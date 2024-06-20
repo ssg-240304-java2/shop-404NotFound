@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: developer-shop-project
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3360/mydb
+    username: user
+    password: pw123
+
+server:
+  port: 8080
+
+mybatis:
+  mapper-locations: mappers/**/*.xml

@@ -1,4 +1,4 @@
-package com.ohgiraffers.developershop;
+package com.nf404.devshop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
