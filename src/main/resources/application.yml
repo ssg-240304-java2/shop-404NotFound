@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: chap08-crud-lecture-source
+
+  # driver config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3006/testdb
+    username: testid
+    password: testpw123
+
+server:
+  port: 8080
+
+# mybatis config
+mybatis:
+  mapper-locations: mappers/**/*.xml
