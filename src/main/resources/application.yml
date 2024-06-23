@@ -22,4 +22,4 @@ mybatis:
 logging:
   level:
     com.nf404.devshop: DEBUG
-    org.mybatis: TRACE
+    com.nf404.devshop.mapper: DEBUG
