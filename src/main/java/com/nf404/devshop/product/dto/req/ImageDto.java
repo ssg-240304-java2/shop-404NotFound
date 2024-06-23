@@ -1,4 +1,4 @@
-package com.nf404.devshop.product.domain;
+package com.nf404.devshop.product.dto.req;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class Image {
+public class ImageDto {
 
     private int thumbnailPath;
     private String uuidFilename;
