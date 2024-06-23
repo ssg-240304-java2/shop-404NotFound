@@ -3,6 +3,7 @@ package com.nf404.devshop.service.impl;
 import com.nf404.devshop.dao.UserDAO;
 import com.nf404.devshop.model.UserDTO;
 import com.nf404.devshop.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * 사용자 관련 CRUD 작업을 수행하며, 비즈니스 로직을 포함
  * 사용자 정보 조회, 등록, 수정, 삭제 및 로그인 기능을 제공
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,8 +23,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
-        return userDAO.getAllUsers();
+        List<UserDTO> users = userDAO.getAllUsers();
+        log.info("Retrieved users: {}", users);
+        if (users == null || users.isEmpty()) {
+            log.warn("No users found or users list is null");
+        } else {
+            log.info("Number of users retrieved: {}", users.size());
+            for (UserDTO user : users) {
+                log.info("User: {}", user);
+            }
+        }
+        return users;
     }
+
 
     @Override
     public UserDTO getUserById(String userId) {

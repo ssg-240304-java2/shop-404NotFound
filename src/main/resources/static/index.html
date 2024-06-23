@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>index</title>
-    </head>
-    <body>
-        
-    </body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Developer Shop - 회원 관리</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f4f4f4;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>404 Developer Shop - 회원 관리 시스템</h1>
+    <ul>
+        <li><a href="/users/list">회원 목록 조회</a></li>
+        <li><a href="/users/register">새 회원 등록</a></li>
+        <li><a href="/users/login">로그인</a></li>
+    </ul>
+</div>
+</body>
 </html>
