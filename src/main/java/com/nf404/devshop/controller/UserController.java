@@ -5,11 +5,13 @@ import com.nf404.devshop.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +29,38 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/list")
-    public String listUsers(Model model) {
-        List<UserDTO> users = userService.getAllUsers();
-        if (users == null) {
-            users = new ArrayList<>(); // null 대신 빈 리스트 사용
+    public String listUsers(
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) Integer userRank,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Model model) {
+
+        List<UserDTO> users;
+        try {
+            if (userId != null || userName != null || userRank != null || startDate != null || endDate != null) {
+                // 검색 조건이 있는 경우
+                users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
+            } else {
+                // 검색 조건이 없는 경우 (기존 로직)
+                users = userService.getAllUsers();
+            }
+
+            if (users == null) {
+                users = new ArrayList<>(); // null 대신 빈 리스트 사용
+            }
+            log.info("Retrieved users count: {}", users.size());
+        } catch (Exception e) {
+            log.error("Error fetching users: ", e);
+            users = new ArrayList<>();
+            model.addAttribute("errorMessage", "사용자 정보를 가져오는 중 오류가 발생했습니다.");
         }
+
+        log.info("Users list size: {}", users.size());
         model.addAttribute("users", users);
         return "user/list";
     }
-
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {

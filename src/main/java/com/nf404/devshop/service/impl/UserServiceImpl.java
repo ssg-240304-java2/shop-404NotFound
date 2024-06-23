@@ -1,13 +1,17 @@
 package com.nf404.devshop.service.impl;
 
 import com.nf404.devshop.dao.UserDAO;
+import com.nf404.devshop.mapper.UserMapper;
 import com.nf404.devshop.model.UserDTO;
 import com.nf404.devshop.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 사용자 서비스 구현 클래스
@@ -25,6 +29,9 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public List<UserDTO> getAllUsers() {
@@ -82,4 +89,19 @@ public class UserServiceImpl implements UserService {
         // 예: 비밀번호 암호화 확인, 로그인 시도 횟수 체크 등
         return userDAO.loginUser(userId, userPw);
     }
+
+    @Override
+    public List<UserDTO> getFilteredUsers(String userId, String userName, Integer userRank, LocalDate startDate, LocalDate endDate) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("userName", userName);
+        params.put("userRank", userRank);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+
+        return userMapper.selectFilteredUsers(params);
+    }
+
+
+
 }

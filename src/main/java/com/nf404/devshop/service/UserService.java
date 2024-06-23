@@ -1,6 +1,8 @@
 package com.nf404.devshop.service;
 
 import com.nf404.devshop.model.UserDTO;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public interface UserService {
@@ -15,4 +17,6 @@ public interface UserService {
     void updateUser(UserDTO user);
     void deleteUser(String userId);
     UserDTO loginUser(String userId, String userPw);
+
+    List<UserDTO> getFilteredUsers(String userId, String userName, Integer userRank, LocalDate startDate, LocalDate endDate);
 }
