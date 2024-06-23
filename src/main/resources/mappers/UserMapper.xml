@@ -53,14 +53,15 @@
                 AND user_rank = #{userRank}
             </if>
             <if test="startDate != null">
-                AND user_date >= #{startDate}
+                AND DATE(user_date) >= DATE(#{startDate})
             </if>
             <if test="endDate != null">
-                AND user_date &lt;= #{endDate}
+                AND DATE(user_date) &lt;= DATE(#{endDate})
             </if>
         </where>
         ORDER BY user_no
     </select>
+
 
 
 </mapper>

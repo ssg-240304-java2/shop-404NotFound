@@ -96,9 +96,10 @@ public class UserServiceImpl implements UserService {
         params.put("userId", userId);
         params.put("userName", userName);
         params.put("userRank", userRank);
-        params.put("startDate", startDate);
-        params.put("endDate", endDate);
-
+        params.put("startDate", startDate != null ? startDate.toString() : null);
+        params.put("endDate", endDate != null ? endDate.toString() : null);
+        
+        log.debug("Filtered users params: {}", params);
         return userMapper.selectFilteredUsers(params);
     }
 

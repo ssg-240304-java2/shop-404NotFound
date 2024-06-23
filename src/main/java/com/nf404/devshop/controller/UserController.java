@@ -33,9 +33,11 @@ public class UserController {
             @RequestParam(required = false) String userId,
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) Integer userRank,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             Model model) {
+        log.info("Search parameters - userId: {}, userName: {}, userRank: {}, startDate: {}, endDate: {}",
+                userId, userName, userRank, startDate, endDate);
 
         List<UserDTO> users;
         try {
