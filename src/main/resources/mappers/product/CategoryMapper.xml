@@ -22,9 +22,19 @@
         WHERE ref_category_code = #{parentId}
     </select>
 
+    <select id="selectAllCategories" resultMap="categoryResultMap">
+        SELECT * FROM tbl_category
+    </select>
+
     <insert id="insertCategory">
         insert into tbl_category (category_name, ref_category_code)
         values (#{categoryName}, #{refCategoryCode})
     </insert>
+
+    <update id="updateCategory">
+        update tbl_category
+        set category_name = #{categoryName}, ref_category_code = #{refCategoryCode}
+        where category_code = #{categoryCode}
+    </update>
 
 </mapper>

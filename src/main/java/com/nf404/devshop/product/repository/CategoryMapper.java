@@ -12,5 +12,9 @@ public interface CategoryMapper {
 
     List<CategoryDto> getByRefCategoryCode(int parentId);
 
+    List<CategoryDto> selectAllCategories();
+
     void insertCategory(CategoryDto categoryDto);
+
+    void updateCategory(CategoryDto categoryDto);
 }
