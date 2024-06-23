@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 사용자 데이터 액세스 객체 구현
+ * 이 클래스는 사용자 데이터에 대한 CRUD 작업을 수행.
+ * 사용자 데이터는 UserMapper를 통해 데이터베이스에서 관리가 될듯.
+ */
 @Repository
 public class UserDAOImpl implements UserDAO {
 
