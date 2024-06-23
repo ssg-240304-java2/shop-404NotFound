@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,15 +28,13 @@ public class UserController {
     @GetMapping("/list")
     public String listUsers(Model model) {
         List<UserDTO> users = userService.getAllUsers();
-        if (users == null || users.isEmpty()) {
-            log.warn("No users found or users list is null");
-            model.addAttribute("errorMessage", "사용자 목록을 불러오는데 실패했습니다.");
-        } else {
-            log.info("Retrieved {} users", users.size());
+        if (users == null) {
+            users = new ArrayList<>(); // null 대신 빈 리스트 사용
         }
         model.addAttribute("users", users);
         return "user/list";
     }
+
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -51,10 +50,16 @@ public class UserController {
 
     @GetMapping("/edit/{userId}")
     public String showEditForm(@PathVariable String userId, Model model) {
+        log.info("Editing user with ID: {}", userId); // log를 통해 확인 가능
         UserDTO user = userService.getUserById(userId);
+        if (user == null) {
+            // 사용자를 찾지 못했을 때의 처리
+            return "redirect:/users/list";
+        }
         model.addAttribute("user", user);
         return "user/edit";
     }
+
 
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute UserDTO user) {

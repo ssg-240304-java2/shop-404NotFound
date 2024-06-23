@@ -51,21 +51,22 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user, stat : ${users}">
-        <td th:text="${user.userNo}"></td>
-        <td th:text="${user.userId}"></td>
-        <td th:text="${user.userName}"></td>
-        <td th:text="${user.userAddr}"></td>
-        <td th:text="${user.userPhone}"></td>
-        <td th:text="${user.userDate}"></td>
-        <td th:text="${user.userRank}"></td>
+    <tr th:each="user : ${users}">
+        <td th:text="${user != null ? user.userNo : ''}"></td>
+        <td th:text="${user != null ? user.userId : ''}"></td>
+        <td th:text="${user != null ? user.userName : ''}"></td>
+        <td th:text="${user != null ? user.userAddr : ''}"></td>
+        <td th:text="${user != null ? user.userPhone : ''}"></td>
+        <td th:text="${user != null ? user.userDate : ''}"></td>
+        <td th:text="${user != null ? user.userRank : ''}"></td>
         <td>
-            <a th:href="@{/users/edit/{id}(id=${user.userId})}">수정</a> |
-            <a th:href="@{/users/delete/{id}(id=${user.userId})}"
+            <a th:if="${user != null}" th:href="@{/users/edit/{id}(id=${user.userId})}">수정</a> |
+            <a th:if="${user != null}" th:href="@{/users/delete/{id}(id=${user.userId})}"
                onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</a>
         </td>
     </tr>
     </tbody>
+
 </table>
 
 <p th:if="${#lists.isEmpty(users)}">등록된 회원이 없습니다.</p>
