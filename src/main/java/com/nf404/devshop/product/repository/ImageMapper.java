@@ -1,11 +1,13 @@
 package com.nf404.devshop.product.repository;
 
-import com.nf404.devshop.product.domain.Image;
-import com.nf404.devshop.product.dto.req.ImageCreateReqDto;
+import com.nf404.devshop.product.dto.req.ImageDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface ImageMapper {
 
-    int insertImageInfo(Image image);
+    void insertImageInfo(ImageDto imageDto);
+
+    void updateImageInfo(@Param("image") ImageDto imageDto, @Param("productCode") int productCode);
 }

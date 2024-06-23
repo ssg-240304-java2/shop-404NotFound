@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class ProductCreateReqDto {
+public class ProductUpadateReqDto {
 
     private int productCode;
     private String productName;
@@ -15,6 +15,4 @@ public class ProductCreateReqDto {
     private int categoryCode;
     private String isDisplayed;
     private String productDesc;
-    private int thumbnailPath;
-    private int stockQuantity;
 }

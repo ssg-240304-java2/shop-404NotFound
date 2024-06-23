@@ -63,4 +63,20 @@
             select last_insert_id()
         </selectKey>
     </insert>
+
+    <update id="updateProductInfo">
+        update tbl_product
+        set product_name = #{productName},
+            price = #{price},
+            category_code = #{categoryCode},
+            is_displayed = #{isDisplayed},
+            product_desc = #{productDesc}
+        where product_code = #{productCode}
+    </update>
+
+    <update id="deleteProductInfo">
+        update tbl_product
+        set is_displayed = 'N'
+        where product_code = #{productCode}
+    </update>
 </mapper>
