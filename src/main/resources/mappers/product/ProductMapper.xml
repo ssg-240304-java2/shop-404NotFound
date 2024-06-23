@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.product.repository.ProductMapper">
+
+    <resultMap id="productResultMap" type="com.nf404.devshop.product.dto.res.ProductReadResDto">
+        <id property="productCode" column="product_code"/>
+        <result property="productName" column="product_name"/>
+        <result property="price" column="price"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="isDisplayed" column="is_displayed"/>
+        <result property="productDesc" column="product_desc"/>
+        <result property="uuidFilename" column="uuid_filename"/>
+        <result property="registrationDate" column="registration_date"/>
+    </resultMap>
+
+    <select id="getAllProductInfo" resultMap="productResultMap">
+        SELECT a.product_code, a.product_name, a.price, b.category_name, a.is_displayed, a.product_desc,
+        c.uuid_filename, a.registration_date
+        FROM tbl_product a LEFT JOIN tbl_category b on a.category_code = b.category_code
+        JOIN tbl_product_image c on a.thumbnail_path = c.thumbnail_path
+    </select>
+
+    <select id="getProductInfoByCriteria" parameterType="com.nf404.devshop.product.dto.req.ProductCriteria"
+    resultMap="productResultMap">
+        SELECT a.product_code, a.product_name, a.price, b.category_name, a.is_displayed, a.product_desc,
+        c.uuid_filename, a.registration_date
+        FROM tbl_product a LEFT JOIN tbl_category b on a.category_code = b.category_code
+        JOIN tbl_product_image c on a.thumbnail_path = c.thumbnail_path
+        <where>
+            <if test="productName != null and productName != ''">
+                AND a.product_name LIKE CONCAT('%', #{productName}, '%')
+            </if>
+            <if test="minPrice != null">
+                AND a.price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND a.price &lt;= #{maxPrice}
+            </if>
+            <if test="startDate != null">
+                AND a.registration_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND a.registration_date &lt;= DATE_ADD(#{endDate}, INTERVAL 1 DAY) - INTERVAL 1 SECOND
+            </if>
+            <if test="mainCategoryCode != null and subCategoryCode == null">
+                AND b.ref_category_code = #{mainCategoryCode}
+            </if>
+            <if test="subCategoryCode != null">
+                AND a.category_code = #{subCategoryCode}
+            </if>
+            <if test="isDisplayed != null">
+                AND a.is_displayed = #{isDisplayed}
+            </if>
+        </where>
+    </select>
+</mapper>

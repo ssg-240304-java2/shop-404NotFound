@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Item Shop</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="date"] {
+            width: auto;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .form-row .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<form action="/product/product-list" method="GET" id="productSearchForm">
+    <div class="form-group">
+        <label for="productName">상품 이름</label>
+        <input type="text" id="productName" name="productName">
+    </div>
+    <div class="form-group">
+        <label for="mainCategoryCode">메인 카테고리</label>
+        <select id="mainCategoryCode" name="mainCategoryCode">
+            <option value="">Select Main Category</option>
+            <option th:each="mainCategory : ${mainCategories}"
+                    th:value="${mainCategory.categoryCode}"
+                    th:text="${mainCategory.categoryName}"></option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="subCategoryCode">서브 카테고리</label>
+        <select id="subCategoryCode" name="subCategoryCode">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="minPrice">최소 가격</label>
+        <input type="number" id="minPrice" name="minPrice" min="0">
+    </div>
+    <div class="form-group">
+        <label for="maxPrice">최대 가격</label>
+        <input type="number" id="maxPrice" name="maxPrice" min="0">
+    </div>
+    <div class="form-group">
+        <label for="minPrice">판매 여부</label>
+        <input type="radio" name="isDisplayed" value="Y" checked>판매중
+        <input type="radio" name="isDisplayed" value="N">판매중단
+    </div>
+    <div class="form-group">
+        <label for="startDate">생성일자 이후</label>
+        <input type="date" id="startDate" name="startDate">
+    </div>
+    <div class="form-group">
+        <label for="endDate">생성일자 이전</label>
+        <input type="date" id="endDate" name="endDate">
+    </div>
+    <button type="submit">검색</button>
+</form>
+
+<table>
+    <tr>
+        <th>상품 코드</th>
+        <th>상품 이름</th>
+        <th>가격</th>
+        <th>카테고리</th>
+        <th>판매 여부</th>
+        <th>상품 설명</th>
+        <th>이미지 uuid</th>
+        <th>등록 일자</th>
+    </tr>
+
+    <tr th:each="product : ${ productList }">
+        <td th:text="${product.productCode}"></td>
+        <td th:text="${product.productName}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.categoryName}"></td>
+        <td th:text="${product.isDisplayed}"></td>
+        <td th:text="${product.productDesc}"></td>
+        <td th:text="${product.uuidFilename}"></td>
+        <td th:text="${product.registrationDate}"></td>
+    </tr>
+</table>
+
+<script>
+    // 메인 카테고리 선택에 따라서 서브 카테고리 동적으로 불러오기
+    $(document).ready(function() {
+        $('#mainCategoryCode').change(function() {
+            var parentId = $(this).val();
+            if (parentId) {
+                $.ajax({
+                    url: '/category/subcategories',
+                    type: 'GET',
+                    data: { parentId: parentId },
+                    success: function(data) {
+                        var subCategorySelect = $('#subCategoryCode');
+                        subCategorySelect.empty();
+                        subCategorySelect.append('<option value="">Select Sub Category</option>');
+                        $.each(data, function(index, subCategory) {
+                            subCategorySelect.append('<option value="' + subCategory.categoryCode + '">' + subCategory.categoryName + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#subCategoryCode').html('<option value="">Select Sub Category</option>');
+            }
+        });
+
+        $('#productSearchForm').submit(function(event) {
+            var minPrice = $('#minPrice').val();
+            var maxPrice = $('#maxPrice').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+
+            if (minPrice && maxPrice && parseInt(minPrice) > parseInt(maxPrice)) {
+                alert('최대 가격은 최소 가격보다 커야 합니다.');
+                event.preventDefault();
+            }
+
+            if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+                alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
