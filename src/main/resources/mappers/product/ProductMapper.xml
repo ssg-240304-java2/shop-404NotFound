@@ -55,4 +55,12 @@
             </if>
         </where>
     </select>
+
+    <insert id="insertProductInfo">
+        insert into tbl_product (product_name, price, category_code, is_displayed, product_desc, thumbnail_path)
+        values (#{productName}, #{price}, #{categoryCode}, #{isDisplayed}, #{productDesc}, #{thumbnailPath})
+        <selectKey keyProperty="productCode" order="AFTER" resultType="_int">
+            select last_insert_id()
+        </selectKey>
+    </insert>
 </mapper>
