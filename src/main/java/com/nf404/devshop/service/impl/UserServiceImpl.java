@@ -21,6 +21,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    public UserServiceImpl(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
     @Override
     public List<UserDTO> getAllUsers() {
         List<UserDTO> users = userDAO.getAllUsers();
@@ -39,8 +44,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(String userId) {
-        return userDAO.getUserById(userId);
+        UserDTO user = userDAO.getUserById(userId);
+        log.info("Retrieved user: {}", user);  // 객체의 내용을 로그로 출력
+        if (user == null) {
+            log.warn("User not found with id: {}", userId);
+        } else {
+            log.info("User found: id={}, name={}", user.getUserId(), user.getUserName());
+        }
+        return user;
     }
+
 
     @Override
     public void registerUser(UserDTO user) {
