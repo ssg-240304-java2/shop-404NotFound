@@ -11,5 +11,5 @@ public class CategoryDto {
 
     private int categoryCode;
     private String categoryName;
-    private int refCategoryCode;
+    private Integer refCategoryCode;
 }

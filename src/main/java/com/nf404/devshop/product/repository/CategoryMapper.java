@@ -9,5 +9,8 @@ import java.util.List;
 public interface CategoryMapper {
 
     List<CategoryDto> getMainCategory();
+
     List<CategoryDto> getByRefCategoryCode(int parentId);
+
+    void insertCategory(CategoryDto categoryDto);
 }

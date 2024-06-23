@@ -22,4 +22,9 @@
         WHERE ref_category_code = #{parentId}
     </select>
 
+    <insert id="insertCategory">
+        insert into tbl_category (category_name, ref_category_code)
+        values (#{categoryName}, #{refCategoryCode})
+    </insert>
+
 </mapper>
