@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,41 +50,20 @@ public class UserController {
 
     @GetMapping("/edit/{userId}")
     public String showEditForm(@PathVariable String userId, Model model) {
-        log.info("Attempting to edit user with ID: {}", userId);
+        log.info("Editing user with ID: {}", userId); // log를 통해 확인 가능
         UserDTO user = userService.getUserById(userId);
         if (user == null) {
-            log.warn("User not found with ID: {}", userId);
+            // 사용자를 찾지 못했을 때의 처리
             return "redirect:/users/list";
         }
-        log.info("User found: {}", user);  // 추가된 로그
         model.addAttribute("user", user);
         return "user/edit";
     }
 
 
     @PostMapping("/edit")
-    public String updateUser(@ModelAttribute UserDTO updatedUser, RedirectAttributes redirectAttributes) {
-        log.info("Updating user: {}", updatedUser);
-        try {
-            // 기존 사용자 정보를 가져옵니다.
-            UserDTO existingUser = userService.getUserById(updatedUser.getUserId());
-            if (existingUser == null) {
-                throw new IllegalArgumentException("User not found");
-            }
-
-            // 랭크를 제외한 다른 필드들만 업데이트합니다.
-            existingUser.setUserName(updatedUser.getUserName());
-            existingUser.setUserPw(updatedUser.getUserPw());
-            existingUser.setUserAddr(updatedUser.getUserAddr());
-            existingUser.setUserPhone(updatedUser.getUserPhone());
-            // userRank는 업데이트하지 않습니다.
-
-            userService.updateUser(existingUser);
-            redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 업데이트되었습니다.");
-        } catch (Exception e) {
-            log.error("Error updating user: ", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "사용자 정보 업데이트 중 오류가 발생했습니다: " + e.getMessage());
-        }
+    public String updateUser(@ModelAttribute UserDTO user) {
+        userService.updateUser(user);
         return "redirect:/users/list";
     }
 
