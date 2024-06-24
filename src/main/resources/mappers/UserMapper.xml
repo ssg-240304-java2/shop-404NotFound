@@ -6,27 +6,4 @@
         SELECT * FROM tbl_user
     </select>
 
-    <select id="getUserById" resultType="com.nf404.devshop.model.UserDTO">
-        SELECT * FROM tbl_user WHERE user_id = #{userId}
-    </select>
-
-    <insert id="insertUser" parameterType="com.nf404.devshop.model.UserDTO">
-        INSERT INTO tbl_user (user_id, user_pw, user_name, user_addr, user_phone, user_rank)
-        VALUES (#{userId}, #{userPw}, #{userName}, #{userAddr}, #{userPhone}, #{userRank})
-    </insert>
-
-    <update id="updateUser" parameterType="com.nf404.devshop.model.UserDTO">
-        UPDATE tbl_user
-        SET user_pw = #{userPw}, user_name = #{userName}, user_addr = #{userAddr},
-            user_phone = #{userPhone}, user_rank = #{userRank}
-        WHERE user_id = #{userId}
-    </update>
-
-    <delete id="deleteUser">
-        DELETE FROM tbl_user WHERE user_id = #{userId}
-    </delete>
-
-    <select id="loginUser" resultType="com.nf404.devshop.model.UserDTO">
-        SELECT * FROM tbl_user WHERE user_id = #{userId} AND user_pw = #{userPw}
-    </select>
 </mapper>
