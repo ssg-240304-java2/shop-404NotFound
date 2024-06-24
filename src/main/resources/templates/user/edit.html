@@ -1,50 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>사용자 정보 수정</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        h1 { color: #333; }
-        form { max-width: 400px; }
-        div { margin-bottom: 10px; }
-        label { display: inline-block; width: 100px; }
-        input[type="text"], input[type="password"] { width: 200px; padding: 5px; }
-        input[type="submit"] { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
-        input[type="submit"]:hover { background-color: #45a049; }
-        .error { color: red; margin-bottom: 10px; }
-    </style>
+    <title>Edit User</title>
 </head>
 <body>
-<h1>사용자 정보 수정</h1>
-
-<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
-
+<h1>Edit User</h1>
 <form th:action="@{/users/edit}" th:object="${user}" method="post">
     <input type="hidden" th:field="*{userId}" />
     <div>
-        <label for="userName">이름:</label>
-        <input type="text" id="userName" th:field="*{userName}" required />
+        <label>Name: <input type="text" th:field="*{userName}" /></label>
     </div>
     <div>
-        <label for="userPw">비밀번호:</label>
-        <input type="password" id="userPw" th:field="*{userPw}" required />
+        <label>Address: <input type="text" th:field="*{userAddr}" /></label>
     </div>
     <div>
-        <label for="userAddr">주소:</label>
-        <input type="text" id="userAddr" th:field="*{userAddr}" />
+        <label>Phone: <input type="text" th:field="*{userPhone}" /></label>
     </div>
     <div>
-        <label for="userPhone">전화번호:</label>
-        <input type="text" id="userPhone" th:field="*{userPhone}" />
-    </div>
-    <div>
-        <input type="submit" value="수정 완료" />
+        <input type="submit" value="Update" />
     </div>
 </form>
-
-<div>
-    <a th:href="@{/users/list}">사용자 목록으로 돌아가기</a>
-</div>
 </body>
 </html>

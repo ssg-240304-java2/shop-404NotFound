@@ -2,18 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nf404.devshop.mapper.UserMapper">
 
-    <resultMap id="UserResultMap" type="com.nf404.devshop.model.UserDTO">
-        <id property="userNo" column="user_no"/>
-        <result property="userId" column="user_id"/>
-        <result property="userName" column="user_name"/>
-        <!-- 나머지 필드들도 매핑 -->
-<!--        <result property="userPw" column="user_pw"/>-->
-<!--        <result property="userAddr" column="user_addr"/>-->
-<!--        <result property="userPhone" column="user_phone"/>-->
-<!--        <result property="userRank" column="user_rank"/>-->
-    </resultMap>
-
-    <select id="getAllUsers" resultMap="UserResultMap">
+    <select id="getAllUsers" resultType="com.nf404.devshop.model.UserDTO">
         SELECT * FROM tbl_user
     </select>
 
@@ -37,7 +26,7 @@
         DELETE FROM tbl_user WHERE user_id = #{userId}
     </delete>
 
-    <select id="loginUser" resultMap="UserResultMap">
+    <select id="loginUser" resultType="com.nf404.devshop.model.UserDTO">
         SELECT * FROM tbl_user WHERE user_id = #{userId} AND user_pw = #{userPw}
     </select>
 </mapper>

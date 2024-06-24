@@ -46,8 +46,6 @@ public class UserServiceImpl implements UserService {
     public void registerUser(UserDTO user) {
         // 비즈니스 로직 추가 예정.
         // 예: 비밀번호 암호화, 유효성 검사 등..
-        // 기본 랭크 설정 (예: 1)
-        user.setUserRank(1);
         userDAO.insertUser(user);
     }
 

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: developer-shop
+    name: chap08-crud-lecture-source
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -21,4 +21,4 @@ mybatis:
 
 logging:
   level:
-    com.nf404.devshop.mapper: TRACE
+    com.nf404.devshop.mapper: DEBUG
