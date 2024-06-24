@@ -2,7 +2,6 @@ package com.nf404.devshop.controller;
 
 import com.nf404.devshop.model.UserDTO;
 import com.nf404.devshop.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,23 +128,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String userId, @RequestParam String userPw, HttpSession session, Model model) {
-        try {
-            UserDTO user = userService.loginUser(userId, userPw);
-            if (user != null) {
-                // 로그인 성공 로직
-                session.setAttribute("loggedInUser", user);
-                return "redirect:/users/list";
-            } else {
-                // 로그인 실패 로직
-                model.addAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
-                return "user/login";
-            }
-        } catch (Exception e) {
-            // 예외 처리
-            model.addAttribute("error", "로그인 처리 중 오류가 발생했습니다.");
+    public String loginUser(@RequestParam String userId, @RequestParam String userPw, Model model) {
+        UserDTO user = userService.loginUser(userId, userPw);
+        if (user != null) {
+            // 로그인 성공 로직
+            return "redirect:/users/list";
+        } else {
+            // 로그인 실패 로직
+            model.addAttribute("error", "Invalid username or password");
             return "user/login";
         }
     }
-
 }

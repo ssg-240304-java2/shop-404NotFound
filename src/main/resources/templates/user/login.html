@@ -1,161 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 - 테스트 페이지</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            background-color: #ffe6e6;
-            border: 1px solid red;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            color: green;
-            background-color: #e6ffe6;
-            border: 1px solid green;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .test-functions {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #ddd;
-            border-radius: 5px;
-        }
-        .nav-menu {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-        .menu-button {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .menu-button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Login</title>
 </head>
 <body>
-<div class="container">
-    <div class="nav-menu">
-        <a href="/" class="menu-button">메인 메뉴로 돌아가기</a>
+<h1>Login</h1>
+<form th:action="@{/users/login}" method="post">
+    <div>
+        <label>User ID: <input type="text" name="userId" /></label>
     </div>
-
-    <h1>로그인 (테스트 페이지)</h1>
-
-    <div id="message" th:if="${error}" th:text="${error}" class="error"></div>
-
-    <form id="loginForm" th:action="@{/users/login}" method="post">
-        <div class="form-group">
-            <label for="userId">사용자 ID:</label>
-            <input type="text" id="userId" name="userId" required>
-        </div>
-        <div class="form-group">
-            <label for="userPw">비밀번호:</label>
-            <input type="password" id="userPw" name="userPw" required>
-        </div>
-        <button type="submit">로그인</button>
-    </form>
-
-    <div class="test-functions">
-        <h2>테스트 기능</h2>
-        <button onclick="fillTestCredentials('user1', 'password1')">테스트 계정 1</button>
-        <button onclick="fillTestCredentials('user2', 'password2')">테스트 계정 2</button>
-        <button onclick="testInvalidCredentials()">잘못된 자격 증명 테스트</button>
-        <button onclick="testEmptyFields()">빈 필드 테스트</button>
+    <div>
+        <label>Password: <input type="password" name="userPw" /></label>
     </div>
-</div>
-
-<script th:inline="javascript">
-    function showMessage(message, isError) {
-        const messageDiv = document.getElementById('message');
-        messageDiv.textContent = message;
-        messageDiv.className = isError ? 'error' : 'success';
-        messageDiv.style.display = 'block';
-    }
-
-    function fillTestCredentials(userId, userPw) {
-        document.getElementById('userId').value = userId;
-        document.getElementById('userPw').value = userPw;
-        showMessage(`테스트 계정 정보가 입력되었습니다: ${userId}`, false);
-    }
-
-    function testInvalidCredentials() {
-        document.getElementById('userId').value = 'invaliduser';
-        document.getElementById('userPw').value = 'invalidpassword';
-        showMessage('잘못된 자격 증명으로 설정되었습니다. 로그인을 시도해보세요.', false);
-    }
-
-    function testEmptyFields() {
-        document.getElementById('userId').value = '';
-        document.getElementById('userPw').value = '';
-        showMessage('필드가 비워졌습니다. 로그인을 시도해보세요.', false);
-    }
-
-    // 페이지 로드 시 서버 측 에러 메시지가 있으면 표시
-    document.addEventListener('DOMContentLoaded', function() {
-        const messageDiv = document.getElementById('message');
-        if (messageDiv.textContent) {
-            messageDiv.style.display = 'block';
-        }
-    });
-</script>
+    <div>
+        <input type="submit" value="Login" />
+    </div>
+</form>
+<div th:if="${error}" th:text="${error}" style="color: red;"></div>
 </body>
 </html>
