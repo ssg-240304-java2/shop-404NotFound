@@ -8,11 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * 사용자 서비스 구현 클래스
- * 사용자 관련 CRUD 작업을 수행하며, 비즈니스 로직을 포함
- * 사용자 정보 조회, 등록, 수정, 삭제 및 로그인 기능을 제공
- */
 @Service
 public class UserServiceImpl implements UserService {
 
