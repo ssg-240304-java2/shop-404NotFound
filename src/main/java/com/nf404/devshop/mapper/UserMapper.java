@@ -4,9 +4,7 @@ import com.nf404.devshop.model.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 /**
@@ -58,8 +56,6 @@ public interface UserMapper {
      * @return 사용자 정보
      */
     UserDTO loginUser(@Param("userId") String userId, @Param("userPw") String userPw);
-
-    List<UserDTO> selectFilteredUsers(Map<String, Object> params);
 }
 
 // public interface UserMapper {

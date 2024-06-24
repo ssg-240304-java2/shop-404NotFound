@@ -39,28 +39,4 @@
     <select id="loginUser" resultMap="UserResultMap">
         SELECT * FROM tbl_user WHERE user_id = #{userId} AND user_pw = #{userPw}
     </select>
-
-    <select id="selectFilteredUsers" resultMap="UserResultMap">
-        SELECT * FROM tbl_user
-        <where>
-            <if test="userId != null and userId != ''">
-                AND user_id LIKE CONCAT('%', #{userId}, '%')
-            </if>
-            <if test="userName != null and userName != ''">
-                AND user_name LIKE CONCAT('%', #{userName}, '%')
-            </if>
-            <if test="userRank != null">
-                AND user_rank = #{userRank}
-            </if>
-            <if test="startDate != null">
-                AND user_date >= #{startDate}
-            </if>
-            <if test="endDate != null">
-                AND user_date &lt;= #{endDate}
-            </if>
-        </where>
-        ORDER BY user_no
-    </select>
-
-
 </mapper>

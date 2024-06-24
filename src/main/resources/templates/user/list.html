@@ -24,12 +24,6 @@
             color: green;
             font-weight: bold;
         }
-        .search-form {
-            margin-bottom: 20px;
-        }
-        .search-form input, .search-form select {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
@@ -42,21 +36,6 @@
 <div th:if="${successMessage}" class="success">
     <p th:text="${successMessage}"></p>
 </div>
-
-<!-- 검색 및 필터링 폼 추가 -->
-<form class="search-form" th:action="@{/users/list}" method="get">
-    <input type="text" name="userId" placeholder="회원 아이디" th:value="${param.userId}">
-    <input type="text" name="userName" placeholder="회원명" th:value="${param.userName}">
-    <select name="userRank">
-        <option value="">모든 등급</option>
-        <option value="1" th:selected="${param.userRank == '1'}">BRONZE</option>
-        <option value="2" th:selected="${param.userRank == '2'}">SILVER</option>
-        <option value="3" th:selected="${param.userRank == '3'}">GOLD</option>
-    </select>
-    <input type="date" name="startDate" th:value="${param.startDate}">
-    <input type="date" name="endDate" th:value="${param.endDate}">
-    <button type="submit">검색</button>
-</form>
 
 <table th:if="${not #lists.isEmpty(users)}">
     <thead>
@@ -73,20 +52,19 @@
     </thead>
     <tbody>
     <tr th:each="user : ${users}">
-        <td th:text="${user?.userNo}"></td>
-        <td th:text="${user?.userId}"></td>
-        <td th:text="${user?.userName}"></td>
-        <td th:text="${user?.userAddr}"></td>
-        <td th:text="${user?.userPhone}"></td>
-        <td th:text="${user?.userDate}"></td>
-        <td th:text="${user?.userRank}"></td>
+        <td th:text="${user != null ? user.userNo : ''}"></td>
+        <td th:text="${user != null ? user.userId : ''}"></td>
+        <td th:text="${user != null ? user.userName : ''}"></td>
+        <td th:text="${user != null ? user.userAddr : ''}"></td>
+        <td th:text="${user != null ? user.userPhone : ''}"></td>
+        <td th:text="${user != null ? user.userDate : ''}"></td>
+        <td th:text="${user != null ? user.userRank : ''}"></td>
         <td>
-            <a th:if="${user?.userId != null}" th:href="@{/users/edit/{id}(id=${user.userId})}" class="edit-link">수정</a>
-            <a th:if="${user?.userId != null}" th:href="@{/users/delete/{id}(id=${user.userId})}"
+            <a th:href="@{/users/edit/{id}(id=${user.userId})}" class="edit-link">수정</a>
+            <a th:if="${user != null}" th:href="@{/users/delete/{id}(id=${user.userId})}"
                onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</a>
         </td>
     </tr>
-
     </tbody>
 
 </table>
@@ -124,12 +102,6 @@
                     });
             });
         });
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-        // 날짜 입력 필드의 최소값과 최대값 설정
-        const today = new Date().toISOString().split('T')[0];
-        document.querySelector('input[name="startDate"]').max = today;
-        document.querySelector('input[name="endDate"]').max = today;
     });
 </script>
 </body>
