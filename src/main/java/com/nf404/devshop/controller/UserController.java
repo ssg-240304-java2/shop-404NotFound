@@ -2,14 +2,10 @@ package com.nf404.devshop.controller;
 
 import com.nf404.devshop.model.UserDTO;
 import com.nf404.devshop.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 사용자 관리를 위한 컨트롤러 클래스.
@@ -20,20 +16,12 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
     @GetMapping("/list")
     public String listUsers(Model model) {
-        List<UserDTO> users = userService.getAllUsers();
-        if (users == null || users.isEmpty()) {
-            log.warn("No users found or users list is null");
-            model.addAttribute("errorMessage", "사용자 목록을 불러오는데 실패했습니다.");
-        } else {
-            log.info("Retrieved {} users", users.size());
-        }
-        model.addAttribute("users", users);
+        model.addAttribute("users", userService.getAllUsers());
         return "user/list";
     }
 

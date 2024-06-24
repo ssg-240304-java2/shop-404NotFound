@@ -1,16 +1,13 @@
 spring:
   application:
     name: chap08-crud-lecture-source
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
 
   # driver config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
-    username: devshop
-    password: 1234
+    url: jdbc:mysql://localhost:3006/testdb
+    username: testid
+    password: testpw123
 
 server:
   port: 8080
@@ -18,7 +15,3 @@ server:
 # mybatis config
 mybatis:
   mapper-locations: mappers/**/*.xml
-
-logging:
-  level:
-    com.nf404.devshop.mapper: DEBUG
