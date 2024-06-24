@@ -4,111 +4,36 @@
     <meta charset="UTF-8">
     <title>회원 목록 - 테스트 페이지</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: white;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 8px;
             text-align: left;
         }
         th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:nth-child(even) {
             background-color: #f2f2f2;
         }
         .error {
             color: red;
             font-weight: bold;
-            padding: 10px;
-            background-color: #ffe6e6;
-            border: 1px solid red;
-            margin-bottom: 10px;
         }
         .success {
             color: green;
             font-weight: bold;
-            padding: 10px;
-            background-color: #e6ffe6;
-            border: 1px solid green;
-            margin-bottom: 10px;
         }
         .search-form {
             margin-bottom: 20px;
-            padding: 15px;
-            background-color: #e9e9e9;
-            border-radius: 5px;
         }
         .search-form input, .search-form select {
             margin-right: 10px;
-            padding: 5px;
-        }
-        .search-form button {
-            padding: 5px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .action-buttons {
-            margin-top: 20px;
-        }
-        .action-buttons a, .action-buttons button {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        .test-functions {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #ddd;
-            border-radius: 5px;
-        }
-        .nav-menu {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-        .menu-button {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .menu-button:hover {
-            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 <h1>회원 목록 (테스트 페이지)</h1>
-
-<div class="nav-menu">
-    <a href="/" class="menu-button">메인 메뉴로 돌아가기</a>
-</div>
 
 <div th:if="${errorMessage}" class="error">
     <p th:text="${errorMessage}"></p>
@@ -118,6 +43,7 @@
     <p th:text="${successMessage}"></p>
 </div>
 
+<!-- 검색 및 필터링 폼 추가 -->
 <form class="search-form" th:action="@{/users/list}" method="get">
     <input type="text" name="userId" placeholder="회원 아이디" th:value="${param.userId}">
     <input type="text" name="userName" placeholder="회원명" th:value="${param.userName}">
@@ -160,26 +86,25 @@
                onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</a>
         </td>
     </tr>
+
     </tbody>
+
 </table>
 
 <p th:if="${#lists.isEmpty(users)}">등록된 회원이 없습니다.</p>
 
-<div class="action-buttons">
+<div>
     <a href="/users/register">새 회원 등록</a>
 </div>
 
-<div class="test-functions">
+<div>
     <h3>테스트 기능</h3>
     <button onclick="location.reload();">페이지 새로고침</button>
-    <button onclick="alert('총 회원 수: ' + (document.getElementsByTagName('tr').length - 1) + '명');">총 회원 수 확인</button>
-    <button onclick="testRandomUser()">랜덤 사용자 생성</button>
-    <button onclick="testBulkDelete()">대량 삭제 테스트</button>
+    <button onclick="alert('총 회원 수: ' + document.getElementsByTagName('tr').length + '명');">총 회원 수 확인</button>
 </div>
 
-<script th:inline="javascript">
+<script>
     console.log("회원 목록 페이지가 로드되었습니다.");
-
     document.addEventListener('DOMContentLoaded', function() {
         const editLinks = document.querySelectorAll('.edit-link');
         editLinks.forEach(link => {
@@ -199,21 +124,13 @@
                     });
             });
         });
-
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // 날짜 입력 필드의 최소값과 최대값 설정
         const today = new Date().toISOString().split('T')[0];
         document.querySelector('input[name="startDate"]').max = today;
         document.querySelector('input[name="endDate"]').max = today;
     });
-
-    function testRandomUser() {
-        // 랜덤 사용자 생성 로직 구현
-        alert('랜덤 사용자 생성 기능은 백엔드에서 구현해야 합니다.');
-    }
-
-    function testBulkDelete() {
-        // 대량 삭제 테스트 로직 구현
-        alert('대량 삭제 테스트 기능은 백엔드에서 구현해야 합니다.');
-    }
 </script>
 </body>
 </html>
