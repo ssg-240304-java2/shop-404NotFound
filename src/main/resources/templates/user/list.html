@@ -161,6 +161,9 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .rank-bronze { color: #CD7F32; }
+        .rank-silver { color: #C0C0C0; }
+        .rank-gold { color: #FFD700; }
     </style>
 </head>
 <body>
@@ -213,7 +216,15 @@
         <td th:text="${user?.userAddr}"></td>
         <td th:text="${user?.userPhone}"></td>
         <td th:text="${user?.userDate}"></td>
-        <td th:text="${user?.userRank}"></td>
+        <td>
+            <span th:switch="${user?.userRank}">
+                <span th:case="1" class="rank-bronze">Bronze</span>
+                <span th:case="2" class="rank-silver">Silver</span>
+                <span th:case="3" class="rank-gold">Gold</span>
+                <span th:case="*" th:text="${user?.userRank}">Unknown</span>
+            </span>
+        </td>
+
         <td>
             <a th:if="${user?.userId != null}" th:href="@{/users/edit/{id}(id=${user.userId})}" class="edit-link">수정</a>
             <a th:if="${user?.userId != null}" th:href="@{/users/delete/{id}(id=${user.userId})}"
