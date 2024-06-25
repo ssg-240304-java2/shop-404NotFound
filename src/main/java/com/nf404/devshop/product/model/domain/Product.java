@@ -1,23 +1,22 @@
-package com.nf404.devshop.product.dto.res;
+package com.nf404.devshop.product.model.domain;
 
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 @ToString
-public class ProductReadResDto {
+public class Product {
 
     private int productCode;
     private String productName;
     private int price;
-    private String categoryName;
+    private int categoryCode;
     private String isDisplayed;
     private String productDesc;
-    private String uuidFilename;
+    private int thumbnailPath;
     private LocalDate registrationDate;
+
 }

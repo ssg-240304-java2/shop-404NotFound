@@ -1,4 +1,4 @@
-package com.nf404.devshop.product.dto.res;
+package com.nf404.devshop.product.model.dto;
 
 import lombok.*;
 

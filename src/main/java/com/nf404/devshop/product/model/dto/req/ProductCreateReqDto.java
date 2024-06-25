@@ -1,4 +1,4 @@
-package com.nf404.devshop.product.dto.req;
+package com.nf404.devshop.product.model.dto.req;
 
 import lombok.*;
 
@@ -7,12 +7,13 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class ProductUpadateReqDto {
+public class ProductCreateReqDto {
 
     private int productCode;
     private String productName;
     private int price;
-    private int categoryCode;
+    private int subCategoryCode;
     private String isDisplayed;
     private String productDesc;
+    private int thumbnailPath;
 }
