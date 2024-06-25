@@ -26,7 +26,7 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final SaveImageUtil saveImageUtil;
-    private final String filePath = "ssg-java2.iptime.org/nf404/product";
+    private final String filePath = "http://ssg-java2.iptime.org/nf404/product/";
 
     @Autowired
     public ProductController(ProductService productService, CategoryService categoryService, SaveImageUtil saveImageUtil) {
@@ -40,8 +40,12 @@ public class ProductController {
 
         List<ProductReadResDto> productList = productService.getProductInfo(productCriteria);
 
-        for(ProductReadResDto productReadResDto : productList)
-            productReadResDto.getImage().setUuidFilename(filePath + productReadResDto.getImage().getUuidFilename());
+        for(ProductReadResDto productReadResDto : productList) {
+            String finalFilename = filePath + productReadResDto.getImage().getUuidFilename();
+            productReadResDto.getImage().setUuidFilename(finalFilename);
+        }
+
+        log.info("[productReadResDto] : {}", productList.get(20).getImage().getUuidFilename());
 
         model.addAttribute("productList", productList);
 
@@ -62,13 +66,11 @@ public class ProductController {
     @PostMapping("/add-product")
     public String addProduct(@ModelAttribute ProductCreateReqDto productCreateReqDto, @RequestParam("imageFile") MultipartFile imageFile) {
 
-        log.info("[ProductController] productCreateReqDto: {}", productCreateReqDto);
-        log.info("[ProductController] imageFile: {}", imageFile);
-
         ImageDto imageDto = null;
 
         try {
-            imageDto = saveImageUtil.upload(imageFile, "product");
+            if (!imageFile.isEmpty()) imageDto = saveImageUtil.upload(imageFile, "product");
+            else imageDto = new ImageDto("", "");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -13,4 +13,9 @@ public class ImageDto {
     private int thumbnailPath;
     private String uuidFilename;
     private String originFilename;
+
+    public ImageDto(String uuidFilename, String originFilename) {
+        this.uuidFilename = uuidFilename;
+        this.originFilename = originFilename;
+    }
 }
