@@ -1,6 +1,6 @@
 package com.nf404.devshop.product.controller;
 
-import com.nf404.devshop.product.dto.res.CategoryDto;
+import com.nf404.devshop.product.model.dto.CategoryDto;
 import com.nf404.devshop.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
