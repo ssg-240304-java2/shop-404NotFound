@@ -1,6 +1,6 @@
 package com.nf404.devshop.product.repository;
 
-import com.nf404.devshop.product.dto.res.CategoryDto;
+import com.nf404.devshop.product.model.dto.CategoryDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -8,9 +8,9 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
 
-    List<CategoryDto> getMainCategory();
+    List<CategoryDto> selectMainCategories();
 
-    List<CategoryDto> getByRefCategoryCode(int parentId);
+    List<CategoryDto> selectSubCategoriesByParentCategoryCode(int parentId);
 
     List<CategoryDto> selectAllCategories();
 

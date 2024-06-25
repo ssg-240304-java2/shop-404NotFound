@@ -4,19 +4,19 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nf404.devshop.product.repository.CategoryMapper">
 
-    <resultMap id="categoryResultMap" type="com.nf404.devshop.product.dto.res.CategoryDto">
+    <resultMap id="categoryResultMap" type="com.nf404.devshop.product.model.dto.CategoryDto">
         <id property="categoryCode" column="category_code"/>
         <result property="categoryName" column="category_name"/>
         <result property="refCategoryCode" column="ref_category_code"/>
     </resultMap>
     
-    <select id="getMainCategory" resultMap="categoryResultMap">
+    <select id="selectMainCategories" resultMap="categoryResultMap">
         SELECT category_code, category_name, ref_category_code
         FROM tbl_category
         WHERE ref_category_code IS NULL
     </select>
 
-    <select id="getByRefCategoryCode" resultMap="categoryResultMap">
+    <select id="selectSubCategoriesByParentCategoryCode" resultMap="categoryResultMap">
         SELECT category_code, category_name, ref_category_code
         FROM tbl_category
         WHERE ref_category_code = #{parentId}

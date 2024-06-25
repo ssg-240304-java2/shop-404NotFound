@@ -13,12 +13,11 @@
         </selectKey>
     </insert>
 
-    <update id="updateImageInfo" parameterType="map">
-        update tbl_product_image as img
-        join tbl_product as prod on img.thumbnail_path = prod.thumbnail_path
-        set img.uuid_filename = #{image.uuidFilename},
-        img.origin_filename = #{image.originFilename}
-        where prod.product_code = #{productCode}
+    <update id="updateImageInfo">
+        update tbl_product_image
+        set uuid_filename = #{uuidFilename},
+            origin_filename = #{originFilename}
+        where thumbnail_path = #{thumbnailPath}
     </update>
 
 </mapper>

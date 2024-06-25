@@ -1,6 +1,6 @@
 package com.nf404.devshop.product.service;
 
-import com.nf404.devshop.product.dto.res.CategoryDto;
+import com.nf404.devshop.product.model.dto.CategoryDto;
 import com.nf404.devshop.product.repository.CategoryMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class CategoryService {
      * @return
      */
     public List<CategoryDto> getMainCategory() {
-        return categoryMapper.getMainCategory();
+        return categoryMapper.selectMainCategories();
     }
 
     /***
@@ -30,7 +30,7 @@ public class CategoryService {
      * @return
      */
     public List<CategoryDto> getSubCategoryByParentId(int parentId) {
-        return categoryMapper.getByRefCategoryCode(parentId);
+        return categoryMapper.selectSubCategoriesByParentCategoryCode(parentId);
     }
 
     /***
