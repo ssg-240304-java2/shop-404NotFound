@@ -10,15 +10,9 @@
 <div layout:fragment="content">
     <h2>주문 상세 정보</h2>
     <div class="container_c">
-        <!--<p><strong>주문번호:</strong> <span th:text="${orderDetail.orderNo}"></span></p>
-        <p><strong>회원 번호:</strong> <span th:text="${orderDetail.userNo}"></span></p>
-        <p><strong>금액:</strong> <span th:text="${orderDetail.price}"></span></p>
-        <p><strong>생성일:</strong> <span th:text="${orderList.createdAt}"></span></p>
-        <p><strong>Status:</strong> <span th:text="${orderList.orderStatus}"></span></p>-->
         <table>
             <tr>
                 <th>주문번호</th>
-                <th>회원번호</th>
                 <th>상품코드</th>
                 <th>상품이름</th>
                 <th>개수</th>
@@ -26,7 +20,6 @@
             </tr>
             <tr th:each="items : ${ orderDetail }">
                 <td th:text="${ items.orderNo }"></td>
-                <td th:text="${ items.userNo }"></td>
                 <td th:text="${ items.productCode }"></td>
                 <td th:text="${ items.productName }"></td>
                 <td th:text="${ items.orderItemQuantity }"></td>

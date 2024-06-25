@@ -1,8 +1,8 @@
-package com.nf404.devshop.OrderSearch.controller;
+package com.nf404.devshop.order.controller;
 
-import com.nf404.devshop.OrderSearch.model.dto.OrderDTO;
-import com.nf404.devshop.OrderSearch.model.dto.OrderItemDTO;
-import com.nf404.devshop.OrderSearch.model.service.OrderService;
+import com.nf404.devshop.order.model.dto.OrderDTO;
+import com.nf404.devshop.order.model.dto.OrderItemDTO;
+import com.nf404.devshop.order.model.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +34,12 @@ public class OrderController {
         return "order/orderlist";
     }
 
+    /***
+     * 전체 주문 조회에서 주문 번호를 눌렀을 때 주문 상세 정보
+     * @param orderNo
+     * @param model
+     * @return
+     */
     @GetMapping("/detail/{orderNo}")
     public String orderDetail(@PathVariable int orderNo, Model model){
         log.info("주문번호>>>>>>>>>>>>>>>>>>> {}", orderNo);
@@ -43,4 +49,6 @@ public class OrderController {
         return "order/orderdetail";
 
     }
+
+
 }

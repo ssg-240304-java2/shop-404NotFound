@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{common/layouts/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>주문 상태 관리</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>주문번호</th>
+            <th>처리일자</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orderList}">
+            <td th:text="${order.orderNo}"></td>
+            <td th:text="${order.processedAt}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

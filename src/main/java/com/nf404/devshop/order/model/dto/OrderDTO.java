@@ -1,7 +1,7 @@
-package com.nf404.devshop.OrderSearch.model.dto;
+package com.nf404.devshop.order.model.dto;
 
 import lombok.*;
-
+import com.nf404.devshop.user.model.UserDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +16,6 @@ public class OrderDTO {
     private int orderTotalPrice;
     private LocalDateTime createdAt;
     private String orderStatus;
-    private List<UserDTO> userInfo;
+    private UserDTO userInfo;
     private List<OrderItemDTO> orderItems;
 }

@@ -85,6 +85,14 @@
         <li><a href="/users/register">새 회원 등록</a></li>
         <li><a href="/users/login">로그인</a></li>
     </ul>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>index</title>
+    </head>
+    <body>
+    <button onclick="location.href='/order/orderlist'">전체 주문 조회</button>
+    <button onclick="location.href='/order/orderstatus'">주문 관리</button>
 
     <div class="test-functions">
         <h2>테스트 기능</h2>
@@ -92,7 +100,6 @@
         <button onclick="testRandomUserGeneration()">랜덤 사용자 생성</button>
         <button onclick="testPerformance()">성능 테스트</button>
     </div>
-</div>
 
 <script>
     function testDatabaseConnection() {

@@ -1,8 +1,8 @@
-package com.nf404.devshop.OrderSearch.model.service;
+package com.nf404.devshop.order.model.service;
 
-import com.nf404.devshop.OrderSearch.model.dao.OrderMapper;
-import com.nf404.devshop.OrderSearch.model.dto.OrderDTO;
-import com.nf404.devshop.OrderSearch.model.dto.OrderItemDTO;
+import com.nf404.devshop.order.model.dao.OrderMapper;
+import com.nf404.devshop.order.model.dto.OrderDTO;
+import com.nf404.devshop.order.model.dto.OrderItemDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

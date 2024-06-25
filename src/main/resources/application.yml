@@ -8,9 +8,9 @@ spring:
   # driver config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: 
-    username: 
-    password: 
+    url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
+    username: devshop
+    password: 1234
 
 server:
   port: 8080
@@ -18,6 +18,8 @@ server:
 # mybatis config
 mybatis:
   mapper-locations: mappers/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
 logging:
   level:

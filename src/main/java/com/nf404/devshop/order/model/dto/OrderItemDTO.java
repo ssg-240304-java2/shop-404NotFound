@@ -1,4 +1,4 @@
-package com.nf404.devshop.OrderSearch.model.dto;
+package com.nf404.devshop.order.model.dto;
 
 import lombok.*;
 
