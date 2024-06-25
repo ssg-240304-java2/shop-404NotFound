@@ -8,9 +8,9 @@ spring:
   # driver config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
-    username: devshop
-    password: 1234
+    url: jdbc:mysql://localhost:3306/devshop
+    username: a
+    password: a
 
 server:
   port: 8080
