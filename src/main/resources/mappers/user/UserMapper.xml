@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.user.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="com.nf404.devshop.user.model.UserDTO">
+        <id property="userNo" column="user_no"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPw" column="user_pw"/>
+        <result property="userAddr" column="user_addr"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="userDate" column="user_date"/>
+        <result property="userRank" column="user_rank"/>
+    </resultMap>
+
+    <select id="getAllUsers" resultMap="UserResultMap">
+        SELECT * FROM tbl_user
+    </select>
+
+    <select id="getUserById" resultMap="UserResultMap">
+        SELECT * FROM tbl_user WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertUser" parameterType="com.nf404.devshop.user.model.UserDTO">
+        INSERT INTO tbl_user (user_id, user_pw, user_name, user_addr, user_phone, user_rank)
+        VALUES (#{userId}, #{userPw}, #{userName}, #{userAddr}, #{userPhone}, #{userRank})
+    </insert>
+
+    <update id="updateUser" parameterType="com.nf404.devshop.user.model.UserDTO">
+        UPDATE tbl_user
+        SET user_pw = #{userPw}, user_name = #{userName}, user_addr = #{userAddr},
+            user_phone = #{userPhone}, user_rank = #{userRank}
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUser">
+        DELETE FROM tbl_user WHERE user_id = #{userId}
+    </delete>
+
+    <select id="loginUser" resultMap="UserResultMap">
+        SELECT * FROM tbl_user WHERE user_id = #{userId} AND user_pw = #{userPw}
+    </select>
+
+    <select id="selectFilteredUsers" resultMap="UserResultMap">
+        SELECT * FROM tbl_user
+        <where>
+            <if test="userId != null and userId != ''">
+                AND user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="userRank != null">
+                AND user_rank = #{userRank}
+            </if>
+            <if test="startDate != null">
+                AND DATE(user_date) >= DATE(#{startDate})
+            </if>
+            <if test="endDate != null">
+                AND DATE(user_date) &lt;= DATE(#{endDate})
+            </if>
+        </where>
+        ORDER BY user_no
+    </select>
+
+
+
+</mapper>

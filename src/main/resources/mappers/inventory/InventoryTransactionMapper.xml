@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.inventory.transactions.InventoryTransactionMapper">
+
+    <!--    // history_code(PK) INT : 이력 코드-->
+    <!--    // executed_at TIMESTAMP : 수행 일시-->
+    <!--    // operated_quantity INT : 처리 수량-->
+    <!--    // task_id(FK) INT : 작업 코드-->
+    <!--    // product_code(FK) INT : 상품 코드-->
+    <!--    private int historyCode;-->
+    <!--    private Timestamp executedAt;-->
+    <!--    private int operatedQuantity;-->
+    <!--    //    private int taskId;-->
+
+    <!--    // use Association-->
+    <!--    private Task task;-->
+
+    <!--    private int productCode;-->
+
+    <!--    /**-->
+    <!--    * 전체 입출고 트랜잭션 로그 조회-->
+    <!--    * @return List<Transactions> 전체 입출고 트랜잭션 로그-->
+    <!--    */-->
+    <!--    List<Transactions> selectAllTransactionLogs();-->
+    <resultMap id="transactionResultMap" type="com.nf404.devshop.inventory.transactions.Transactions">
+        <id property="historyCode" column="history_code"/>
+        <result property="executedAt" column="executed_at"/>
+        <result property="operatedQuantity" column="operated_quantity"/>
+        <result property="productCode" column="product_code"/>
+        <association property="task" column="task_id" javaType="com.nf404.devshop.inventory.transactions.Task">
+            <id property="taskId" column="task_id"/>
+            <result property="taskName" column="task_name"/>
+        </association>
+    </resultMap>
+
+    <!--    selectAllTransactionLogs-->
+    <select id="selectAllTransactionLogs" resultMap="transactionResultMap">
+        select a.*, b.task_name
+        from tbl_inventory_transactions a
+            join tbl_inventory_tasks b
+    </select>
+
+<!--    deprecated..-->
+<!--    List<Transactions> selectTransactionLogsByPeriod(String start, String end);-->
+<!--    <select id="selectTransactionLogsByPeriod" resultMap="transactionResultMap">-->
+<!--        select *-->
+<!--        from tbl_inventory_transactions-->
+<!--        where executed_at between #{start} and #{end}-->
+<!--    </select>-->
+
+<!--    selectTransactionLogsByProduct-->
+<!--    List<Transactions> selectTransactionLogsByProduct(int productCode);-->
+    <select id="selectTransactionLogsByProduct" resultMap="transactionResultMap">
+        select *
+        from tbl_inventory_transactions
+        where product_code = #{productCode}
+    </select>
+
+<!--    insertInboundTransactionLog-->
+<!--    int insertInboundTransactionLog(int productCode, int operatedQuantity, int taskId);-->
+    <insert id="insertInboundTransactionLog">
+        insert into tbl_inventory_transactions (executed_at, operated_quantity, task_id, product_code)
+        values (now(), #{operatedQuantity}, #{taskId}, #{productCode})
+    </insert>
+
+<!--    int insertOutboundTransactionLog(int productCode, int operatedQuantity, int taskId);-->
+    <insert id="insertOutboundTransactionLog">
+        insert into tbl_inventory_transactions (executed_at, operated_quantity, task_id, product_code)
+        values (now(), #{operatedQuantity}, #{taskId}, #{productCode})
+    </insert>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.inventory.stock.StockMapper">
+    <resultMap id="stockResultMap" type="com.nf404.devshop.inventory.stock.Stock">
+        <id property="productCode" column="product_code" />
+        <result property="stockQuantity" column="stock_quantity" />
+    </resultMap>
+
+    <select id="selectStockByProductCode" resultMap="stockResultMap">
+        select *
+        from tbl_inventory_stock
+        where product_code = #{productCode}
+    </select>
+
+    <insert id="insertNewStockTuple">
+        insert into tbl_inventory_stock(product_code)
+        values (#{productCode})
+    </insert>
+
+    <update id="updateStockInbound">
+        update tbl_inventory_stock
+        set stock_quantity = #{quantity}
+        where product_code = #{productCode}
+    </update>
+
+    <update id="updateStockOutbound">
+        update tbl_inventory_stock
+        set stock_quantity = #{quantity}
+        where product_code = #{productCode}
+    </update>
+
+<!--    selectAllStocks-->
+    <select id="selectAllStocks" resultMap="stockResultMap">
+        select *
+        from tbl_inventory_stock
+    </select>
+</mapper>

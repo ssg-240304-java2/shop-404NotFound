@@ -1,4 +1,4 @@
-package com.nf404.devshop.config;
+package com.nf404.devshop.user.config;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;

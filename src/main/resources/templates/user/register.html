@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 등록 - 테스트 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .test-functions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        .test-functions h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: red;
+            background-color: #ffe6e6;
+            border: 1px solid red;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            color: green;
+            background-color: #e6ffe6;
+            border: 1px solid green;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .nav-menu {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        .menu-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .menu-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="nav-menu">
+    <a href="/" class="menu-button">메인 메뉴로 돌아가기</a>
+</div>
+<div class="container">
+    <h1>회원 등록 (테스트 페이지)</h1>
+
+    <div id="message" style="display: none;"></div>
+
+    <form id="registerForm" th:action="@{/users/register}" th:object="${user}" method="post">
+        <div class="form-group">
+            <label for="userId">사용자 ID:</label>
+            <input type="text" id="userId" th:field="*{userId}" required>
+        </div>
+        <div class="form-group">
+            <label for="userPw">비밀번호:</label>
+            <input type="password" id="userPw" th:field="*{userPw}" required>
+        </div>
+        <div class="form-group">
+            <label for="userName">이름:</label>
+            <input type="text" id="userName" th:field="*{userName}" required>
+        </div>
+        <div class="form-group">
+            <label for="userAddr">주소:</label>
+            <input type="text" id="userAddr" th:field="*{userAddr}">
+        </div>
+        <div class="form-group">
+            <label for="userPhone">전화번호:</label>
+            <input type="text" id="userPhone" th:field="*{userPhone}">
+        </div>
+        <button type="submit">등록</button>
+    </form>
+
+    <div class="test-functions">
+        <h2>테스트 기능</h2>
+        <button onclick="fillRandomData()">랜덤 데이터 채우기</button>
+        <button onclick="testDuplicateId()">중복 ID 테스트</button>
+        <button onclick="testInvalidData()">유효하지 않은 데이터 테스트</button>
+        <button onclick="testPerformance()">대량 등록 테스트</button>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function showMessage(message, isError) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = message;
+        messageDiv.className = isError ? 'error' : 'success';
+        messageDiv.style.display = 'block';
+    }
+
+    function fillRandomData() {
+        document.getElementById('userId').value = 'user' + Math.floor(Math.random() * 10000);
+        document.getElementById('userPw').value = 'pass' + Math.floor(Math.random() * 10000);
+        document.getElementById('userName').value = '테스트사용자' + Math.floor(Math.random() * 100);
+        document.getElementById('userAddr').value = '서울시 테스트구 테스트동 ' + Math.floor(Math.random() * 100) + '번지';
+        document.getElementById('userPhone').value = '010' + Math.floor(Math.random() * 100000000);
+    }
+
+    function testDuplicateId() {
+        const userId = document.getElementById('userId').value;
+        showMessage(`ID '${userId}'의 중복 여부를 확인합니다. (서버 구현 필요)`, false);
+    }
+
+    function testInvalidData() {
+        document.getElementById('userId').value = '';
+        document.getElementById('userPw').value = 'short';
+        document.getElementById('userName').value = '';
+        document.getElementById('userPhone').value = 'invalid-phone';
+        showMessage('유효하지 않은 데이터로 폼을 채웠습니다. 제출해보세요.', false);
+    }
+
+    function testPerformance() {
+        const count = prompt('몇 명의 사용자를 생성하시겠습니까?', '100');
+        if (count) {
+            showMessage(`${count}명의 사용자를 생성하는 테스트를 시작합니다. (서버 구현 필요)`, false);
+        }
+    }
+
+    // 폼 제출 이벤트 리스너 제거 (원래의 등록 기능 유지)
+</script>
+</body>
+</html>
