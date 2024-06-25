@@ -69,7 +69,8 @@ public class ProductController {
         ImageDto imageDto = null;
 
         try {
-            imageDto = saveImageUtil.upload(imageFile, "product");
+            if (!imageFile.isEmpty()) imageDto = saveImageUtil.upload(imageFile, "product");
+            else imageDto = new ImageDto("", "");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
