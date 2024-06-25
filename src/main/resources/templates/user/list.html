@@ -69,6 +69,16 @@
         .action-buttons {
             margin-top: 20px;
         }
+        .action-button {
+            background: none;
+            border: none;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 1em;  /* 기본 폰트 크기 사용 */
+            padding: 0;
+            font-family: inherit;  /* 부모 요소의 폰트 패밀리 상속 */
+        }
         .action-buttons a, .action-buttons button {
             display: inline-block;
             padding: 10px 15px;
@@ -155,10 +165,14 @@
         <td th:text="${user?.userDate}"></td>
         <td th:text="${user?.userRank}"></td>
         <td>
-            <a th:if="${user?.userId != null}" th:href="@{/users/edit/{id}(id=${user.userId})}" class="edit-link">수정</a>
-            <a th:if="${user?.userId != null}" th:href="@{/users/delete/{id}(id=${user.userId})}"
-               onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</a>
+            <a th:if="${user?.userId != null}" th:href="@{/users/edit/{id}(id=${user.userId})}" class="action-button">수정</a>
+            <form th:if="${user?.userId != null}" th:action="@{/users/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="userId" th:value="${user.userId}" />
+                <button type="submit" onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');" 
+                        class="action-button">삭제</button>
+            </form>
         </td>
+        
     </tr>
     </tbody>
 </table>

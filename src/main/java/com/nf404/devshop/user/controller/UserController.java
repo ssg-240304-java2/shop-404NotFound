@@ -117,9 +117,22 @@ public class UserController {
         return "redirect:/users/list";
     }
 
-    @GetMapping("/delete/{userId}")
-    public String deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
+    // get 메서드 삭제
+    // @GetMapping("/delete/{userId}")
+    // public String deleteUser(@PathVariable String userId) {
+    //     userService.deleteUser(userId);
+    //     return "redirect:/users/list";
+    // }
+
+    // POST 메서드로 변경
+    @PostMapping("/delete")
+    public String deleteUser(@RequestParam String userId, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUser(userId);
+            redirectAttributes.addFlashAttribute("successMessage", "사용자가 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "사용자 삭제 중 오류가 발생했습니다: " + e.getMessage());
+        }
         return "redirect:/users/list";
     }
 
