@@ -6,6 +6,7 @@ import com.nf404.devshop.user.model.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -105,6 +106,42 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectFilteredUsers(params);
     }
 
+    /**
+     * 사용자의 등급을 업데이트합니다.
+     * 이 메서드는 public으로 선언되어 외부에서 접근 가능하며, @Transactional 어노테이션이 적용됩니다.
+     * 주요 역할:
+     * 1. 사용자 존재 여부를 확인합니다.
+     * 2. 트랜잭션 경계를 설정합니다.
+     * 3. 실제 업데이트 로직을 수행하는 내부 메서드를 호출합니다.
+     *
+     * 이렇게 분리함으로써 트랜잭션 관리를 명확히 하고,
+     * 같은 클래스 내에서의 @Transactional 메서드 호출로 인한 문제를 방지합니다.
+     */
+    @Override
+    @Transactional
+    public void updateUserRank(String userId, int newRank) {
+        UserDTO user = getUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        updateUserRankInternal(user, newRank);
+    }
+    /**
+     * 사용자의 등급을 실제로 업데이트하는 내부 메서드입니다.
+     * 이 메서드는 private으로 선언되어 클래스 내부에서만 접근 가능합니다.
+     * 주요 역할:
+     * 1. 사용자 객체의 등급을 새로운 등급으로 설정합니다.
+     * 2. 데이터베이스에 업데이트된 사용자 정보를 저장합니다.
+     * 3. 등급 업데이트 결과를 로그로 기록합니다.
+     *
+     * 이 메서드는 updateUserRank 메서드의 트랜잭션 컨텍스트 내에서 실행되므로,
+     * 별도의 @Transactional 어노테이션이 필요하지 않습니다.
+     */
+    private void updateUserRankInternal(UserDTO user, int newRank) {
+        user.setUserRank(newRank);
+        userMapper.updateUser(user);
+        log.info("User rank updated: userId={}, newRank={}", user.getUserId(), newRank);
+    }
 
 
 }
