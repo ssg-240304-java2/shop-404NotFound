@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{common/layouts/default}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .container_c {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            height: 80%;
+        }
+        .left {
+            grid-row: 1/3;
+            grid-column: 1/2;
+        }
+        .right {
+            grid-row:1/3;
+            grid-colum: 2/3;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container_c">
+        <div class="left">
+            <h1>주문관리</h1>
+            <table>
+                <tr>
+                    <th>주문번호</th>
+                    <th>회원번호</th>
+                    <th>회원 ID</th>
+                    <th>주문금액</th>
+                    <th>주문일자</th>
+                </tr>
+                <tr th:each="order : ${orderList}">
+                    <td>
+                        <!--주문 전체 리스트에서 주문 번호를 선택하면 해당 주문 번호의 상세 주문을 볼 수 있는 페이지로 넘어가도록 작성
+                        값을 따로 입력받는 것이 아닌 url형식처럼 넘어가기에 pathvariable방식을 사용
+                        이때 {orderNo가 실제로 넘어가는 값이 됨}
+                    -->
+                        <a th:href="@{/order/detail/{orderNo}(orderNo=${order.orderNo})}" th:text="${order.orderNo}"></a>
+                    </td>
+                    <td th:text="${order.userNo}"></td>
+                    <td>
+                        <a th:href="@{/order/user/{userId}(userId=${order.userInfo.get(0).userId})}" th:text="${order.userInfo.get(0).userId}"></a>
+                    </td>
+                    <td th:text="${order.orderTotalPrice}"></td>
+                    <td th:text="${order.createdAt}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
