@@ -1,4 +1,4 @@
-package com.nf404.devshop.model;
+package com.nf404.devshop.user.model;
 
 import lombok.*;
 

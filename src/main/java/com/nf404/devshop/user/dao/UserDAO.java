@@ -3,9 +3,9 @@
  * 이 인터페이스는 사용자 데이터에 대한 CRUD(Create, Read, Update, Delete) 작업을 제공.
  * 사용자 데이터는 UserDTO 객체로 표현됩니다.
  */
-package com.nf404.devshop.dao;
+package com.nf404.devshop.user.dao;
 
-import com.nf404.devshop.model.UserDTO;
+import com.nf404.devshop.user.model.UserDTO;
 import java.util.List;
 
 public interface UserDAO {

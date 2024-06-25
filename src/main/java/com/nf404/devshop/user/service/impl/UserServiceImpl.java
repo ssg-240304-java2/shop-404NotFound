@@ -1,9 +1,9 @@
-package com.nf404.devshop.service.impl;
+package com.nf404.devshop.user.service.impl;
 
-import com.nf404.devshop.dao.UserDAO;
-import com.nf404.devshop.mapper.UserMapper;
-import com.nf404.devshop.model.UserDTO;
-import com.nf404.devshop.service.UserService;
+import com.nf404.devshop.user.dao.UserDAO;
+import com.nf404.devshop.user.mapper.UserMapper;
+import com.nf404.devshop.user.service.UserService;
+import com.nf404.devshop.user.model.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

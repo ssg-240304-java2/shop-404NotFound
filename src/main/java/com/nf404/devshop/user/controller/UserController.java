@@ -1,7 +1,7 @@
-package com.nf404.devshop.controller;
+package com.nf404.devshop.user.controller;
 
-import com.nf404.devshop.model.UserDTO;
-import com.nf404.devshop.service.UserService;
+import com.nf404.devshop.user.service.UserService;
+import com.nf404.devshop.user.model.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

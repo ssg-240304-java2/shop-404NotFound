@@ -1,6 +1,6 @@
-package com.nf404.devshop.service;
+package com.nf404.devshop.user.service;
 
-import com.nf404.devshop.model.UserDTO;
+import com.nf404.devshop.user.model.UserDTO;
 
 import java.time.LocalDate;
 import java.util.List;

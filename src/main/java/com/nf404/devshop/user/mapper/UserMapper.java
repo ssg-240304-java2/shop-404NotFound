@@ -1,10 +1,9 @@
-package com.nf404.devshop.mapper;
+package com.nf404.devshop.user.mapper;
 
-import com.nf404.devshop.model.UserDTO;
+import com.nf404.devshop.user.model.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 

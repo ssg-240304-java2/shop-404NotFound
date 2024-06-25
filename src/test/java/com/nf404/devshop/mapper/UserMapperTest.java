@@ -1,6 +1,7 @@
 package com.nf404.devshop.mapper;
 
-import com.nf404.devshop.model.UserDTO;
+import com.nf404.devshop.user.mapper.UserMapper;
+import com.nf404.devshop.user.model.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

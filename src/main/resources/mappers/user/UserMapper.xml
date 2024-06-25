@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.nf404.devshop.mapper.UserMapper">
-    <resultMap id="UserResultMap" type="com.nf404.devshop.model.UserDTO">
+<mapper namespace="com.nf404.devshop.user.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="com.nf404.devshop.user.model.UserDTO">
         <id property="userNo" column="user_no"/>
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
@@ -20,12 +20,12 @@
         SELECT * FROM tbl_user WHERE user_id = #{userId}
     </select>
 
-    <insert id="insertUser" parameterType="com.nf404.devshop.model.UserDTO">
+    <insert id="insertUser" parameterType="com.nf404.devshop.user.model.UserDTO">
         INSERT INTO tbl_user (user_id, user_pw, user_name, user_addr, user_phone, user_rank)
         VALUES (#{userId}, #{userPw}, #{userName}, #{userAddr}, #{userPhone}, #{userRank})
     </insert>
 
-    <update id="updateUser" parameterType="com.nf404.devshop.model.UserDTO">
+    <update id="updateUser" parameterType="com.nf404.devshop.user.model.UserDTO">
         UPDATE tbl_user
         SET user_pw = #{userPw}, user_name = #{userName}, user_addr = #{userAddr},
             user_phone = #{userPhone}, user_rank = #{userRank}
