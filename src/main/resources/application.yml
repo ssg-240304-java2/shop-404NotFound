@@ -8,15 +8,9 @@ spring:
   # driver config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-<<<<<<< Updated upstream
-    url: 
-    username: 
-    password: 
-=======
     url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
     username: devshop
     password: 1234
->>>>>>> Stashed changes
 
 server:
   port: 8080
@@ -24,11 +18,8 @@ server:
 # mybatis config
 mybatis:
   mapper-locations: mappers/**/*.xml
-<<<<<<< Updated upstream
 
 logging:
   level:
     com.nf404.devshop: DEBUG
     com.nf404.devshop.mapper: DEBUG
-=======
->>>>>>> Stashed changes
