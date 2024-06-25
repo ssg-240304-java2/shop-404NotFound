@@ -6,6 +6,12 @@
     <title>Developer Item Shop</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/product/product-list.css">
+    <style>
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
 </head>
 
 <body>
@@ -72,9 +78,9 @@
         <th><button class="sort">등록 일자</button></th>
     </tr>
 
-    <tr th:each="product : ${ productList }">
+    <tr th:each="product : ${productList}">
         <td th:text="${product.productCode}"></td>
-        <td><img th:src="${product.image.uuidFilename}" alt="준비중 입니다.."></td>
+        <td><img th:src="@{${product.image.uuidFilename}}" alt="준비중 입니다.."></td>
         <td th:text="${product.productName}"></td>
         <td th:text="${product.price}"></td>
         <td th:text="${product.category.categoryName}"></td>

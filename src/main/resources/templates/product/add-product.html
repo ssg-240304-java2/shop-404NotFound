@@ -12,7 +12,7 @@
         <form action="/product/add-product" method="post" id="productAddForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="productName">상품 이름</label>
-                <input type="text" id="productName" name="productName">
+                <input type="text" id="productName" name="productName" required>
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -26,14 +26,14 @@
                 </div>
                 <div class="form-group">
                     <label for="subCategoryCode">서브 카테고리</label>
-                    <select id="subCategoryCode" name="subCategoryCode">
+                    <select id="subCategoryCode" name="subCategoryCode" required>
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="price">상품 가격</label>
-                <input type="number" id="price" name="price" min="0">
+                <input type="number" id="price" name="price" min="0" required>
             </div>
 
             <div class="form-group">
