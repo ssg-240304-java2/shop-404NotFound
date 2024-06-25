@@ -14,6 +14,11 @@
         where product_code = #{productCode}
     </select>
 
+    <insert id="insertNewStockTuple">
+        insert into tbl_inventory_stock(product_code)
+        values (#{productCode})
+    </insert>
+
     <update id="updateStockInbound">
         update tbl_inventory_stock
         set stock_quantity = #{quantity}

@@ -43,4 +43,11 @@ public interface StockMapper {
      * @return List<Stock> 전체 재고 목록
      */
     List<Stock> selectAllStocks();
+
+    /**
+     * 재고 테이블에 새로운 상품 코드에 대한 재고 튜플을 추가한다. <br>
+     * 초깃값은 0으로 설정한다.
+     * @param productCode 상품 코드
+     */
+    void insertNewStockTuple(int productCode);
 }

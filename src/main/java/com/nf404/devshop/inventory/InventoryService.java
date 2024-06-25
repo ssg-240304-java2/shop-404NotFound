@@ -90,4 +90,9 @@ public class InventoryService {
     public List<Transactions> getAllTransactionLogs() {
         return inventoryTransactionMapper.selectAllTransactionLogs();
     }
+
+    @Transactional
+    public void insertNewStockTuple(int productCode) {
+        stockMapper.insertNewStockTuple(productCode);
+    }
 }
