@@ -4,11 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Getter
-@Setter
 public class BoardResponse {
 
     private Long boardId;                  // 게시글번호

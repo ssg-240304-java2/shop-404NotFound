@@ -2,10 +2,6 @@ package com.nf404.devshop.board.model.dto;
 
 import lombok.*;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Getter
 @Setter
 public class BoardRequest { // 게시글생성과 수정에 사용할 요청클래스

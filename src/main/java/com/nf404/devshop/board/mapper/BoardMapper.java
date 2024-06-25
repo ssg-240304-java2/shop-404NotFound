@@ -1,4 +1,4 @@
-package com.nf404.devshop.board.model.dao;
+package com.nf404.devshop.board.mapper;
 
 import com.nf404.devshop.board.model.dto.BoardRequest;
 import com.nf404.devshop.board.model.dto.BoardResponse;
