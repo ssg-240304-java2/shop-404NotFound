@@ -95,4 +95,16 @@ class InventoryServiceTest {
             System.out.println(transaction);
         }
     }
+
+    @Test
+    @DisplayName("상품 등록 시 재고량을 관리하는 테이블에 기본값 튜플 추가 테스트")
+    void insertNewStockTuple() {
+        int productCode = 20;
+        inventoryService.insertNewStockTuple(productCode);
+
+        Stock stock = inventoryService.getStockByProductId(productCode);
+        System.out.println(stock);
+
+        Assertions.assertNotNull(stock);
+    }
 }
