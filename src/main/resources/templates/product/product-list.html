@@ -5,70 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Developer Item Shop</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        .form-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .form-row .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        /* 추가된 스타일 */
-        .form-group.radio-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 0;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/product/product-list.css">
 </head>
+
 <body>
 <div class="form-container">
     <form action="/product/product-list" method="GET" id="productSearchForm">
@@ -121,28 +60,33 @@
     </form>
 </div>
 
+<table>
+    <tr>
+        <th><button class="sort">상품 코드</button></th>
+        <th>이미지</th>
+        <th><button class="sort">상품 이름</button></th>
+        <th><button class="sort">가격</button></th>
+        <th>카테고리</th>
+        <th>판매 여부</th>
+        <th>상품 설명</th>
+        <th><button class="sort">등록 일자</button></th>
+    </tr>
+
+    <tr th:each="product : ${ productList }">
+        <td th:text="${product.productCode}"></td>
+        <td><img th:src="${product.image.uuidFilename}" alt="준비중 입니다.."></td>
+        <td th:text="${product.productName}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.category.categoryName}"></td>
+        <td th:text="${product.isDisplayed}"></td>
+        <td th:text="${product.productDesc}"></td>
+        <td th:text="${product.registrationDate}"></td>
+    </tr>
+</table>
+
+<script src="/js/product/showCategory.js"></script>
 <script>
     $(document).ready(function() {
-        $('#mainCategoryCode').change(function() {
-            var parentId = $(this).val();
-            if (parentId) {
-                $.ajax({
-                    url: '/category/subcategories',
-                    type: 'GET',
-                    data: { parentId: parentId },
-                    success: function(data) {
-                        var subCategorySelect = $('#subCategoryCode');
-                        subCategorySelect.empty();
-                        subCategorySelect.append('<option value="">Select Sub Category</option>');
-                        $.each(data, function(index, subCategory) {
-                            subCategorySelect.append('<option value="' + subCategory.categoryCode + '">' + subCategory.categoryName + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#subCategoryCode').html('<option value="">Select Sub Category</option>');
-            }
-        });
 
         $('#productSearchForm').submit(function(event) {
             var minPrice = $('#minPrice').val();
@@ -162,30 +106,6 @@
         });
     });
 </script>
-
-<table>
-    <tr>
-        <th>상품 코드</th>
-        <th>상품 이름</th>
-        <th>가격</th>
-        <th>카테고리</th>
-        <th>판매 여부</th>
-        <th>상품 설명</th>
-        <th>이미지 uuid</th>
-        <th>등록 일자</th>
-    </tr>
-
-    <tr th:each="product : ${ productList }">
-        <td th:text="${product.productCode}"></td>
-        <td th:text="${product.productName}"></td>
-        <td th:text="${product.price}"></td>
-        <td th:text="${product.categoryName}"></td>
-        <td th:text="${product.isDisplayed}"></td>
-        <td th:text="${product.productDesc}"></td>
-        <td th:text="${product.uuidFilename}"></td>
-        <td th:text="${product.registrationDate}"></td>
-    </tr>
-</table>
 
 </body>
 </html>
