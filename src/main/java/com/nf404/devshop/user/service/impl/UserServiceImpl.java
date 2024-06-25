@@ -1,6 +1,5 @@
 package com.nf404.devshop.user.service.impl;
 
-import com.nf404.devshop.user.dao.UserDAO;
 import com.nf404.devshop.user.mapper.UserMapper;
 import com.nf404.devshop.user.service.UserService;
 import com.nf404.devshop.user.model.UserDTO;
@@ -22,20 +21,16 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDAO userDAO;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
     }
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Override
     public List<UserDTO> getAllUsers() {
-        List<UserDTO> users = userDAO.getAllUsers();
+        List<UserDTO> users = userMapper.getAllUsers();
         log.info("Retrieved users: {}", users);
         if (users == null || users.isEmpty()) {
             log.warn("No users found or users list is null");
@@ -45,20 +40,20 @@ public class UserServiceImpl implements UserService {
                 log.info("User: {}", user);
             }
         }
-        return users;
+        return userMapper.getAllUsers();
     }
 
 
     @Override
     public UserDTO getUserById(String userId) {
-        UserDTO user = userDAO.getUserById(userId);
+        UserDTO user = userMapper.getUserById(userId);
         log.info("Retrieved user: {}", user);  // 객체의 내용을 로그로 출력
         if (user == null) {
             log.warn("User not found with id: {}", userId);
         } else {
             log.info("User found: id={}, name={}", user.getUserId(), user.getUserName());
         }
-        return user;
+        return userMapper.getUserById(userId);
     }
 
 
@@ -68,19 +63,19 @@ public class UserServiceImpl implements UserService {
         // 예: 비밀번호 암호화, 유효성 검사 등..
         // 기본 랭크 설정 (예: 1)
         user.setUserRank(1);
-        userDAO.insertUser(user);
+        userMapper.insertUser(user);
     }
 
     @Override
     public void updateUser(UserDTO user) {
         // 비즈니스 로직 추가 예정.
         // 예: 변경된 필드만 업데이트하는 로직 등
-        userDAO.updateUser(user);
+        userMapper.updateUser(user);
     }
 
     @Override
     public void deleteUser(String userId) {
-        userDAO.deleteUser(userId);
+        userMapper.deleteUser(userId);
     }
 
     @Override
