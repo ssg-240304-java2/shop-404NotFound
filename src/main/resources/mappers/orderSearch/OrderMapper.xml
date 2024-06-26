@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.order.model.dao.OrderMapper">
+    <resultMap id="orderResultMap" type="com.nf404.devshop.order.model.dto.OrderDTO">
+        <id property="orderNo" column="ORDER_NO"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="orderTotalPrice" column="ORDER_TOTALPRICE"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="orderStatus" column="ORDER_STATUS"/>
+        <association property="userInfo" resultMap="userInfoMap"/>
+        <collection property="orderItems" resultMap="orderItemsMap"/>
+    </resultMap>
+    <resultMap id="orderItemsMap" type="com.nf404.devshop.order.model.dto.OrderItemDTO">
+        <id property="orderNo" column="ORDER_NO"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="productCode" column="PRODUCT_CODE"/>
+        <result property="orderItemQuantity" column="ORDER_ITEM_QUANTITY"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="price" column="PRICE"/>
+    </resultMap>
+    <resultMap id="userInfoMap" type="com.nf404.devshop.user.model.UserDTO">
+        <id property="userNo" column="USER_NO"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="userPw" column="USER_PW"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userAddr" column="USER_ADDR"/>
+        <result property="userPhone" column="USER_PHONE"/>
+        <result property="userDate" column="USER_DATE"/>
+        <result property="userRank" column="USER_RANK"/>
+    </resultMap>
+
+    <select id="findAllOrder" resultMap="orderResultMap">
+        SELECT
+        o.ORDER_NO,
+        o.USER_NO,
+        u.USER_ID,
+        u.USER_NAME,
+        o.ORDER_TOTALPRICE,
+        o.CREATED_AT,
+        o.ORDER_STATUS,
+        oi.PRODUCT_CODE,
+        oi.ORDER_ITEM_QUANTITY,
+        p.PRODUCT_NAME,
+        p.PRICE
+        FROM
+        tbl_order o
+        JOIN
+        tbl_user u ON o.USER_NO = u.USER_NO
+        LEFT JOIN
+        tbl_orderitem oi ON o.ORDER_NO = oi.ORDER_NO
+        LEFT JOIN
+        tbl_product p ON oi.PRODUCT_CODE = p.PRODUCT_CODE
+        ORDER BY
+        o.ORDER_NO
+    </select>
+    <select id="findOrderDetailByOrderNo" resultType="com.nf404.devshop.order.model.dto.OrderItemDTO">
+        SELECT o.order_no,u.user_no, i.product_code, p.product_name, i.order_item_quantity, p.price
+        FROM tbl_order o
+        JOIN tbl_user u ON o.user_no = u.user_no
+        JOIN tbl_orderitem i ON o.order_no = i.order_no
+        JOIN tbl_product p ON i.product_code = p.product_code
+        WHERE o.order_no = #{ orderNo }
+    </select>
+</mapper>
