@@ -13,6 +13,7 @@
 
         <input type="hidden" name="productCode" th:value="${productInfo.productCode}">
         <input type="hidden" name="thumbnailPath" th:value="${productInfo.image.thumbnailPath}">
+        <input type="hidden" name ="uuidFilename" th:value="${productInfo.image.uuidFilename}">
 
         <div class="form-group">
             <label for="productName">상품 이름</label>
@@ -57,9 +58,14 @@
             <label for="imageFile">이미지</label>
             <input type="file" id="imageFile" name="imageFile">
         </div>
+        <div class="form-group">
+            <label for="originImage">기존 이미지</label>
+            <img th:src="@{${productInfo.image.uuidFilename}}" id="originImage" alt="사진 없음">
+
+        </div>
         <div>
             <button type="submit">수정</button>
-            <button type="button"    id="cancelOperation">취소</button>
+            <button type="button" id="cancelOperation">취소</button>
         </div>
     </form>
 </div>

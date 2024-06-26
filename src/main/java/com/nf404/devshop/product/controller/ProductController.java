@@ -8,7 +8,7 @@ import com.nf404.devshop.product.model.dto.req.ProductUpdateReqDto;
 import com.nf404.devshop.product.model.dto.res.ProductReadResDto;
 import com.nf404.devshop.product.service.CategoryService;
 import com.nf404.devshop.product.service.ProductService;
-import com.nf404.devshop.global.utility.SaveImageUtil;
+import com.nf404.devshop.global.utility.ImageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,14 +27,14 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final SaveImageUtil saveImageUtil;
+    private final ImageUtil imageUtil;
     private final String filePath = "http://ssg-java2.iptime.org/nf404/product/";
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService, SaveImageUtil saveImageUtil) {
+    public ProductController(ProductService productService, CategoryService categoryService, ImageUtil imageUtil) {
         this.productService = productService;
         this.categoryService = categoryService;
-        this.saveImageUtil = saveImageUtil;
+        this.imageUtil = imageUtil;
     }
 
     @GetMapping("/product-list")
@@ -43,7 +43,8 @@ public class ProductController {
         List<ProductReadResDto> productList = productService.getProductInfo(productCriteria);
 
         for(ProductReadResDto productReadResDto : productList) {
-            String finalFilename = filePath + productReadResDto.getImage().getUuidFilename();
+//            String finalFilename = filePath + productReadResDto.getImage().getUuidFilename();
+            String finalFilename = imageUtil.convertFilenameToUrl(filePath, productReadResDto.getImage().getUuidFilename());
             productReadResDto.getImage().setUuidFilename(finalFilename);
         }
 
@@ -67,7 +68,7 @@ public class ProductController {
         ImageDto imageDto = null;
 
         try {
-            if (!imageFile.isEmpty()) imageDto = saveImageUtil.upload(imageFile, "product");
+            if (!imageFile.isEmpty()) imageDto = imageUtil.upload(imageFile, "product");
             else imageDto = new ImageDto("", "");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -78,21 +79,11 @@ public class ProductController {
         return "redirect:/product/register";
     }
 
-    @PostMapping("/disable-product")
-    public String deleteProduct(@RequestParam("selectedProduct[]") List<Integer> productCodeList,
-                                RedirectAttributes redirectAttributes) {
-
-        productService.updateProductStatusInfo(productCodeList);
-        redirectAttributes.addFlashAttribute("successMessage", "상품의 판매상태가 성공적으로 변경 되었습니다!");
-        return "redirect:/product/product-list";
-    }
-
     @GetMapping("/update")
     public String updateProductPage(@RequestParam("productCode") Integer productCode, Model model) {
 
         ProductReadResDto productInfo = productService.getProductInfoByCode(productCode);
-
-        String finalFilename = filePath + productInfo.getImage().getUuidFilename();
+        String finalFilename = imageUtil.convertFilenameToUrl(filePath, productInfo.getImage().getUuidFilename());
         productInfo.getImage().setUuidFilename(finalFilename);
 
         model.addAttribute("productInfo", productInfo);
@@ -105,12 +96,21 @@ public class ProductController {
     @PostMapping("/update")
     public String updateProductInfo(@ModelAttribute ProductUpdateReqDto productUpdateReqDto,
                                     @RequestParam("imageFile") MultipartFile imageFile,
+                                    @RequestParam("uuidFilename") String originalFileUrl,
                                     RedirectAttributes redirectAttributes) {
+
         ImageDto imageDto = null;
+        String filename = imageUtil.convertUrlToFilename(originalFileUrl);
+        log.info("[filename] : {}", filename);
 
         try {
-            if (!imageFile.isEmpty()) imageDto = saveImageUtil.upload(imageFile, "product");
+            if (!imageFile.isEmpty()) {
+                imageDto = imageUtil.upload(imageFile, "product");
+                if(!filename.isEmpty())
+                    imageUtil.deleteFile(filename, "product");
+            }
             else imageDto = new ImageDto("", "");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -118,6 +118,21 @@ public class ProductController {
         productService.updateProductInfo(productUpdateReqDto, imageDto);
 
         redirectAttributes.addFlashAttribute("successMessage", "상품 정보가 성공적으로 변경 되었습니다!");
+        return "redirect:/product/product-list";
+    }
+
+    /***
+     * delete
+     * @param productCodeList
+     * @param redirectAttributes
+     * @return
+     */
+    @PostMapping("/disable-product")
+    public String deleteProduct(@RequestParam("selectedProduct[]") List<Integer> productCodeList,
+                                RedirectAttributes redirectAttributes) {
+
+        productService.updateProductStatusInfo(productCodeList);
+        redirectAttributes.addFlashAttribute("successMessage", "상품의 판매상태가 성공적으로 변경 되었습니다!");
         return "redirect:/product/product-list";
     }
 }
