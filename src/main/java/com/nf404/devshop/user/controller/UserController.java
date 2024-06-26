@@ -29,8 +29,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // 템플릿 메인 페이지
-
+    // 이하 템플릿에 적용될 객체들
 
     @GetMapping("/list")
     public String listUsers(
@@ -40,33 +39,49 @@ public class UserController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             Model model) {
-        log.info("Search parameters - userId: {}, userName: {}, userRank: {}, startDate: {}, endDate: {}",
-                userId, userName, userRank, startDate, endDate);
 
-        List<UserDTO> users;
-        try {
-            if (userId != null || userName != null || userRank != null || startDate != null || endDate != null) {
-                // 검색 조건이 있는 경우
-                users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
-            } else {
-                // 검색 조건이 없는 경우 (기존 로직)
-                users = userService.getAllUsers();
-            }
-
-            if (users == null) {
-                users = new ArrayList<>(); // null 대신 빈 리스트 사용
-            }
-            log.info("Retrieved users count: {}", users.size());
-        } catch (Exception e) {
-            log.error("Error fetching users: ", e);
-            users = new ArrayList<>();
-            model.addAttribute("errorMessage", "사용자 정보를 가져오는 중 오류가 발생했습니다.");
-        }
-
-        log.info("Users list size: {}", users.size());
+        List<UserDTO> users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
         model.addAttribute("users", users);
-        return "user/list";
+        return "user/user_list";
     }
+
+
+//      이전 기능
+//    @GetMapping("/list")
+//    public String listUsers(
+//            @RequestParam(required = false) String userId,
+//            @RequestParam(required = false) String userName,
+//            @RequestParam(required = false) Integer userRank,
+//            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+//            Model model) {
+//        log.info("Search parameters - userId: {}, userName: {}, userRank: {}, startDate: {}, endDate: {}",
+//                userId, userName, userRank, startDate, endDate);
+//
+//        List<UserDTO> users;
+//        try {
+//            if (userId != null || userName != null || userRank != null || startDate != null || endDate != null) {
+//                // 검색 조건이 있는 경우
+//                users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
+//            } else {
+//                // 검색 조건이 없는 경우 (기존 로직)
+//                users = userService.getAllUsers();
+//            }
+//
+//            if (users == null) {
+//                users = new ArrayList<>(); // null 대신 빈 리스트 사용
+//            }
+//            log.info("Retrieved users count: {}", users.size());
+//        } catch (Exception e) {
+//            log.error("Error fetching users: ", e);
+//            users = new ArrayList<>();
+//            model.addAttribute("errorMessage", "사용자 정보를 가져오는 중 오류가 발생했습니다.");
+//        }
+//
+//        log.info("Users list size: {}", users.size());
+//        model.addAttribute("users", users);
+//        return "user/user_list";
+//    }
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -138,6 +153,7 @@ public class UserController {
         }
         return "redirect:/users/list";
     }
+
 
     @GetMapping("/login")
     public String showLoginForm() {
