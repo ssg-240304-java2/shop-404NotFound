@@ -53,9 +53,6 @@ public interface UserService {
      * 
      * @param userId 삭제할 사용자의 ID
      */
-    @Transactional
-    void deleteUser(String userId);
-
     /**
      * 사용자 로그인 처리
      * 

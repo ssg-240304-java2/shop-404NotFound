@@ -42,12 +42,12 @@ public interface UserMapper {
      */
     void updateUser(UserDTO user);
 
-    /**
-     * 사용자 정보를 삭제
-     * 
-     * @param userId 삭제할 사용자 ID
-     */
-    void deleteUser(@Param("userId") String userId);
+//    /**
+//     * 사용자 정보를 삭제
+//     *
+//     * @param userId 삭제할 사용자 ID
+//     */
+//    void deleteUser(@Param("userId") String userId);
 
     /**
      * 사용자 ID와 비밀번호로 사용자 정보를 조회
