@@ -227,10 +227,13 @@
 
         <td>
             <a th:if="${user?.userId != null}" th:href="@{/users/edit/{id}(id=${user.userId})}" class="edit-link">수정</a>
-            <a th:if="${user?.userId != null}" th:href="@{/users/delete/{id}(id=${user.userId})}"
-               onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</a>
+            <form th:if="${user?.userId != null}" th:action="@{/users/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="userId" th:value="${user.userId}">
+                <button type="submit" class="action-button" onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</button>
+            </form>
             <button th:if="${user?.userId != null}" onclick="openRankModal(this)" th:data-userid="${user.userId}" th:data-currentrank="${user.userRank}">등급 변경</button>
         </td>
+
     </tr>
     </tbody>
 </table>

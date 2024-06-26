@@ -74,9 +74,14 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUser(user);
     }
 
+//    @Override
+//    public void deleteUser(String userId) {
+//        userMapper.deleteUser(userId);
+//    }
+
     @Override
-    public void deleteUser(String userId) {
-        userMapper.deleteUser(userId);
+    public void softDeleteUser(String userId) {
+        userMapper.softDeleteUser(userId);
     }
 
     @Override

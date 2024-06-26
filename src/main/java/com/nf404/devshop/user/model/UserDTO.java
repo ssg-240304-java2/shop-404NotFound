@@ -17,5 +17,6 @@ public class UserDTO {
     private String userPhone;
     private String userDate;
     private int userRank;
+    private boolean isDeleted; // 삭제 여부
 
 }

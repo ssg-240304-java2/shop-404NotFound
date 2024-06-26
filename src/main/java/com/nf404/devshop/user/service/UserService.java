@@ -53,9 +53,6 @@ public interface UserService {
      * 
      * @param userId 삭제할 사용자의 ID
      */
-    @Transactional
-    void deleteUser(String userId);
-
     /**
      * 사용자 로그인 처리
      * 
@@ -63,6 +60,8 @@ public interface UserService {
      * @param userPw 로그인할 사용자의 비밀번호
      * @return 로그인된 사용자 정보
      */
+
+    void softDeleteUser(String userId);
     UserDTO loginUser(String userId, String userPw);
 
     /**
