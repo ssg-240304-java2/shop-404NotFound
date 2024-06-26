@@ -31,19 +31,34 @@ public class BoardServiceTest {
         System.out.println("생성된 게시글 id = " + boardId);
     }
 
-    @Test // JUnit은 테스트 메소드들을 병렬로 실행하기 때문에 출력순서가 보장안됨 
+
+/* 페이징 처리 전 게시판 리스트 조회 테스트*/
+//    @Test // JUnit은 테스트 메소드들을 병렬로 실행하기 때문에 출력순서가 보장안됨
+//    @DisplayName("게시판 리스트 조회 테스트")
+//    void findAllBoard() throws JsonProcessingException {
+//
+//        List<BoardResponse> boardList = boardService.findAllBoard();
+//        for (BoardResponse board : boardList) {
+//            String boardJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(board);
+//            System.out.println("boardJson >>>>>>>>>>>>>>> = " + boardJson);
+//        }
+//
+//    }
+
+    // 페이징 처리 후 리스트 조회 테스트
+    @Test
     @DisplayName("게시판 리스트 조회 테스트")
-    void findAllBoard() throws JsonProcessingException {
+    void saveByForeach() {
 
-        List<BoardResponse> boardList = boardService.findAllBoard();
-        for (BoardResponse board : boardList) {
-            String boardJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(board);
-            System.out.println("boardJson >>>>>>>>>>>>>>> = " + boardJson);
+        for (int i = 1; i <= 1000; i++) {
+            BoardRequest params = new BoardRequest();
+            params.setTitle(i + "번 게시글 제목");
+            params.setContent(i + "번 게시글 내용");
+            params.setWriter("테스터" + i);
+            params.setNoticeYn(false);
+            boardService.saveBoard(params);
         }
-        
     }
-
-
 
     @Test
     @DisplayName("게시글번호로 게시글 조회")
@@ -80,13 +95,25 @@ public class BoardServiceTest {
         }
     }
 
-    @Test // 삭제 테스트 데이터는 물리적으로 삭제되지 않고 삭제여부 상태 값을 0 -> 1로 변경
-    @DisplayName("삭제 테스트")
-    void delete() {
-        System.out.println("삭제 이전의 전체 게시글 개수 : " + boardService.findAllBoard().size());
-        boardService.deleteByBoardId(5);
-        System.out.println("삭제 이후의 전체 게시글 개수 : " + boardService.findAllBoard().size());
+//    @Test // 삭제 테스트 데이터는 물리적으로 삭제되지 않고 삭제여부 상태 값을 0 -> 1로 변경
+//    @DisplayName("삭제 테스트")
+//    void delete() {
+//        System.out.println("삭제 이전의 전체 게시글 개수 : " + boardService.findAllBoard().size());
+//        boardService.deleteByBoardId(5);
+//        System.out.println("삭제 이후의 전체 게시글 개수 : " + boardService.findAllBoard().size());
+//
+//    }
 
+    @Test
+    @DisplayName("테스트 데이터 삽입")
+    void saveByBoardForeach() {
+        for (int i = 1; i <= 200; i++) {
+            BoardRequest params = new BoardRequest();
+            params.setTitle(i + "번 게시글 제목");
+            params.setContent(i + "번 게시글 내용");
+            params.setWriter("테스터" + i);
+            params.setNoticeYn(false);
+            boardService.saveBoard(params);
+        }
     }
-
 }

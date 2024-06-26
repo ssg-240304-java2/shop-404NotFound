@@ -2,12 +2,15 @@ package com.nf404.devshop.board.controller;
 
 import com.nf404.devshop.board.model.dto.BoardRequest;
 import com.nf404.devshop.board.model.dto.BoardResponse;
+import com.nf404.devshop.board.model.dto.PagingResponse;
+import com.nf404.devshop.board.model.dto.SearchDTO;
 import com.nf404.devshop.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,10 +46,9 @@ public class BoardController {
 
     // 게시글 리스트 페이지
     @GetMapping("/board/list")
-    public String openBoardList(Model model) {
-        List<BoardResponse> boards = boardService.findAllBoard();
-        log.info("[BoardController] boards >>>>>>>>>>>>>>>> : {} ", boards);
-        model.addAttribute("boards", boards);
+    public String openBoardList(@ModelAttribute("params") SearchDTO params, Model model) {
+        PagingResponse<BoardResponse> response = boardService.findAllBoard(params);
+        model.addAttribute("response", response);
         return "board/list";
     }
 
@@ -60,11 +62,17 @@ public class BoardController {
     }
 
     // 기존 게시글 수정
-    @PostMapping("/post/update")
+    @PostMapping("/board/update")
     public String updateBoard(BoardRequest params) {
         boardService.updateBoard(params);
         return "redirect:/board/list";
     }
 
+    // 게시글 삭제
+    @PostMapping("/board/delete")
+    public String deleteBoard(@RequestParam Integer boardId, SearchDTO queryParams, Model model) {
+        boardService.deleteByBoardId(boardId);
+        return "redirect:/board/list";
+    }
 
 }
