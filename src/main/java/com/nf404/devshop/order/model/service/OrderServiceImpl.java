@@ -6,7 +6,9 @@ import com.nf404.devshop.order.model.dto.OrderItemDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -29,10 +31,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> searchOrders(String search) {
-        return orderMapper.searchOrders(search);
+    public List<OrderDTO> searchAndFilterOrders(String search, String startDate, String endDate) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("search", search);
+        map.put("startDate",  startDate);
+        map.put("endDate", endDate);
+        return orderMapper.searchAndFilterOrders(map);
     }
 
+
+//    @Override
+//    public List<OrderDTO> searchOrders(String search) {
+//        return orderMapper.searchOrders(search);
+//    }
 
 
 }

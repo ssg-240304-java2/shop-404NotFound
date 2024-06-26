@@ -25,7 +25,7 @@ public class OrderController {
      * @param model
      * @return
      */
-    @GetMapping("/orderlist1")
+   /* @GetMapping("/orderlist1")
     public String allOrderList(@RequestParam(value = "search",required = false) String search,Model model){
         log.info(">>>> 검색어 >>>>>>>>> {}", search);
         List<OrderDTO> orderList;
@@ -37,6 +37,21 @@ public class OrderController {
         model.addAttribute("orderList", orderList);
 
         return "order/orderlist1";
+    }*/
+
+    @GetMapping("/orderlist")
+    public String allOrderList(@RequestParam(value = "search", required = false) String search, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate,
+            Model model) {
+        log.info(">>>>>>>>>>>>>>>>>>. {}", startDate);
+        List<OrderDTO> orderList;
+        if ((search != null && !search.isEmpty()) || (startDate != null && endDate != null)) {
+            orderList = orderService.searchAndFilterOrders(search, startDate, endDate);
+        } else {
+            orderList = orderService.findAllOrder();
+        }
+
+        model.addAttribute("orderList", orderList);
+        return "order/orderlist";
     }
 
     /***
@@ -51,7 +66,7 @@ public class OrderController {
         List<OrderItemDTO> orderDetail = orderService.findOrderDetailByOrderNo(orderNo);
         log.info("[주문 번호 상세 조회]>>>>>> {}", orderDetail);
         model.addAttribute("orderDetail", orderDetail);
-        return "order/orderdetail";
+        return "orderdetail";
     }
 
 
