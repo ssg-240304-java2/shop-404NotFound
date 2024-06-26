@@ -25,7 +25,7 @@ public class OrderController {
      * @param model
      * @return
      */
-    @GetMapping("/orderlist")
+    @GetMapping("/orderlist1")
     public String allOrderList(@RequestParam(value = "search",required = false) String search,Model model){
         log.info(">>>> 검색어 >>>>>>>>> {}", search);
         List<OrderDTO> orderList;
@@ -34,11 +34,9 @@ public class OrderController {
         } else {
             orderList = orderService.findAllOrder();
         }
-//        List<OrderDTO> orderList = orderService.findAllOrder();
-        log.info("전체 주문>>>>>>>>>>>>>>>>. {}", orderList);
         model.addAttribute("orderList", orderList);
 
-        return "order/orderlist";
+        return "order/orderlist1";
     }
 
     /***
@@ -55,5 +53,6 @@ public class OrderController {
         model.addAttribute("orderDetail", orderDetail);
         return "order/orderdetail";
     }
+
 
 }

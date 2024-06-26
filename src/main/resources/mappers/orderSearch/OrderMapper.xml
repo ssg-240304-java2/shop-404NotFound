@@ -53,7 +53,7 @@
         tbl_orderitem oi ON o.order_no = oi.order_no
         LEFT JOIN
         tbl_product p ON oi.product_code = p.product_code
-<!--        WHERE o.order_status = '주문접수'-->
+        WHERE is_deleted = 0
         ORDER BY
             o.order_no
     </select>
