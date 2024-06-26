@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.product.repository.ImageMapper">
+
+    <insert id="insertImageInfo">
+        insert into tbl_product_image (uuid_filename, origin_filename)
+        values (#{uuidFilename}, #{originFilename})
+
+        <selectKey keyProperty="thumbnailPath" order="AFTER" resultType="_int">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="updateImageInfo">
+        update tbl_product_image
+        set uuid_filename = #{uuidFilename},
+            origin_filename = #{originFilename}
+        where thumbnail_path = #{thumbnailPath}
+    </update>
+
+</mapper>

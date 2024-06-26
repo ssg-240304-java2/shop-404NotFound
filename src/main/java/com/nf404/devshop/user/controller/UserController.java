@@ -161,4 +161,16 @@ public class UserController {
         }
     }
 
+    // 회원 등급 수정 메서드
+    @PostMapping("/updateRank")
+    public String updateUserRank(@RequestParam String userId, @RequestParam int newRank, RedirectAttributes redirectAttributes) {
+        try {
+            userService.updateUserRank(userId, newRank);
+            redirectAttributes.addFlashAttribute("successMessage", "회원 등급이 성공적으로 변경되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "회원 등급 변경 중 오류가 발생했습니다: " + e.getMessage());
+        }
+        return "redirect:/users/list";
+    }
+
 }

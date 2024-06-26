@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf404.devshop.product.repository.ProductMapper">
+
+    <resultMap id="productResultMap" type="com.nf404.devshop.product.model.dto.res.ProductReadResDto">
+        <id property="productCode" column="product_code"/>
+        <result property="productName" column="product_name"/>
+        <result property="price" column="price"/>
+        <result property="isDisplayed" column="is_displayed"/>
+        <result property="productDesc" column="product_desc"/>
+        <result property="registrationDate" column="registration_date"/>
+
+        <association property="category" javaType="com.nf404.devshop.product.model.domain.Category">
+            <id property="categoryCode" column="category_code"/>
+            <result property="categoryName" column="category_name"/>
+            <result property="refCategoryCode" column="ref_category_code"/>
+        </association>
+
+        <association property="image" javaType="com.nf404.devshop.product.model.domain.Image">
+            <id property="thumbnailPath" column="thumbnail_path"/>
+            <result property="uuidFilename" column="uuid_filename"/>
+            <result property="originFilename" column="origin_filename"/>
+        </association>
+    </resultMap>
+
+    <select id="selectProductInfoByCriteria" parameterType="com.nf404.devshop.product.model.dto.req.ProductCriteria"
+    resultMap="productResultMap">
+        SELECT a.product_code, a.product_name, a.price, b.category_name, a.is_displayed, a.product_desc,
+        c.uuid_filename, a.registration_date
+        FROM tbl_product a LEFT JOIN tbl_category b on a.category_code = b.category_code
+        JOIN tbl_product_image c on a.thumbnail_path = c.thumbnail_path
+        <where>
+            <if test="productName != null and productName != ''">
+                AND a.product_name LIKE CONCAT('%', #{productName}, '%')
+            </if>
+            <if test="minPrice != null">
+                AND a.price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND a.price &lt;= #{maxPrice}
+            </if>
+            <if test="startDate != null">
+                AND a.registration_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND a.registration_date &lt;= DATE_ADD(#{endDate}, INTERVAL 1 DAY) - INTERVAL 1 SECOND
+            </if>
+            <if test="mainCategoryCode != null and subCategoryCode == null">
+                AND b.ref_category_code = #{mainCategoryCode}
+            </if>
+            <if test="subCategoryCode != null">
+                AND a.category_code = #{subCategoryCode}
+            </if>
+            <if test="isDisplayed != null">
+                AND a.is_displayed = #{isDisplayed}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProductInfoByCode" parameterType="_int" resultMap="productResultMap">
+        select a.*, b.*, c.*
+        from tbl_product as a
+        left join tbl_product_image b on a.thumbnail_path = b.thumbnail_path
+        join tbl_category c on a.category_code = c.category_code
+        where product_code = #{productCode}
+    </select>
+
+    <insert id="insertProductInfo">
+        insert into tbl_product (product_name, price, category_code, is_displayed, product_desc, thumbnail_path)
+        values (#{productName}, #{price}, #{subCategoryCode}, #{isDisplayed}, #{productDesc}, #{thumbnailPath})
+        <selectKey keyProperty="productCode" order="AFTER" resultType="_int">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="updateProductInfo">
+        update tbl_product
+        set product_name = #{productName},
+            price = #{price},
+            category_code = #{subCategoryCode},
+            is_displayed = #{isDisplayed},
+            product_desc = #{productDesc}
+        where product_code = #{productCode}
+    </update>
+
+    <update id="deleteProductInfo">
+        update tbl_product
+        set is_displayed = 'N'
+        where product_code = #{productCode}
+    </update>
+
+
+</mapper>
