@@ -8,9 +8,9 @@ spring:
   # driver config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/devshop
-    username: a
-    password: a
+    url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
+    username: devshop
+    password: 1234
 
 server:
   port: 8080
@@ -25,3 +25,10 @@ logging:
   level:
     com.nf404.devshop: DEBUG
     com.nf404.devshop.mapper: DEBUG
+
+ftp:
+  server:
+    host: ssg-java2.iptime.org
+    port: 21
+    username: nf404
+    password: nf404
