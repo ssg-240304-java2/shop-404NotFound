@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class ProductUpadateReqDto {
+public class ProductUpdateReqDto {
 
     private int productCode;
     private String productName;

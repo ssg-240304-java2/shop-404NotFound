@@ -53,6 +53,9 @@
             <if test="subCategoryCode != null">
                 AND a.category_code = #{subCategoryCode}
             </if>
+            <if test="isDisplayed == null">
+                a.is_displayed = 'Y'
+            </if>
             <if test="isDisplayed != null">
                 AND a.is_displayed = #{isDisplayed}
             </if>
@@ -85,11 +88,16 @@
         where product_code = #{productCode}
     </update>
 
-    <update id="deleteProductInfo">
-        update tbl_product
-        set is_displayed = 'N'
-        where product_code = #{productCode}
+    <update id="updateProductStatusInfo">
+        UPDATE tbl_product
+        SET is_displayed = CASE
+        WHEN is_displayed = 'Y' THEN 'N'
+        WHEN is_displayed = 'N' THEN 'Y'
+        ELSE is_displayed
+        END
+        WHERE product_code IN
+        <foreach item="productCode" index="index" collection="productCodeList" open="(" separator="," close=")">
+            #{productCode}
+        </foreach>
     </update>
-
-
 </mapper>
