@@ -30,10 +30,7 @@ public class UserController {
     private UserService userService;
 
     // 템플릿 메인 페이지
-    @GetMapping("/userhome")
-    public String userHome() {
-        return "user/userhome";
-    }
+
 
     @GetMapping("/list")
     public String listUsers(
