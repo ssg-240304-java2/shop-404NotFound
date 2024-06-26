@@ -4,8 +4,7 @@ import com.nf404.devshop.inventory.stock.StockMapper;
 import com.nf404.devshop.product.model.dto.ImageDto;
 import com.nf404.devshop.product.model.dto.req.ProductCreateReqDto;
 import com.nf404.devshop.product.model.dto.req.ProductCriteria;
-import com.nf404.devshop.product.model.dto.req.ProductDeleteReqDto;
-import com.nf404.devshop.product.model.dto.req.ProductUpadateReqDto;
+import com.nf404.devshop.product.model.dto.req.ProductUpdateReqDto;
 import com.nf404.devshop.product.model.dto.res.ProductReadResDto;
 import com.nf404.devshop.product.repository.ImageMapper;
 import com.nf404.devshop.product.repository.ProductMapper;
@@ -58,28 +57,25 @@ public class ProductService {
         stockMapper.insertNewStockTuple(productCreateReqDto.getProductCode());
     }
 
-
     /***
      * 상품 정보 변경 서비스 메소드
-     * @param productUpadateReqDto
+     * @param productUpdateReqDto
      * @param imageDto
      * @return
      */
     @Transactional
-    public void updateProductInfo(ProductUpadateReqDto productUpadateReqDto, ImageDto imageDto) {
-        productMapper.updateProductInfo(productUpadateReqDto);
-        imageDto.setThumbnailPath(productUpadateReqDto.getThumbnailPath());
+    public void updateProductInfo(ProductUpdateReqDto productUpdateReqDto, ImageDto imageDto) {
+        productMapper.updateProductInfo(productUpdateReqDto);
+//        imageDto.setThumbnailPath(productUpdateReqDto.getThumbnailPath());
         imageMapper.updateImageInfo(imageDto);
     }
 
     /***
-     * 상품 정보 비활성화 서비스 메소드
-     * @param productDeleteReqDto
-     * @return
+     * 상품 판매 상태 (판매 여부) 일괄 변경 메소드
+     * @param productCodeList
      */
     @Transactional
-    public boolean deleteProductInfo(ProductDeleteReqDto productDeleteReqDto) {
-        productMapper.deleteProductInfo(productDeleteReqDto);
-        return true;
+    public void updateProductStatusInfo(List<Integer> productCodeList) {
+        productMapper.updateProductStatusInfo(productCodeList);
     }
 }
