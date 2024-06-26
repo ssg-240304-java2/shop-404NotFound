@@ -1,60 +1,335 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--    <head>-->
+<!--        <meta charset="UTF-8" />-->
+<!--        <meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+<!--        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />-->
+
+<!--        <title>재고관리 - 재고수량관리</title>-->
+<!--        <link th:replace="elements/misc/deps :: html"/>-->
+<!--        &lt;!&ndash; Custom fonts for this template &ndash;&gt;-->
+<!--    </head>-->
+<!--    <body id="page-top">-->
+<!--        <div id="wrapper">-->
+<!--            <nav th:replace="elements/nav :: body"></nav> &lt;!&ndash; left sidebar &ndash;&gt;-->
+
+<!--            <div id="content-wrapper" class="d-flex flex-column">-->
+<!--                <div id="content">-->
+<!--                    <nav th:replace="elements/topbar :: body"></nav> &lt;!&ndash; top navbar &ndash;&gt;-->
+<!--                    <div class="container-fluid">-->
+<!--                        <h1 class="h3 mb-4 text-gray-800">재고수량관리</h1>   &lt;!&ndash; 페이지 제목 &ndash;&gt;-->
+<!--                        <p class="mb-4">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>  &lt;!&ndash; 페이지 설명 &ndash;&gt;-->
+<!--                        &lt;!&ndash; 이곳에 내용을 채워넣으면 됩니다. start &ndash;&gt;-->
+
+<!--                        &lt;!&ndash; todo. 상품정보 및 재고수량 테이블 &ndash;&gt;-->
+<!--                        <div class="card shadow mb-4">-->
+<!--                            <div class="card-header py-3">-->
+<!--                                <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>-->
+<!--                            </div>-->
+<!--                            <div class="card-body">-->
+<!--                                <div class="table-responsive">-->
+<!--                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">-->
+<!--                                        <thead>-->
+<!--                                                <tr>-->
+<!--                                                    <th>이력코드</th>-->
+<!--                                                    <th>수행일시</th>-->
+<!--                                                    <th>처리수량</th>-->
+<!--                                                    <th>작업분류</th>-->
+<!--                                                    <th>상품코드</th>-->
+<!--                                                </tr>-->
+<!--                                            </thead>-->
+<!--                                            <tfoot>-->
+<!--                                                <tr>-->
+<!--                                                    <th>이력코드</th>-->
+<!--                                                    <th>수행일시</th>-->
+<!--                                                    <th>처리수량</th>-->
+<!--                                                    <th>작업분류</th>-->
+<!--                                                    <th>상품코드</th>-->
+<!--                                                </tr>-->
+<!--                                            </tfoot>-->
+<!--                                            <tbody th:each="item : ${itemList}">-->
+<!--                                                <tr>-->
+<!--                                                    <td th:text="${item.historyCode}"></td>-->
+<!--                                                    <td th:text="${item.executedAt}"></td>-->
+<!--                                                    <td th:text="${item.operatedQuantity}"></td>-->
+<!--                                                    <td th:text="${item.task.taskName}"></td>-->
+<!--                                                    <td th:text="${item.productCode}"></td>-->
+<!--                                                </tr>-->
+<!--                                        </tbody>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; 이곳에 내용을 채워넣으면 됩니다. end &ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <footer th:replace="elements/footer :: footer"></footer>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--&lt;!&ndash;        <script src="/js/demo/datatables-demo.js"></script>&ndash;&gt;-->
+<!--    </body>-->
+<!--</html>-->
+
+
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>재고관리 - 재고수량관리</title>
+    <link th:replace="elements/misc/deps :: html"/>
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+            animation: backgroundMove 20s linear infinite;
+        }
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50%, 50%); }
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-action {
+            transition: all 0.3s ease;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
 
-        <title>재고관리 - 재고수량관리</title>
-        <link th:replace="elements/misc/deps :: html"/>
-    </head>
-    <body id="page-top">
-        <div id="wrapper">
-            <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="container-fluid">
+                    <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">재고수량관리</h1>
+                    <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>
+                </div>
+            </div>
 
-            <div id="content-wrapper" class="d-flex flex-column">
-                <div id="content">
-                    <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
-                    <div class="container-fluid">
-                        <h1 class="h3 mb-4 text-gray-800">재고수량관리</h1>   <!-- 페이지 제목 -->
-                        <p class="mb-4">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>  <!-- 페이지 설명 -->
-                        <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+            <div class="container-fluid">
+                <!-- 알림 메시지 -->
+                <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeIn" role="alert" id="successAlert" style="display:none;">
+                    <strong>성공!</strong> <span id="successMessage"></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeIn" role="alert" id="errorAlert" style="display:none;">
+                    <strong>오류!</strong> <span id="errorMessage"></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-                        <!-- todo. 상품정보 및 재고수량 테이블 -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                                <tr>
-                                                    <th>이력코드</th>
-                                                    <th>수행일시</th>
-                                                    <th>처리수량</th>
-                                                    <th>작업분류</th>
-                                                    <th>상품코드</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody th:each="item : ${itemList}">
-                                                <tr>
-                                                    <td th:text="${item.historyCode}"></td>
-                                                    <td th:text="${item.executedAt}"></td>
-                                                    <td th:text="${item.operatedQuantity}"></td>
-                                                    <td th:text="${item.task.taskName}"></td>
-                                                    <td th:text="${item.productCode}"></td>
-                                                </tr>
-                                        </tbody>
-                                    </table>
+                <div class="card shadow mb-4 animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>
+                        <button class="btn btn-primary animate__animated animate__pulse animate__infinite" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
+                            <i class="fas fa-search fa-sm"></i> 검색 필터
+                        </button>
+                    </div>
+                    <div th:class="${param.historyCode != null or param.executedAt != null or param.task != null or param.productCode != null} ? 'collapse show' : 'collapse'" id="searchCollapse">
+                        <div class="card-body">
+                            <form th:action="@{/inventory/list}" method="get">
+                                <div class="form-row">
+                                    <div class="form-group col-md-2">
+                                        <input type="text" class="form-control" name="historyCode" placeholder="이력 코드" th:value="${param.historyCode}">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <input type="text" class="form-control" name="executedAt" placeholder="수행 일시" th:value="${param.executedAt}">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <input type="text" class="form-control" name="task" placeholder="작업 분류" th:value="${param.task}">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <input type="text" class="form-control" name="productCode" placeholder="상품 코드" th:value="${param.productCode}">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <button type="submit" class="btn btn-primary btn-block">검색</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                        <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered animate__animated animate__fadeIn animate__delay-2s" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>이력코드</th>
+                                    <th>수행일시</th>
+                                    <th>처리수량</th>
+                                    <th>작업분류</th>
+                                    <th>상품코드</th>
+                                </tr>
+                                </thead>
+                                <tbody th:each="item : ${itemList}">
+                                <tr>
+                                    <td th:text="${item.historyCode}"></td>
+                                    <td th:text="${item.executedAt}"></td>
+                                    <td th:text="${item.operatedQuantity}"></td>
+                                    <td th:text="${item.task.taskName}"></td>
+                                    <td th:text="${item.productCode}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <footer th:replace="elements/footer :: footer"></footer>
             </div>
         </div>
-    </body>
+        <footer th:replace="elements/footer :: footer"></footer>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editItemModalLabel">재고 정보 수정</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editItemForm" th:action="@{/inventory/edit}" method="post">
+                    <input type="hidden" id="editItemId" name="historyCode">
+                    <div class="form-group">
+                        <label for="editExecutedAt">수행일시</label>
+                        <input type="text" class="form-control" id="editExecutedAt" name="executedAt" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editOperatedQuantity">처리수량</label>
+                        <input type="number" class="form-control" id="editOperatedQuantity" name="operatedQuantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTask">작업분류</label>
+                        <input type="text" class="form-control" id="editTask" name="task">
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductCode">상품코드</label>
+                        <input type="text" class="form-control" id="editProductCode" name="productCode">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/demo/datatables-demo.js"></script>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        if ($.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable().destroy();
+        }
+        // DataTable 초기화
+        var table = $('#dataTable').DataTable({
+            columnDefs: [
+                {
+                    targets: 3, // 작업분류 열의 인덱스 (0부터 시작)
+                    type: 'num',
+                    render: function(data, type, row) {
+                        return data; // 정렬을 위해 원래 숫자 값 반환
+                    }
+                }
+            ]
+        });
+
+        // 수정 버튼 클릭 이벤트 (이벤트 위임 사용)
+        $('#dataTable').on('click', '.edit-item', function() {
+            var historyCode = $(this).data('historycode');
+            var executedAt = $(this).closest('tr').find('td:eq(1)').text();
+            var operatedQuantity = $(this).closest('tr').find('td:eq(2)').text();
+            var task = $(this).closest('tr').find('td:eq(3)').text();
+            var productCode = $(this).closest('tr').find('td:eq(4)').text();
+
+            $('#editItemId').val(historyCode);
+            $('#editExecutedAt').val(executedAt);
+            $('#editOperatedQuantity').val(operatedQuantity);
+            $('#editTask').val(task);
+            $('#editProductCode').val(productCode);
+
+            $('#editItemModal').modal('show').addClass('animate__animated animate__fadeInUp');
+        });
+
+        // 성공 및 오류 메시지 표시
+        var successMessage = /*[[${successMessage}]]*/ '';
+        var errorMessage = /*[[${errorMessage}]]*/ '';
+
+        if (successMessage) {
+            showAlert(successMessage, true);
+        }
+        if (errorMessage) {
+            showAlert(errorMessage, false);
+        }
+    });
+
+    function showAlert(message, isSuccess) {
+        var alertElement = isSuccess ? $('#successAlert') : $('#errorAlert');
+        var messageElement = isSuccess ? $('#successMessage') : $('#errorMessage');
+
+        messageElement.text(message);
+        alertElement.show().addClass('animate__animated animate__fadeIn');
+
+        setTimeout(function() {
+            alertElement.removeClass('animate__fadeIn').addClass('animate__fadeOut');
+            setTimeout(function() {
+                alertElement.hide().removeClass('animate__fadeOut');
+            }, 500);
+        }, 3000);
+    }
+</script>
+</body>
 </html>
+

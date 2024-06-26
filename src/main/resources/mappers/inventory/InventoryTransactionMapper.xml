@@ -39,7 +39,8 @@
     <select id="selectAllTransactionLogs" resultMap="transactionResultMap">
         select a.*, b.task_name
         from tbl_inventory_transactions a
-            join tbl_inventory_tasks b
+            join tbl_inventory_tasks b on a.task_id = b.task_id
+        order by a.executed_at desc
     </select>
 
 <!--    deprecated..-->

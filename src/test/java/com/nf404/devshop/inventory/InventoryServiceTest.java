@@ -78,8 +78,8 @@ class InventoryServiceTest {
     @Test
     @DisplayName("1개 상품 재고 출고")
     void updateStockOutbound() {
-        int productCode = 1;
-        int quantity = 200;
+        int productCode = 22;
+        int quantity = 220;
 
         inventoryService.updateStockOutbound(productCode, quantity);
 

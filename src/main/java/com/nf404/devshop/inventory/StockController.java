@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -37,12 +38,15 @@ public class StockController {
         return "inventory/inbound_process";
     }
 
-    @PostMapping("/inbound")
-    public String inbound(@RequestParam int productCode, @RequestParam int quantity) {
-        inventoryService.updateStockInbound(productCode, quantity);
+    @PostMapping("/update")
+    public String updateStockInbound(@RequestParam int productCode, @RequestParam int stockQuantity, RedirectAttributes rttr) {
+        inventoryService.updateStockInbound(productCode, stockQuantity);
+
+        rttr.addFlashAttribute("message", "입고 처리가 완료되었습니다.");
+        // 이 값은 html에서 받는 방법
+
         return "redirect:/admin/stock/list";
     }
-
 
     @GetMapping("/logs")
     public String listLogs(Model model) {
