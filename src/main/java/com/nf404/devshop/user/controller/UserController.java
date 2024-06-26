@@ -86,17 +86,24 @@ public class UserController {
 //        return "user/user_list";
 //    }
 
+
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new UserDTO());
-        return "user/register";
+        return "user/user_register";
     }
-
+    
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute UserDTO user) {
-        userService.registerUser(user);
+    public String registerUser(@ModelAttribute UserDTO user, RedirectAttributes redirectAttributes) {
+        try {
+            userService.registerUser(user);
+            redirectAttributes.addFlashAttribute("successMessage", "회원이 성공적으로 등록되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "회원 등록 중 오류가 발생했습니다: " + e.getMessage());
+        }
         return "redirect:/users/list";
     }
+    
 
     @GetMapping("/edit/{userId}")
     public String showEditForm(@PathVariable String userId, Model model) {
