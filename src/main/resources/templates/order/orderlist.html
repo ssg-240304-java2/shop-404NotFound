@@ -32,6 +32,10 @@
     <div class="container_c">
         <div class="left">
             <h1>주문관리</h1>
+            <form th:action="@{/order/orderlist}" method="get">
+                <input type="text" name="search" placeholder="검색어를 입력하세요"/>
+                <button type="submit">검색</button>
+            </form>
             <table>
                 <tr>
                     <th>주문번호</th>
@@ -41,6 +45,7 @@
                     <th>주문상태</th>
                     <th>주문일자</th>
                     <th>주소</th>
+
                 </tr>
                 <tr th:each="order : ${orderList}">
                     <td>
@@ -59,10 +64,10 @@
                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${order.orderStatus}"></button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <form th:action="@{/order/updateStatus}" method="post">
-                                        <input type="hidden" name="orderNo" th:value="${order.orderNo}"/>
-                                        <input type="hidden" name="orderStatus" value="처리완료"/>
-                                        <button class="dropdown-item" type="submit">처리 완료</button>
+                                    <form th:action="@{/order/updatestatus}" method="post">
+                                    <input type="hidden" name="orderNo" th:value="${order.orderNo}"/>
+                                    <input type="hidden" name="orderStatus" value="처리완료"/>
+                                    <button class="dropdown-item" type="submit">처리 완료</button>
                                     </form>
                                 </li>
                             </ul>
@@ -70,6 +75,7 @@
                     </td>
                     <td th:text="${order.createdAt}"/>
                     <td th:text="${order.userInfo.userAddr}"/>
+
                 </tr>
             </table>
         </div>
