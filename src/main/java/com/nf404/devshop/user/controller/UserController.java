@@ -126,12 +126,12 @@ public class UserController {
 
     // POST 메서드로 변경
     @PostMapping("/delete")
-    public String deleteUser(@RequestParam String userId, RedirectAttributes redirectAttributes) {
+    public String softDeleteUser(@RequestParam String userId, RedirectAttributes redirectAttributes) {
         try {
-            userService.deleteUser(userId);
-            redirectAttributes.addFlashAttribute("successMessage", "사용자가 성공적으로 삭제되었습니다.");
+            userService.softDeleteUser(userId);
+            redirectAttributes.addFlashAttribute("successMessage", "사용자가 성공적으로 비활성화되었습니다.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "사용자 삭제 중 오류가 발생했습니다: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "사용자 비활성화 중 오류가 발생했습니다: " + e.getMessage());
         }
         return "redirect:/users/list";
     }

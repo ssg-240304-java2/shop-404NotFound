@@ -13,7 +13,7 @@
     </resultMap>
 
     <select id="getAllUsers" resultMap="UserResultMap">
-        SELECT * FROM tbl_user
+        SELECT * FROM tbl_user WHERE is_deleted = FALSE
     </select>
 
     <select id="getUserById" resultMap="UserResultMap">
@@ -32,9 +32,13 @@
         WHERE user_id = #{userId}
     </update>
 
-    <delete id="deleteUser">
-        DELETE FROM tbl_user WHERE user_id = #{userId}
-    </delete>
+<!--    <delete id="deleteUser">-->
+<!--        DELETE FROM tbl_user WHERE user_id = #{userId}-->
+<!--    </delete>-->
+
+    <update id="softDeleteUser" parameterType="com.nf404.devshop.user.model.UserDTO">
+        UPDATE tbl_user SET is_deleted = TRUE WHERE user_id = #{userId}
+    </update>
 
     <select id="loginUser" resultMap="UserResultMap">
         SELECT * FROM tbl_user WHERE user_id = #{userId} AND user_pw = #{userPw}

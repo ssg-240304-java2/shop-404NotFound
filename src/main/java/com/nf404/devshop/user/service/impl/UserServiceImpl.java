@@ -80,6 +80,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void softDeleteUser(String userId) {
+        userMapper.softDeleteUser(userId);
+    }
+
+    @Override
     public UserDTO loginUser(String userId, String userPw) {
         // 비즈니스 로직 추가 예정.
         // 예: 비밀번호 암호화 확인, 로그인 시도 횟수 체크 등

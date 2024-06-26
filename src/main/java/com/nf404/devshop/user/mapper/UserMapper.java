@@ -59,5 +59,7 @@ public interface UserMapper {
     UserDTO loginUser(@Param("userId") String userId, @Param("userPw") String userPw);
 
     List<UserDTO> selectFilteredUsers(Map<String, Object> params);
+
+    void softDeleteUser(String userId);
 }
 
