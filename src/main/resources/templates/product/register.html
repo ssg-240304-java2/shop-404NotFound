@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Developer Item Shop</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let successMessage = `[[${successMessage}]]`;
+        if(successMessage) alert(successMessage.replaceAll("\"",""));
+    </script>
 </head>
 
 <body>
     <div class="form-container">
-        <form action="/product/add-product" method="post" id="productAddForm" enctype="multipart/form-data">
+        <form action="/product/register" method="post" id="productInfoForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="productName">상품 이름</label>
                 <input type="text" id="productName" name="productName" required>
@@ -51,15 +55,23 @@
                 <label for="imageFile">이미지</label>
                 <input type="file" id="imageFile" name="imageFile">
             </div>
-            <button type="submit">등록</button>
+            <div>
+                <button type="submit">등록</button>
+                <button type="button" id="cancelOperation">취소</button>
+            </div>
         </form>
     </div>
 
     <script src="/js/product/showCategory.js"></script>
-<!--    여기서 1차 데이터 검증 로직 필요
-        1. 중복된 상품 명
-        2. 정도......?
--->
+
+    <script src="/js/product/showCategory.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#cancelOperation').click(function() {
+                window.location.replace('/product/product-list');
+            });
+        });
+    </script>
 
 </body>
 </html>
