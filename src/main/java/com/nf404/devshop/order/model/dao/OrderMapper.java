@@ -12,4 +12,8 @@ public interface OrderMapper {
 
 
     List<OrderItemDTO> findOrderDetailByOrderNo(int orderNo);
+
+    List<OrderItemDTO> findOrderItemsByOrderNo(int orderNo);
+
+    List<OrderDTO> searchOrders(String search);
 }

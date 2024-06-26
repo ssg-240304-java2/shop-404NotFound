@@ -2,6 +2,7 @@ package com.nf404.devshop.inventory;
 
 import com.nf404.devshop.inventory.stock.*;
 import com.nf404.devshop.inventory.transactions.*;
+import com.nf404.devshop.order.model.dto.OrderItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,5 +95,8 @@ public class InventoryService {
     @Transactional
     public void insertNewStockTuple(int productCode) {
         stockMapper.insertNewStockTuple(productCode);
+    }
+
+    public void updateStockForOrderCompletion(List<OrderItemDTO> orderItems) {
     }
 }

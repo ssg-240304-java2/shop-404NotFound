@@ -28,5 +28,10 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findOrderDetailByOrderNo(orderNo);
     }
 
+    @Override
+    public List<OrderDTO> searchOrders(String search) {
+        return orderMapper.searchOrders(search);
+    }
+
 
 }

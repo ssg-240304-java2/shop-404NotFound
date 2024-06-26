@@ -33,27 +33,61 @@
 
     <select id="findAllOrder" resultMap="orderResultMap">
         SELECT
-        o.ORDER_NO,
-        o.USER_NO,
-        u.USER_ID,
-        u.USER_NAME,
-        o.ORDER_TOTALPRICE,
-        o.CREATED_AT,
-        o.ORDER_STATUS,
-        oi.PRODUCT_CODE,
-        oi.ORDER_ITEM_QUANTITY,
-        p.PRODUCT_NAME,
-        p.PRICE
+            o.order_no,
+            o.user_no,
+            u.user_id,
+            u.user_name,
+            u.user_addr,
+            o.order_totalprice,
+            o.created_at,
+            o.order_status,
+            oi.product_code,
+            oi.order_item_quantity,
+            p.product_name,
+            p.price
         FROM
-        tbl_order o
+            tbl_order o
         JOIN
-        tbl_user u ON o.USER_NO = u.USER_NO
+            tbl_user u ON o.user_no = u.user_no
         LEFT JOIN
-        tbl_orderitem oi ON o.ORDER_NO = oi.ORDER_NO
+        tbl_orderitem oi ON o.order_no = oi.order_no
         LEFT JOIN
-        tbl_product p ON oi.PRODUCT_CODE = p.PRODUCT_CODE
+        tbl_product p ON oi.product_code = p.product_code
+<!--        WHERE o.order_status = '주문접수'-->
         ORDER BY
-        o.ORDER_NO
+            o.order_no
+    </select>
+    <select id="searchOrders" resultMap="orderResultMap">
+        SELECT
+            o.order_no,
+            o.user_no,
+            u.user_id,
+            u.user_name,
+            u.user_addr,
+            o.order_totalprice,
+            o.created_at,
+            o.order_status,
+            oi.product_code,
+            oi.order_item_quantity,
+            p.product_name,
+            p.price
+        FROM tbl_order o
+        JOIN tbl_user u ON o.user_no = u.user_no
+        LEFT JOIN tbl_orderitem oi ON o.order_no = oi.order_no
+        LEFT JOIN tbl_product p ON oi.product_code = p.product_code
+        WHERE
+            o.order_no LIKE CONCAT('%', #{searchTerm}, '%') OR
+            o.user_no LIKE CONCAT('%', #{searchTerm}, '%') OR
+            u.user_id LIKE CONCAT('%', #{searchTerm}, '%') OR
+            u.user_name LIKE CONCAT('%', #{searchTerm}, '%') OR
+            u.user_addr LIKE CONCAT('%', #{searchTerm}, '%') OR
+            o.order_totalprice LIKE CONCAT('%', #{searchTerm}, '%') OR
+            o.created_at LIKE CONCAT('%', #{searchTerm}, '%') OR
+            o.order_status LIKE CONCAT('%', #{searchTerm}, '%') OR
+            p.product_name LIKE CONCAT('%', #{searchTerm}, '%') OR
+            oi.product_code LIKE CONCAT('%', #{searchTerm}, '%')
+        ORDER BY
+            o.order_no
     </select>
     <select id="findOrderDetailByOrderNo" resultType="com.nf404.devshop.order.model.dto.OrderItemDTO">
         SELECT o.order_no,u.user_no, i.product_code, p.product_name, i.order_item_quantity, p.price
@@ -63,4 +97,5 @@
         JOIN tbl_product p ON i.product_code = p.product_code
         WHERE o.order_no = #{ orderNo }
     </select>
+
 </mapper>
