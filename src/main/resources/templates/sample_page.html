@@ -1,10 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>sample</title>
-    </head>
-    <body>
-        
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SB Admin 2 - Dashboard</title>
+    <link th:replace="elements/misc/deps :: html"/>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+            <div class="container-fluid">
+                <h1 class="h3 mb-4 text-gray-800">Page Name</h1>   <!-- 페이지 제목 -->
+                <p class="mb-4">Bootstrap's default utility classes can be found on the official <a
+                        href="https://getbootstrap.com/docs">Bootstrap Documentation</a> page. The custom utilities
+                    below were created to extend this theme past the default utility classes built into Bootstrap's
+                    framework.</p>  <!-- 페이지 설명 -->
+                <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+
+                <!-- 행 항목으로 나누어서 채워넣으면 됩니다. -->
+                <div class="row">
+
+                </div>
+                <div class="row">
+
+                </div>
+
+                <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+            </div>
+        </div>
+        <footer th:replace="elements/footer :: footer"></footer>
+    </div>
+</div>
+</body>
 </html>
