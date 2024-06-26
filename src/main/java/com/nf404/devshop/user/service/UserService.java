@@ -77,5 +77,7 @@ public interface UserService {
      */
     List<UserDTO> getFilteredUsers(String userId, String userName, Integer userRank, LocalDate startDate,
             LocalDate endDate);
+
+    void updateUserRank(String userId, int newRank);
 }
 
