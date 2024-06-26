@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <title>재고관리 - 재고수량관리</title>
+        <link th:replace="elements/misc/deps :: html"/>
+    </head>
+    <body id="page-top">
+        <div id="wrapper">
+            <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+                    <div class="container-fluid">
+                        <h1 class="h3 mb-4 text-gray-800">재고수량관리</h1>   <!-- 페이지 제목 -->
+                        <p class="mb-4">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>  <!-- 페이지 설명 -->
+                        <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+
+                        <!-- todo. 상품정보 및 재고수량 테이블 -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                                <tr>
+                                                    <th>이력코드</th>
+                                                    <th>수행일시</th>
+                                                    <th>처리수량</th>
+                                                    <th>작업분류</th>
+                                                    <th>상품코드</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody th:each="item : ${itemList}">
+                                                <tr>
+                                                    <td th:text="${item.historyCode}"></td>
+                                                    <td th:text="${item.executedAt}"></td>
+                                                    <td th:text="${item.operatedQuantity}"></td>
+                                                    <td th:text="${item.task.taskName}"></td>
+                                                    <td th:text="${item.productCode}"></td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+                    </div>
+                </div>
+                <footer th:replace="elements/footer :: footer"></footer>
+            </div>
+        </div>
+    </body>
+</html>
