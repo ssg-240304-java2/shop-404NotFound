@@ -1,176 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>회원 전체 조회</title>
+    <link th:replace="elements/misc/deps :: html"/>
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <style>
+        .rank-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        .rank-bronze {
+            background-color: #CD7F32;
+            color: white;
+        }
+        .rank-silver {
+            background-color: #C0C0C0;
+            color: black;
+        }
+        .rank-gold {
+            background-color: #FFD700;
+            color: black;
+        }
+    </style>
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">회원 전체 조회</h1>
+                    <p class="mb-4">이 페이지에서는 모든 회원의 정보를 조회할 수 있습니다. 회원 ID, 이름, 주소, 전화번호, 가입일, 등급 등의 정보를 확인할 수 있으며, 각 회원에 대한 수정 및 삭제 작업을 수행할 수 있습니다.</p>
 
-        <title>SB Admin 2 - Dashboard</title>
+                    <!-- 알림 메시지 -->
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert" style="display:none;">
+                        <strong>성공!</strong> <span id="successMessage"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert" style="display:none;">
+                        <strong>오류!</strong> <span id="errorMessage"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-        <link th:replace="elements/misc/deps :: html"/>
-
-    </head>
-    <body id="page-top">
-        <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert" style="display:none;">
-            <strong>성공!</strong> <span id="successMessage"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert" style="display:none;">
-            <strong>오류!</strong> <span id="errorMessage"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div id="wrapper">
-            <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
-
-            <div id="content-wrapper" class="d-flex flex-column">
-                <div id="content">
-                    <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
-                    <div class="container-fluid">
-                        <h1 class="h3 mb-4 text-gray-800">회원 전체 조회</h1>   <!-- 페이지 제목 -->
-                        <p class="mb-4">이 페이지에서는 모든 회원의 정보를 조회할 수 있습니다. 회원 ID, 이름, 주소, 전화번호, 가입일, 등급 등의 정보를 확인할 수 있으며, 각 회원에 대한 수정 및 삭제 작업을 수행할 수 있습니다. 회원 관리를 위한 중요한 도구로 활용됩니다.</p>  <!-- 페이지 설명 -->
-                        <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
-
-                        <!-- 행 항목으로 나누어서 채워넣으면 됩니다. -->
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">회원 목록</h6>
-                                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
-                                            <i class="fas fa-search fa-sm"></i> 검색 필터
-                                        </button>
-                                    </div>
-                                    <div th:class="${param.userId != null or param.userName != null or param.userRank != null or param.startDate != null or param.endDate != null} ? 'collapse show' : 'collapse'" id="searchCollapse">
-                                        <div class="card-body">
-                                            <form th:action="@{/users/list}" method="get">
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-2">
-                                                        <input type="text" class="form-control" name="userId" placeholder="회원 아이디" th:value="${param.userId}">
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <input type="text" class="form-control" name="userName" placeholder="회원명" th:value="${param.userName}">
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <select class="form-control" name="userRank">
-                                                            <option value="">모든 등급</option>
-                                                            <option value="1" th:selected="${param.userRank == '1'}">BRONZE</option>
-                                                            <option value="2" th:selected="${param.userRank == '2'}">SILVER</option>
-                                                            <option value="3" th:selected="${param.userRank == '3'}">GOLD</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <input type="date" class="form-control" name="startDate" th:value="${param.startDate}" placeholder="시작일">
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <input type="date" class="form-control" name="endDate" th:value="${param.endDate}" placeholder="종료일">
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <button type="submit" class="btn btn-primary btn-block">검색</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">회원 목록</h6>
+                            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
+                                <i class="fas fa-search fa-sm"></i> 검색 필터
+                            </button>
+                        </div>
+                        <div th:class="${param.userId != null or param.userName != null or param.userRank != null or param.startDate != null or param.endDate != null} ? 'collapse show' : 'collapse'" id="searchCollapse">
+                            <div class="card-body">
+                                <form th:action="@{/users/list}" method="get">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2">
+                                            <input type="text" class="form-control" name="userId" placeholder="회원 아이디" th:value="${param.userId}">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <input type="text" class="form-control" name="userName" placeholder="회원명" th:value="${param.userName}">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <select class="form-control" name="userRank">
+                                                <option value="">모든 등급</option>
+                                                <option value="1" th:selected="${param.userRank == '1'}">BRONZE</option>
+                                                <option value="2" th:selected="${param.userRank == '2'}">SILVER</option>
+                                                <option value="3" th:selected="${param.userRank == '3'}">GOLD</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <input type="date" class="form-control" name="startDate" th:value="${param.startDate}" placeholder="시작일">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <input type="date" class="form-control" name="endDate" th:value="${param.endDate}" placeholder="종료일">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <button type="submit" class="btn btn-primary btn-block">검색</button>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>이름</th>
-                                                        <th>주소</th>
-                                                        <th>전화번호</th>
-                                                        <th>가입일</th>
-                                                        <th>등급</th>
-                                                        <th>작업</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>이름</th>
-                                                        <th>주소</th>
-                                                        <th>전화번호</th>
-                                                        <th>가입일</th>
-                                                        <th>등급</th>
-                                                        <th>작업</th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody>
-                                                    <tr th:each="user : ${users}">
-                                                        <td th:text="${user.userId}"></td>
-                                                        <td th:text="${user.userName}"></td>
-                                                        <td th:text="${user.userAddr}"></td>
-                                                        <td th:text="${user.userPhone}"></td>
-                                                        <td th:text="${user.userDate}"></td>
-                                                        <td th:text="${user.userRank}"></td>
-                                                        <td>
-                                                            <a th:href="@{/users/edit/{id}(id=${user.userId})}" class="btn btn-primary btn-sm">수정</a>
-                                                            <form th:action="@{/users/delete}" method="post" style="display:inline;">
-                                                                <input type="hidden" name="userId" th:value="${user.userId}" />
-                                                                <button type="submit" class="btn btn-danger btn-sm" 
-                                                                        onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</button>
-                                                            </form>                                                            
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
-                        <script th:inline="javascript">
-                            /*<![CDATA[*/
-                            var successMessage = /*[[${successMessage}]]*/ '';
-                            var errorMessage = /*[[${errorMessage}]]*/ '';
-                            
-                            function showAlert(message, isSuccess) {
-                                var alertElement = isSuccess ? $('#successAlert') : $('#errorAlert');
-                                var messageElement = isSuccess ? $('#successMessage') : $('#errorMessage');
-                                
-                                messageElement.text(message);
-                                alertElement.show();
-                                
-                                setTimeout(function() {
-                                    alertElement.hide();
-                                }, 2000);
-                            }
-                            
-                            $(document).ready(function() {
-                                if (successMessage) {
-                                    showAlert(successMessage, true);
-                                }
-                                if (errorMessage) {
-                                    showAlert(errorMessage, false);
-                                }
-                            });
-                            /*]]>*/
-                        </script>
-                        
-
-
-
-
-                        <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
-                    </div>
-                </div>
-                <footer class="sticky-footer bg-white">     <!-- footer -->
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; Your Website 2020</span>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>이름</th>
+                                            <th>주소</th>
+                                            <th>전화번호</th>
+                                            <th>가입일</th>
+                                            <th>등급</th>
+                                            <th>작업</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="user : ${users}">
+                                            <td th:text="${user.userId}"></td>
+                                            <td th:text="${user.userName}"></td>
+                                            <td th:text="${user.userAddr}"></td>
+                                            <td th:text="${user.userPhone}"></td>
+                                            <td th:text="${user.userDate}"></td>
+                                            <td th:text="${user.userRank}"></td>                                       
+                                            <td>
+                                                <button class="btn btn-primary btn-sm edit-user" th:data-userid="${user.userId}">수정</button>
+                                                <form th:action="@{/users/delete}" method="post" style="display:inline;">
+                                                    <input type="hidden" name="userId" th:value="${user.userId}" />
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                                            onclick="return confirm('정말로 이 회원을 삭제하시겠습니까?');">삭제</button>
+                                                </form>                                                            
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </footer>
+                </div>
             </div>
-
-
-
+            <footer th:replace="elements/footer :: footer"></footer>
         </div>
-    </body>
+    </div>
+
+    <!-- 수정 모달 -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">회원 정보 수정</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm" th:action="@{/users/edit}" method="post">
+                        <input type="hidden" id="editUserId" name="userId">
+                        <div class="form-group">
+                            <label for="editUserName">이름</label>
+                            <input type="text" class="form-control" id="editUserName" name="userName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserPw">비밀번호</label>
+                            <input type="password" class="form-control" id="editUserPw" name="userPw">
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserAddr">주소</label>
+                            <input type="text" class="form-control" id="editUserAddr" name="userAddr">
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserPhone">전화번호</label>
+                            <input type="tel" class="form-control" id="editUserPhone" name="userPhone">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                            <button type="submit" class="btn btn-primary">저장</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/js/demo/datatables-demo.js"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function() {
+            if ($.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable().destroy();
+        }
+            // DataTable 초기화
+            var table = $('#dataTable').DataTable({
+            columnDefs: [
+                {
+                    targets: 5, // 등급 열의 인덱스 (0부터 시작)
+                    type: 'num',
+                    render: function(data, type, row) {
+                        if (type === 'sort') {
+                            return data; // 정렬을 위해 원래 숫자 값 반환
+                        }
+                        var rankText = data == 1 ? 'Bronze' : (data == 2 ? 'Silver' : (data == 3 ? 'Gold' : data));
+                        var rankClass = data == 1 ? 'rank-bronze' : (data == 2 ? 'rank-silver' : (data == 3 ? 'rank-gold' : ''));
+                        return '<span class="rank-badge ' + rankClass + '">' + rankText + '</span>';
+                    }
+                }
+            ]
+        });
+
+
+        // 수정 버튼 클릭 이벤트 (이벤트 위임 사용)
+        $('#dataTable').on('click', '.edit-user', function() {
+            var userId = $(this).data('userid');
+            var userName = $(this).closest('tr').find('td:eq(1)').text();
+            var userAddr = $(this).closest('tr').find('td:eq(2)').text();
+            var userPhone = $(this).closest('tr').find('td:eq(3)').text();
+
+            $('#editUserId').val(userId);
+            $('#editUserName').val(userName);
+            $('#editUserAddr').val(userAddr);
+            $('#editUserPhone').val(userPhone);
+            $('#editUserPw').val(''); // 보안상 비밀번호는 비워둡니다.
+
+            $('#editUserModal').modal('show');
+        });
+
+        // 성공 및 오류 메시지 표시
+        var successMessage = /*[[${successMessage}]]*/ '';
+        var errorMessage = /*[[${errorMessage}]]*/ '';
+        
+        if (successMessage) {
+            showAlert(successMessage, true);
+        }
+        if (errorMessage) {
+            showAlert(errorMessage, false);
+        }
+    });
+
+
+        function showAlert(message, isSuccess) {
+            var alertElement = isSuccess ? $('#successAlert') : $('#errorAlert');
+            var messageElement = isSuccess ? $('#successMessage') : $('#errorMessage');
+            
+            messageElement.text(message);
+            alertElement.show();
+            
+            setTimeout(function() {
+                alertElement.hide();
+            }, 2000);
+        }
+        /*]]>*/
+    </script>
+</body>
 </html>
