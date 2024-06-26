@@ -50,4 +50,10 @@ public interface StockMapper {
      * @param productCode 상품 코드
      */
     void insertNewStockTuple(int productCode);
+
+    /**
+     * 상품 코드로 재고 수량 조회
+     * @return 재고 수량 및 상품 정보를 포함한 리스트
+     */
+    List<StockAndProduct> getAllStocksInfoWithProductInfo();
 }
