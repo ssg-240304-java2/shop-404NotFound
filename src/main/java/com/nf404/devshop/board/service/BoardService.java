@@ -4,6 +4,7 @@ import com.nf404.devshop.board.mapper.BoardMapper;
 import com.nf404.devshop.board.model.dto.BoardRequest;
 import com.nf404.devshop.board.model.dto.BoardResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor // 클래스 내 final로 선언된 모든 멤버에 대한 생성자를 만들어주는 어노테이션
+@Slf4j
 public class BoardService {
 
     private final BoardMapper boardMapper;
@@ -22,6 +24,8 @@ public class BoardService {
      */
     @Transactional
     public int saveBoard(BoardRequest params) {
+
+        log.info("[BoardService] params >>>>>>>>>>>>>>>>>>>>>>> : {} ", params);
         boardMapper.saveBoard(params);
         return params.getBoardId();
     }
@@ -62,6 +66,7 @@ public class BoardService {
      * @return 게시글 리스트
      */
     public List<BoardResponse> findAllBoard() {
+        log.info("[BoardService] boards >>>>>>>>>>>>>>>> : {} ", boardMapper.findAllBoard());
         return boardMapper.findAllBoard();
     }
 
