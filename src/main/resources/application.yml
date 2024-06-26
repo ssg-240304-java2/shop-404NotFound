@@ -5,14 +5,30 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+
   # driver config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
-    username: devshop
-    password: 1234
+    username:
+    password: 
 
+  # home.html의 css 경로 설정
+  web:
+    resources:
+      static-locations: classpath:/static/
+ftp:
+  server:
+    host: ssg-java2.iptime.org
+    port: 21
+    username:
+    password:
 server:
+  forward-headers-strategy: native
   port: 8080
 
 # mybatis config
@@ -26,9 +42,3 @@ logging:
     com.nf404.devshop: DEBUG
     com.nf404.devshop.mapper: DEBUG
 
-ftp:
-  server:
-    host: ssg-java2.iptime.org
-    port: 21
-    username: nf404
-    password: nf404

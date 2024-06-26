@@ -29,6 +29,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // 템플릿 메인 페이지
+    @GetMapping("/userhome")
+    public String userHome() {
+        return "user/userhome";
+    }
+
     @GetMapping("/list")
     public String listUsers(
             @RequestParam(required = false) String userId,
