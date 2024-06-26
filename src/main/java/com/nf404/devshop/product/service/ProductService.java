@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductService {
@@ -66,8 +67,9 @@ public class ProductService {
     @Transactional
     public void updateProductInfo(ProductUpdateReqDto productUpdateReqDto, ImageDto imageDto) {
         productMapper.updateProductInfo(productUpdateReqDto);
-//        imageDto.setThumbnailPath(productUpdateReqDto.getThumbnailPath());
-        imageMapper.updateImageInfo(imageDto);
+
+        if(!Objects.equals(imageDto.getUuidFilename(), ""))
+            imageMapper.updateImageInfo(imageDto);
     }
 
     /***

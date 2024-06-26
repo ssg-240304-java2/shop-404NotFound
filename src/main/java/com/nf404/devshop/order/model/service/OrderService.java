@@ -11,6 +11,9 @@ public interface OrderService {
 
     List<OrderItemDTO> findOrderDetailByOrderNo(int orderNo);
 
-    List<OrderDTO> searchOrders(String search);
 
+
+//    List<OrderDTO> searchOrders(String search);
+
+    List<OrderDTO> searchAndFilterOrders(String search, String startDate, String endDate);
 }

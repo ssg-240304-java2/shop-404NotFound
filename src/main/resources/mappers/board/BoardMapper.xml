@@ -85,13 +85,59 @@
     <!-- 게시글 리스트 조회 -->
     <select id="findAllBoard" resultMap="boardResultMap">
         SELECT
-        <include refid="boardColumns" />
+            <include refid="boardColumns" />
         FROM
-        tbl_board
+            tbl_board
         WHERE
-        delete_yn = 0
+            delete_yn = 0
+            <include refid="search" />
         ORDER BY
-        board_id DESC
+            board_id DESC
+        LIMIT
+            #{pagination.limitStart}, #{recordSize}
     </select>
 
+    <!-- 게시글 수 카운팅 -->
+    <select id="count" parameterType="com.nf404.devshop.board.model.dto.SearchDTO" resultType="_int">
+        SELECT
+            COUNT(*)
+        FROM
+            tbl_board
+        WHERE
+            delete_yn = 0
+            <include refid="search" />
+    </select>
+
+
+    <!-- 게시글 검색 -->
+    <sql id="search">
+        <!-- 검색 키워드가 있을 때 -->
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <!-- 검색 유형이 있을 때 -->
+                <when test="searchType != null and searchType != ''">
+                    <choose>
+                        <when test="'title'.equals( searchType )">
+                            AND title LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                        <when test="'content'.equals( searchType )">
+                            AND content LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                        <when test="'writer'.equals( searchType )">
+                            AND writer LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                    </choose>
+                </when>
+
+                <!-- 전체 검색일 때 -->
+                <otherwise>
+                    AND (
+                    title LIKE CONCAT('%', #{keyword}, '%')
+                    OR content LIKE CONCAT('%', #{keyword}, '%')
+                    OR writer LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
 </mapper>
