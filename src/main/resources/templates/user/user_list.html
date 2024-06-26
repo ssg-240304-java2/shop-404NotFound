@@ -35,8 +35,8 @@
             <div id="content">
                 <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
                 <div class="container-fluid">
-                    <h1 class="h3 mb-4 text-gray-800">회원 전체 조회</h1>
-                    <p class="mb-4">이 페이지에서는 모든 회원의 정보를 조회할 수 있습니다. 회원 ID, 이름, 주소, 전화번호, 가입일, 등급 등의 정보를 확인할 수 있으며, 각 회원에 대한 수정 및 삭제 작업을 수행할 수 있습니다.</p>
+                    <h1 class="h3 mb-4 text-gray-800">회원 전체 조회 및 수정</h1>
+                    <p class="mb-4">이 페이지에서는 모든 회원의 정보를 조회하고 수정할 수 있습니다. 회원 ID, 이름, 주소, 전화번호, 가입일, 등급 등의 정보를 확인할 수 있으며, 각 회원에 대한 수정 및 삭제 작업을 수행할 수 있습니다. 또한, 검색 필터를 사용하여 특정 회원을 쉽게 찾을 수 있습니다.</p>
 
                     <!-- 알림 메시지 -->
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert" style="display:none;">
@@ -161,6 +161,14 @@
                             <label for="editUserPhone">전화번호</label>
                             <input type="tel" class="form-control" id="editUserPhone" name="userPhone">
                         </div>
+                        <div class="form-group">
+                            <label for="editUserRank">등급</label>
+                            <select class="form-control" id="editUserRank" name="userRank">
+                                <option value="1">Bronze</option>
+                                <option value="2">Silver</option>
+                                <option value="3">Gold</option>
+                            </select>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
                             <button type="submit" class="btn btn-primary">저장</button>
@@ -219,12 +227,22 @@
             var userName = $(this).closest('tr').find('td:eq(1)').text();
             var userAddr = $(this).closest('tr').find('td:eq(2)').text();
             var userPhone = $(this).closest('tr').find('td:eq(3)').text();
+            var userRank = $(this).closest('tr').find('td:eq(5)').text();
 
             $('#editUserId').val(userId);
             $('#editUserName').val(userName);
             $('#editUserAddr').val(userAddr);
             $('#editUserPhone').val(userPhone);
             $('#editUserPw').val(''); // 보안상 비밀번호는 비워둡니다.
+
+            // 등급 설정
+            if (userRank.includes('Bronze')) {
+                $('#editUserRank').val('1');
+            } else if (userRank.includes('Silver')) {
+                $('#editUserRank').val('2');
+            } else if (userRank.includes('Gold')) {
+                $('#editUserRank').val('3');
+            }
 
             $('#editUserModal').modal('show');
         });

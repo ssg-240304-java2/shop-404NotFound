@@ -131,6 +131,7 @@ public class UserController {
             existingUser.setUserPw(updatedUser.getUserPw());
             existingUser.setUserAddr(updatedUser.getUserAddr());
             existingUser.setUserPhone(updatedUser.getUserPhone());
+            existingUser.setUserRank(updatedUser.getUserRank());
 
             userService.updateUser(existingUser);
             redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 업데이트되었습니다.");
