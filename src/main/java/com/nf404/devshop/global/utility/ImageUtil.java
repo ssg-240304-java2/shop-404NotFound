@@ -11,7 +11,7 @@ import java.util.*;
 import java.io.InputStream;
 
 @Component
-public class SaveImageUtil {
+public class ImageUtil {
 
     @Value("${ftp.server.host}")
     private String server;
@@ -62,8 +62,53 @@ public class SaveImageUtil {
         }
     }
 
-    public static String getRenamedFilename(String originalFilename) {
+    public String getRenamedFilename(String originalFilename) {
         String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
         return "%s%s".formatted(UUID.randomUUID().toString(), ext);
+    }
+
+
+    public String convertFilenameToUrl(String filePath, String uuidFilename) {
+        return filePath + uuidFilename;
+    }
+
+    public String convertUrlToFilename(String url) {
+        String[] parts = url.split("/");
+        String filename = parts[parts.length - 1];
+
+        int dotIndex = filename.lastIndexOf('.');
+        if (dotIndex > 0 && dotIndex < filename.length() - 1) {
+            return filename;
+        } else {
+            return "";
+        }
+    }
+
+    public void deleteFile(String filename, String folderName) throws IOException {
+        FTPClient ftpClient = new FTPClient();
+
+        try {
+            ftpClient.connect(server, port);
+            ftpClient.login(username, password);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+
+            filename = folderName + "/" + filename;
+            boolean done = ftpClient.deleteFile(filename);
+
+            if (!done)
+                throw new RuntimeException("[" + filename + "] 파일 업로드에 실패했습니다.");
+
+        } finally {
+            try {
+                if (ftpClient.isConnected()) {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }
