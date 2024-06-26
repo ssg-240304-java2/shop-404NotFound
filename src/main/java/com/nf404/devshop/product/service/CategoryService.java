@@ -37,7 +37,7 @@ public class CategoryService {
      * 전체 카테고리 반환 서비스 메소드
      * @return
      */
-    public List<CategoryDto> selectAllCategories() {
+    public List<CategoryDto> getAllCategories() {
         return categoryMapper.selectAllCategories();
     }
 
@@ -47,9 +47,8 @@ public class CategoryService {
      * @return
      */
     @Transactional
-    public boolean addCategory(CategoryDto categoryDto) {
+    public void addCategory(CategoryDto categoryDto) {
         categoryMapper.insertCategory(categoryDto);
-        return true;
     }
 
     /***
@@ -58,8 +57,20 @@ public class CategoryService {
      * @return
      */
     @Transactional
-    public boolean updateCategory(CategoryDto categoryDto) {
+    public void updateCategory(CategoryDto categoryDto) {
         categoryMapper.updateCategory(categoryDto);
-        return true;
+    }
+
+    @Transactional
+    public void deleteCategory(int categoryCode) {
+        categoryMapper.deleteCategory(categoryCode);
+    }
+
+    public boolean isCategoryNameDuplicated(String categoryName) {
+        return categoryMapper.countCategoriesByName(categoryName) > 0;
+    }
+
+    public boolean isCategoryNameDuplicated(String categoryName, int categoryCode) {
+        return categoryMapper.countCategoriesByNameAndCode(categoryName, categoryCode) > 0;
     }
 }

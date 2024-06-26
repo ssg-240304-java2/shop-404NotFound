@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카테고리 관리</title>
+    <style>
+        .category-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .category-table {
+            width: 45%;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        .scrollable {
+            display: block;
+            max-height: 400px; /* 원하는 높이로 설정 */
+            overflow-y: auto;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .existing-value {
+            color: grey;
+            opacity: 0.5;
+            font-size: 12px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+<div class="category-container">
+    <div class="category-table">
+        <h2>메인 카테고리</h2>
+        <button id="addMainCategoryBtn">메인 카테고리 추가</button>
+        <div class="scrollable">
+            <table>
+                <thead>
+                <tr>
+                    <th>카테고리 코드</th>
+                    <th>카테고리 이름</th>
+                    <th>액션</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category : ${categoryList}" th:if="${category.refCategoryCode} == null">
+                    <td th:text="${category.categoryCode}"></td>
+                    <td th:text="${category.categoryName}"></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="editCategoryBtn" th:data-type="main" th:data-code="${category.categoryCode}" th:data-name="${category.categoryName}">수정</button>
+                            <button class="deleteCategoryBtn" th:data-code="${category.categoryCode}">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="category-table">
+        <h2>서브 카테고리</h2>
+        <button id="addSubCategoryBtn">서브 카테고리 추가</button>
+        <div class="scrollable">
+            <table>
+                <thead>
+                <tr>
+                    <th>카테고리 코드</th>
+                    <th>카테고리 이름</th>
+                    <th>상위 카테고리 번호</th>
+                    <th>액션</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category : ${categoryList}" th:if="${category.refCategoryCode} != null">
+                    <td th:text="${category.categoryCode}"></td>
+                    <td th:text="${category.categoryName}"></td>
+                    <td th:text="${category.refCategoryCode}"></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="editCategoryBtn" th:data-type="sub" th:data-code="${category.categoryCode}" th:data-name="${category.categoryName}" th:data-ref="${category.refCategoryCode}">수정</button>
+                            <button class="deleteCategoryBtn" th:data-code="${category.categoryCode}">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">카테고리 추가/수정</h2>
+        <form id="modalForm">
+            <label for="categoryName">카테고리 이름:</label>
+            <input type="text" id="categoryName" name="categoryName" required><br><br>
+            <span id="existingCategoryName" class="existing-value"></span><br>
+            <label for="refCategoryCode" id="refCategoryLabel" style="display: none;">상위 카테고리 번호:</label>
+            <select id="refCategoryCode" name="refCategoryCode" style="display: none;">
+                <option value="">상위 카테고리 선택</option>
+                <option th:each="category : ${categoryList}" th:if="${category.refCategoryCode} == null" th:value="${category.categoryCode}" th:text="${category.categoryName}"></option>
+            </select><br><br>
+            <span id="existingRefCategoryCode" class="existing-value"></span><br>
+            <input type="hidden" id="categoryCode" name="categoryCode">
+            <button type="submit">저장</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+        $('#addMainCategoryBtn').click(function() {
+            openModal('add');
+        });
+
+        $('#addSubCategoryBtn').click(function() {
+            openModal('add', 'sub');
+        });
+
+        $('.editCategoryBtn').click(function() {
+            var categoryCode = $(this).attr('data-code');
+            var categoryName = $(this).attr('data-name');
+            var refCategoryCode = $(this).attr('data-ref');
+            openModal('edit', refCategoryCode ? 'sub' : 'main', categoryCode, categoryName, refCategoryCode);
+        });
+
+        $('.close').click(function() {
+            closeModal();
+        });
+
+        $(window).click(function(event) {
+            if (event.target == $('#myModal')[0]) {
+                closeModal();
+            }
+        });
+
+        // Form submission
+        $('#modalForm').submit(function(event) {
+            event.preventDefault();
+            var action = $('#modalForm').attr('data-action');
+            var formData = $(this).serialize();
+            var url = '/category/' + action;
+
+            $.ajax({
+                type: 'post',
+                url: url,
+                data: formData,
+                success: function(data) {
+                    alert(data);
+                    closeModal();
+                    location.reload();
+                },
+                error: function() {
+                    if(action === 'add')
+                        alert('카테고리 등록에 실패했습니다!');
+                    else
+                        alert('카테고리 수정에 실패했습니다!');
+                }
+            });
+        });
+
+        function openModal(action, type, categoryCode, categoryName, refCategoryCode) {
+            $('#myModal').show();
+            $('#modalForm').attr('data-action', action); // 액션 구별을 위한 속성 설정
+            if (action === 'edit') {
+                $('#modalTitle').text('카테고리 수정');
+                $('#categoryCode').val(categoryCode);
+                $('#categoryName').val(categoryName);
+                $('#existingCategoryName').text('기존 이름: ' + categoryName).show();
+                if (type === 'sub') {
+                    $('#refCategoryLabel').show();
+                    $('#refCategoryCode').show();
+                    $('#refCategoryCode').val(refCategoryCode);
+                    $('#existingRefCategoryCode').text('기존 상위 카테고리 코드: ' + refCategoryCode).show();
+                } else {
+                    $('#refCategoryLabel').hide();
+                    $('#refCategoryCode').hide();
+                    $('#existingRefCategoryCode').hide();
+                }
+            } else {
+                $('#modalTitle').text('카테고리 추가');
+                $('#categoryCode').val('');
+                $('#categoryName').val('');
+                $('#existingCategoryName').hide();
+                if (type === 'sub') {
+                    $('#refCategoryLabel').show();
+                    $('#refCategoryCode').show();
+                    $('#refCategoryCode').val('');
+                    $('#existingRefCategoryCode').hide();
+                } else {
+                    $('#refCategoryLabel').hide();
+                    $('#refCategoryCode').hide();
+                    $('#existingRefCategoryCode').hide();
+                }
+            }
+        }
+
+        function closeModal() {
+            $('#myModal').hide();
+            $('#modalForm')[0].reset();
+            $('#existingCategoryName').hide();
+            $('#existingRefCategoryCode').hide();
+        }
+
+        $('.deleteCategoryBtn').click(function() {
+
+            if(confirm("정말 이 카테고리를 삭제하시겠습니까?")) {
+                $.ajax({
+                    type: 'post',
+                    url: '/category/delete',
+                    data: {categoryCode: $(this).attr('data-code')},
+                    success: function(data) {
+                        alert(data);
+                        location.reload();
+                    },
+                    error: function(error) {
+                        alert(error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
