@@ -2,6 +2,7 @@ package com.nf404.devshop.board.mapper;
 
 import com.nf404.devshop.board.model.dto.BoardRequest;
 import com.nf404.devshop.board.model.dto.BoardResponse;
+import com.nf404.devshop.board.model.dto.SearchDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -38,12 +39,12 @@ public interface BoardMapper {
      * 게시글 리스트 조회
      * @return 게시글 리스트
      */
-    List<BoardResponse> findAllBoard();
+    List<BoardResponse> findAllBoard(SearchDTO params);
 
     /**
      * 게시글 수 카운팅
      * @return 게시글 수
      */
-    int count();
+    int count(SearchDTO params);
 
 }
