@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 사용자 관리를 위한 컨트롤러 클래스.
@@ -41,9 +42,11 @@ public class UserController {
             Model model) {
 
         List<UserDTO> users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
+        users = users.stream().filter(user -> !user.isDeleted()).collect(Collectors.toList());
         model.addAttribute("users", users);
         return "user/user_list";
     }
+
 
 
 //      이전 기능
@@ -111,25 +114,20 @@ public class UserController {
 
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute UserDTO updatedUser, RedirectAttributes redirectAttributes) {
-        log.info("Updating user: {}", updatedUser);
         try {
-            // 기존 사용자 정보를 가져옵니다.
             UserDTO existingUser = userService.getUserById(updatedUser.getUserId());
             if (existingUser == null) {
                 throw new IllegalArgumentException("User not found");
             }
 
-            // 랭크를 제외한 다른 필드들만 업데이트합니다.
             existingUser.setUserName(updatedUser.getUserName());
             existingUser.setUserPw(updatedUser.getUserPw());
             existingUser.setUserAddr(updatedUser.getUserAddr());
             existingUser.setUserPhone(updatedUser.getUserPhone());
-            // userRank는 업데이트하지 않습니다.
 
             userService.updateUser(existingUser);
             redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
-            log.error("Error updating user: ", e);
             redirectAttributes.addFlashAttribute("errorMessage", "사용자 정보 업데이트 중 오류가 발생했습니다: " + e.getMessage());
         }
         return "redirect:/users/list";

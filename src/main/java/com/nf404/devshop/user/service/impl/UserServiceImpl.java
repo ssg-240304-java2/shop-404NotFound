@@ -32,17 +32,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> getAllUsers() {
         List<UserDTO> users = userMapper.getAllUsers();
-        log.info("Retrieved users: {}", users);
+        log.info("Retrieved non-deleted users: {}", users);
         if (users == null || users.isEmpty()) {
-            log.warn("No users found or users list is null");
+            log.warn("No non-deleted users found or users list is null");
         } else {
-            log.info("Number of users retrieved: {}", users.size());
-            for (UserDTO user : users) {
-                log.info("User: {}", user);
-            }
+            log.info("Number of non-deleted users retrieved: {}", users.size());
         }
-        return userMapper.getAllUsers();
+        return users;
     }
+
 
 
     @Override

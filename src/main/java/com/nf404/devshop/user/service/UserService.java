@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface UserService {
     /**
-     * 모든 사용자 정보를 가져옴
-     * 
-     * @return 모든 사용자 정보를 담은 UserDTO 리스트
+     * 삭제되지 않은 모든 사용자 정보를 가져옴
+     *
+     * @return 삭제되지 않은 모든 사용자 정보를 담은 UserDTO 리스트
      */
     @Transactional(readOnly = true)
     List<UserDTO> getAllUsers();
