@@ -1,154 +1,373 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Item Shop</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let successMessage = `[[${successMessage}]]`;
         if(successMessage) alert(successMessage.replaceAll("\"",""));
     </script>
-    <link rel="stylesheet" type="text/css" href="/css/product/product-list.css">
-    <style>
-        img {
-            width: 50px;
-            height: 50px;
-        }
-    </style>
+    <title>404NotFound - DevShop</title>
+
+    <link th:replace="elements/misc/deps :: html"/>
+
 </head>
+<body id="page-top">
+    <div id="wrapper">
+        <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
 
-<body>
-<div class="form-container">
-    <form action="/product/product-list" method="GET" id="productSearchForm">
-        <div class="form-group">
-            <label for="productName">상품 이름</label>
-            <input type="text" id="productName" name="productName">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">전체 상품관리</h1>   <!-- 페이지 제목 -->
+                    <p class="mb-4">상품의 조회, 수정, 판매상태 변경을 처리할 수 있는 페이지 입니다.</p>  <!-- 페이지 설명 -->
+
+                    <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+
+                    <!-- 행 항목으로 나누어서 채워넣으면 됩니다. -->
+    <!--                <div class="row">-->
+    <!--                    <div class="col-xl-3 col-md-6 mb-4">-->
+    <!--                        <div class="card border-left-warning shadow h-100 py-2">-->
+    <!--                            <div class="card-body">-->
+    <!--                                <div class="row no-gutters align-items-center">-->
+    <!--                                    <div class="col mr-2">-->
+    <!--                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">-->
+    <!--                                            Pending Requests</div>-->
+    <!--                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="col-auto">-->
+    <!--                                        <i class="fas fa-comments fa-2x text-gray-300"></i>-->
+    <!--                                    </div>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                    <div class="col-xl-3 col-md-6 mb-4">-->
+    <!--                        <div class="card border-left-warning shadow h-100 py-2">-->
+    <!--                            <div class="card-body">-->
+    <!--                                <div class="row no-gutters align-items-center">-->
+    <!--                                    <div class="col mr-2">-->
+    <!--                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">-->
+    <!--                                            Pending Requests</div>-->
+    <!--                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="col-auto">-->
+    <!--                                        <i class="fas fa-comments fa-2x text-gray-300"></i>-->
+    <!--                                    </div>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+
+
+                    <div class="form-container">
+                        <form action="/product/product-list" method="GET" id="productSearchForm">
+                            <div class="form-group">
+                                <label for="productName">상품 이름</label>
+                                <input type="text" id="productName" name="productName">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="mainCategoryCode">메인 카테고리</label>
+                                    <select id="mainCategoryCode" name="mainCategoryCode">
+                                        <option value="">Select Main Category</option>
+                                        <option th:each="mainCategory : ${mainCategories}"
+                                                th:value="${mainCategory.categoryCode}"
+                                                th:text="${mainCategory.categoryName}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subCategoryCode">서브 카테고리</label>
+                                    <select id="subCategoryCode" name="subCategoryCode">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="minPrice">최소 가격</label>
+                                    <input type="number" id="minPrice" name="minPrice" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="maxPrice">최대 가격</label>
+                                    <input type="number" id="maxPrice" name="maxPrice" min="0">
+                                </div>
+                            </div>
+                            <div class="form-group radio-group">
+                                <label>판매 여부</label>
+                                <label><input type="radio" name="isDisplayed" id="isDisplayedY" value="Y" checked>판매중</label>
+                                <label><input type="radio" name="isDisplayed" id="isDisplayedN" value="N">판매중단</label>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="startDate">생성일자 이후</label>
+                                    <input type="date" id="startDate" name="startDate">
+                                </div>
+                                <div class="form-group">
+                                    <label for="endDate">생성일자 이전</label>
+                                    <input type="date" id="endDate" name="endDate">
+                                </div>
+                            </div>
+                            <button type="submit">검색</button>
+                        </form>
+                    </div>
+
+
+                    <form action="/product/disable-product" method="post" id="productResultForm">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="100">
+                            <button type="submit">선택 항목 판매상태 변경</button>
+                            <tr>
+                                <th>선택</th>
+                                <th>상품 코드</th>
+                                <th>이미지</th>
+                                <th>상품 이름</th>
+                                <th>가격</th>
+                                <th>카테고리</th>
+                                <th>판매 여부</th>
+                                <th>상품 설명</th>
+                                <th>등록 일자</th>
+                            </tr>
+                            <tr th:each="product : ${productList}">
+                                <td>
+                                    <input type="checkbox" name="selectedProduct[]" th:value="${product.productCode}"/>
+                                </td>
+                                <td th:text="${product.productCode}"></td>
+                                <td><img th:src="@{${product.image.uuidFilename}}" alt="상품 이미지 준비중 입니다." width="100px" height="100px"></td>
+                                <td th:text="${product.productName}"></td>
+                                <td th:text="${product.price}"></td>
+                                <td th:text="${product.category.categoryName}"></td>
+                                <td th:text="${product.isDisplayed}"></td>
+                                <td th:text="${product.productDesc}"></td>
+                                <td th:text="${product.registrationDate}"></td>
+                                <td>
+                                    <a th:href="@{/product/update(productCode=${product.productCode})}">수정</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+
+                    <script src="/js/product/showCategory.js"></script>
+
+                    <script>
+                        $(document).ready(function() {
+
+                            $('#productSearchForm').submit(function(event) {
+                                var minPrice = $('#minPrice').val();
+                                var maxPrice = $('#maxPrice').val();
+                                var startDate = $('#startDate').val();
+                                var endDate = $('#endDate').val();
+
+                                if (minPrice && maxPrice && parseInt(minPrice) > parseInt(maxPrice)) {
+                                    alert('최대 가격은 최소 가격보다 커야 합니다.');
+                                    event.preventDefault();
+                                }
+
+                                if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+                                    alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+                                    event.preventDefault();
+                                }
+                            });
+                        });
+                    </script>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#productResultForm").submit(function(event) {
+                                var selectedProducts = [];
+                                $("input[name='selectedProduct[]']:checked").each(function() {
+                                    selectedProducts.push($(this).val());
+                                });
+
+                                if (selectedProducts.length === 0) {
+                                    alert("최소 한 개의 상품을 선택해야 합니다.");
+                                    event.preventDefault();
+                                } else {
+                                    var confirmResult = confirm("판매 상태를 변경 하시겠습니까?");
+                                    if(!confirmResult) {
+                                        event.preventDefault();
+                                        $("input[name='selectedProduct[]']:checked").prop('checked', false);
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+
+
+                    <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+                </div>
+            </div>
+            <footer class="sticky-footer bg-white">     <!-- footer -->
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="mainCategoryCode">메인 카테고리</label>
-                <select id="mainCategoryCode" name="mainCategoryCode">
-                    <option value="">Select Main Category</option>
-                    <option th:each="mainCategory : ${mainCategories}"
-                            th:value="${mainCategory.categoryCode}"
-                            th:text="${mainCategory.categoryName}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="subCategoryCode">서브 카테고리</label>
-                <select id="subCategoryCode" name="subCategoryCode">
-                </select>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="minPrice">최소 가격</label>
-                <input type="number" id="minPrice" name="minPrice" min="0">
-            </div>
-            <div class="form-group">
-                <label for="maxPrice">최대 가격</label>
-                <input type="number" id="maxPrice" name="maxPrice" min="0">
-            </div>
-        </div>
-        <div class="form-group radio-group">
-            <label>판매 여부</label>
-            <label><input type="radio" name="isDisplayed" id="isDisplayedY" value="Y" checked>판매중</label>
-            <label><input type="radio" name="isDisplayed" id="isDisplayedN" value="N">판매중단</label>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="startDate">생성일자 이후</label>
-                <input type="date" id="startDate" name="startDate">
-            </div>
-            <div class="form-group">
-                <label for="endDate">생성일자 이전</label>
-                <input type="date" id="endDate" name="endDate">
-            </div>
-        </div>
-        <button type="submit">검색</button>
-    </form>
-</div>
 
 
-<form action="/product/disable-product" method="post" id="productResultForm">
-    <table>
-        <button type="submit">선택 항목 판매상태 변경</button>
-        <tr>
-            <th>선택</th>
-            <th>상품 코드</th>
-            <th>이미지</th>
-            <th>상품 이름</th>
-            <th>가격</th>
-            <th>카테고리</th>
-            <th>판매 여부</th>
-            <th>상품 설명</th>
-            <th>등록 일자</th>
-        </tr>
-        <tr th:each="product : ${productList}">
-            <td>
-                <input type="checkbox" name="selectedProduct[]" th:value="${product.productCode}"/>
-            </td>
-            <td th:text="${product.productCode}"></td>
-            <td><img th:src="@{${product.image.uuidFilename}}" alt="상품 이미지 준비중 입니다."></td>
-            <td th:text="${product.productName}"></td>
-            <td th:text="${product.price}"></td>
-            <td th:text="${product.category.categoryName}"></td>
-            <td th:text="${product.isDisplayed}"></td>
-            <td th:text="${product.productDesc}"></td>
-            <td th:text="${product.registrationDate}"></td>
-            <td>
-                <a th:href="@{/product/update(productCode=${product.productCode})}">수정</a>
-            </td>
-        </tr>
-    </table>
-</form>
 
-<script src="/js/product/showCategory.js"></script>
-
-<script>
-    $(document).ready(function() {
-
-        $('#productSearchForm').submit(function(event) {
-            var minPrice = $('#minPrice').val();
-            var maxPrice = $('#maxPrice').val();
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
-
-            if (minPrice && maxPrice && parseInt(minPrice) > parseInt(maxPrice)) {
-                alert('최대 가격은 최소 가격보다 커야 합니다.');
-                event.preventDefault();
-            }
-
-            if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-                alert('종료 날짜는 시작 날짜 이후여야 합니다.');
-                event.preventDefault();
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        $("#productResultForm").submit(function(event) {
-            var selectedProducts = [];
-            $("input[name='selectedProduct[]']:checked").each(function() {
-                selectedProducts.push($(this).val());
-            });
-
-            if (selectedProducts.length === 0) {
-                alert("최소 한 개의 상품을 선택해야 합니다.");
-                event.preventDefault();
-            } else {
-                var confirmResult = confirm("판매 상태를 변경 하시겠습니까?");
-                if(!confirmResult) {
-                    event.preventDefault();
-                    $("input[name='selectedProduct[]']:checked").prop('checked', false);
-                }
-            }
-        });
-    });
-</script>
-
+    </div>
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Developer Item Shop</title>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--    <script>-->
+<!--        let successMessage = `[[${successMessage}]]`;-->
+<!--        if(successMessage) alert(successMessage.replaceAll("\"",""));-->
+<!--    </script>-->
+<!--    <link rel="stylesheet" type="text/css" href="/css/product/product-list.css">-->
+<!--    <style>-->
+<!--        img {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div class="form-container">-->
+<!--    <form action="/product/product-list" method="GET" id="productSearchForm">-->
+<!--        <div class="form-group">-->
+<!--            <label for="productName">상품 이름</label>-->
+<!--            <input type="text" id="productName" name="productName">-->
+<!--        </div>-->
+<!--        <div class="form-row">-->
+<!--            <div class="form-group">-->
+<!--                <label for="mainCategoryCode">메인 카테고리</label>-->
+<!--                <select id="mainCategoryCode" name="mainCategoryCode">-->
+<!--                    <option value="">Select Main Category</option>-->
+<!--                    <option th:each="mainCategory : ${mainCategories}"-->
+<!--                            th:value="${mainCategory.categoryCode}"-->
+<!--                            th:text="${mainCategory.categoryName}"></option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="subCategoryCode">서브 카테고리</label>-->
+<!--                <select id="subCategoryCode" name="subCategoryCode">-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-row">-->
+<!--            <div class="form-group">-->
+<!--                <label for="minPrice">최소 가격</label>-->
+<!--                <input type="number" id="minPrice" name="minPrice" min="0">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="maxPrice">최대 가격</label>-->
+<!--                <input type="number" id="maxPrice" name="maxPrice" min="0">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group radio-group">-->
+<!--            <label>판매 여부</label>-->
+<!--            <label><input type="radio" name="isDisplayed" id="isDisplayedY" value="Y" checked>판매중</label>-->
+<!--            <label><input type="radio" name="isDisplayed" id="isDisplayedN" value="N">판매중단</label>-->
+<!--        </div>-->
+<!--        <div class="form-row">-->
+<!--            <div class="form-group">-->
+<!--                <label for="startDate">생성일자 이후</label>-->
+<!--                <input type="date" id="startDate" name="startDate">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="endDate">생성일자 이전</label>-->
+<!--                <input type="date" id="endDate" name="endDate">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <button type="submit">검색</button>-->
+<!--    </form>-->
+<!--</div>-->
+
+
+<!--<form action="/product/disable-product" method="post" id="productResultForm">-->
+<!--    <table>-->
+<!--        <button type="submit">선택 항목 판매상태 변경</button>-->
+<!--        <tr>-->
+<!--            <th>선택</th>-->
+<!--            <th>상품 코드</th>-->
+<!--            <th>이미지</th>-->
+<!--            <th>상품 이름</th>-->
+<!--            <th>가격</th>-->
+<!--            <th>카테고리</th>-->
+<!--            <th>판매 여부</th>-->
+<!--            <th>상품 설명</th>-->
+<!--            <th>등록 일자</th>-->
+<!--        </tr>-->
+<!--        <tr th:each="product : ${productList}">-->
+<!--            <td>-->
+<!--                <input type="checkbox" name="selectedProduct[]" th:value="${product.productCode}"/>-->
+<!--            </td>-->
+<!--            <td th:text="${product.productCode}"></td>-->
+<!--            <td><img th:src="@{${product.image.uuidFilename}}" alt="상품 이미지 준비중 입니다."></td>-->
+<!--            <td th:text="${product.productName}"></td>-->
+<!--            <td th:text="${product.price}"></td>-->
+<!--            <td th:text="${product.category.categoryName}"></td>-->
+<!--            <td th:text="${product.isDisplayed}"></td>-->
+<!--            <td th:text="${product.productDesc}"></td>-->
+<!--            <td th:text="${product.registrationDate}"></td>-->
+<!--            <td>-->
+<!--                <a th:href="@{/product/update(productCode=${product.productCode})}">수정</a>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--    </table>-->
+<!--</form>-->
+
+<!--<script src="/js/product/showCategory.js"></script>-->
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+
+<!--        $('#productSearchForm').submit(function(event) {-->
+<!--            var minPrice = $('#minPrice').val();-->
+<!--            var maxPrice = $('#maxPrice').val();-->
+<!--            var startDate = $('#startDate').val();-->
+<!--            var endDate = $('#endDate').val();-->
+
+<!--            if (minPrice && maxPrice && parseInt(minPrice) > parseInt(maxPrice)) {-->
+<!--                alert('최대 가격은 최소 가격보다 커야 합니다.');-->
+<!--                event.preventDefault();-->
+<!--            }-->
+
+<!--            if (startDate && endDate && new Date(startDate) > new Date(endDate)) {-->
+<!--                alert('종료 날짜는 시작 날짜 이후여야 합니다.');-->
+<!--                event.preventDefault();-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $("#productResultForm").submit(function(event) {-->
+<!--            var selectedProducts = [];-->
+<!--            $("input[name='selectedProduct[]']:checked").each(function() {-->
+<!--                selectedProducts.push($(this).val());-->
+<!--            });-->
+
+<!--            if (selectedProducts.length === 0) {-->
+<!--                alert("최소 한 개의 상품을 선택해야 합니다.");-->
+<!--                event.preventDefault();-->
+<!--            } else {-->
+<!--                var confirmResult = confirm("판매 상태를 변경 하시겠습니까?");-->
+<!--                if(!confirmResult) {-->
+<!--                    event.preventDefault();-->
+<!--                    $("input[name='selectedProduct[]']:checked").prop('checked', false);-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!-- ========================================================================================  -->
