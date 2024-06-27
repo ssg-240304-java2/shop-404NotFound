@@ -27,9 +27,9 @@ public class UpdateStatusController {
     public String updateOrderStatus(@RequestParam(required = false) int orderNo, @RequestParam(required = false) String orderStatus) {
         log.info("orderNo >>>>>>>>>>>>> {}", orderNo);
         log.info("orderStatus >>>>>>>> {}", orderStatus);
-        if(orderStatus.equals("주문접수")) {
-            updateStatusService.updateOrderStatus(orderNo, orderStatus);
-        }
+
+        updateStatusService.updateOrderStatus(orderNo, orderStatus);
+
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>> 주문 상태 처리 완료");
         return "redirect:/order/orderlist";
     }
