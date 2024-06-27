@@ -100,4 +100,10 @@
             #{productCode}
         </foreach>
     </update>
+
+    <select id="countProductsByCategoryCode" resultType="_int">
+        select count(*)
+        from tbl_product
+        where category_code = #{categoryCode}
+    </select>
 </mapper>

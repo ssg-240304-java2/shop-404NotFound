@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>게시판 관리 페이지</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link th:replace="elements/misc/deps :: html"/>
+</head>
+
+<body id="page-top">
+<div id="wrapper">
+    <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+            <div class="container-fluid">
+                <h1 class="h3 mb-4 text-gray-800">게시글 리스트</h1>   <!-- 페이지 제목 -->
+                <p class="mb-4">
+                    게시글 리스트 페이지입니다.<br>
+                    게시글을 선택하여 삭제할 수 있고, 검색어를 지정하여 특정 게시물 검색이 가능합니다.<br>
+                    게시글을 눌러서 상세보기 페이지로 이동할 수 있습니다.
+                </p>  <!-- 페이지 설명 -->
+                <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+                <!-- 행 항목으로 나누어서 채워넣으면 됩니다. -->
+                <!--                        <div class="row">-->
+
+                <!--                        </div>-->
+
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-column align-items-start justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">게시글 목록</h6>
+                            </div>
+
+                            <section>
+                                <!--/* 검색 */-->
+                                <div class="search_box">
+                                    <form id="searchForm" onsubmit="return false;" autocomplete="off">
+                                        <div class="sch_group fl">
+                                            <!--                                        기존코드-->
+                                            <!--                                        <select id="searchType" name="searchType" title="검색 유형 선택">-->
+                                            <label>
+                                                <select id="searchType" name="dataTable_length" aria-controls="dataTable" title="검색 유형 선택" class="custom-select custom-select-sm form-control form-control-sm">
+                                                    <option value="">전체 검색</option>
+                                                    <option value="title">제목</option>
+                                                    <option value="content">내용</option>
+                                                    <option value="writer">작성자</option>
+                                                </select>
+                                            </label>
+                                            <!--                                        기존코드-->
+                                            <!--                                        <input type="text" id="keyword" name="keyword" placeholder="키워드를 입력해 주세요." title="키워드 입력" />-->
+                                            <label>
+                                                <input type="search" class="form-control form-control-sm" id="keyword" name="keyword"
+                                                       placeholder="키워드를 입력해 주세요." aria-controls="dataTable">
+                                            </label>
+                                            <!--                                        <button type="button" class="bt_search" onclick="movePage(1);"><i class="fas fa-search"></i><span class="skip_info">검색</span></button>-->
+                                            <button type="button" class="btn btn-primary" onclick="movePage(1);">
+                                                <i class="fas fa-search fa-sm">
+                                                </i><span class="skip_info">검색</span>
+                                            </button>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <table class="table table-bordered">
+                                    <colgroup>
+                                        <col style="width:50px;"/><col style="width:7.5%;"/><col style="width:auto;"/><col style="width:10%;"/><col style="width:15%;"/><col style="width:7.5%;"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" id="checkAll" onchange="selectAll(this)"/></th>
+                                        <th scope="col">번호</th>
+                                        <th scope="col">제목</th>
+                                        <th scope="col">작성자</th>
+                                        <th scope="col">등록일</th>
+                                        <th scope="col">조회</th>
+                                    </tr>
+                                    </thead>
+
+                                    <!--/* 리스트 데이터 렌더링 영역 */-->
+                                    <tbody id="list">
+
+                                    </tbody>
+                                </table>
+
+                                <!--/* 페이지네이션 렌더링 영역 */-->
+                                <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+                                    <ul class="pagination"><li class="paginate_button page-item previous disabled" id="dataTable_previous"><a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item next" id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="5" tabindex="0" class="page-link">Next</a></li></ul></div>
+                                <div class="paging">
+
+                                </div>
+
+                                <!--/* 버튼 */-->
+                                <!--                                <button type="button" class="btn btn-primary" onclick="movePage(1);">-->
+                                <!--                                    <i class="fas fa-search fa-sm">-->
+                                <!--                                    </i><span class="skip_info">검색</span>-->
+                                <!--                                </button>-->
+
+                                <div class="container">
+                                    <div class="d-flex justify-content-between mb-4">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteSelected()">
+                                            <i class="fas fa-trash-alt"></i> 선택 삭제
+                                        </button>
+                                        <a th:href="@{/board/write}" class="btn-write">
+                                            <i class="fas fa-pen"></i> 글쓰기
+                                        </a>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+                        </div>
+                    </div>
+                    <footer th:replace="elements/footer :: footer"></footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    window.onload = () => {
+        // 페이지가 로드되었을 때, 딱 한 번만 함수를 실행
+        findAllBoard();
+    }
+
+    // 게시글 리스트 조회
+    function findAllBoard() {
+        const list = [[ ${response.list} ]];
+        const pagination = [[ ${response.pagination} ]];
+        const params = [[ ${params} ]];
+        let num = pagination.totalRecordCount - ((params.page - 1) * params.recordSize);
+
+        drawList(list, num);
+        drawPage(pagination, params);
+
+    }
+
+    // 리스트 HTML draw
+    function drawList(list, num) {
+        let html = '';
+        list.forEach(row => {
+            html += `
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox" data-board-id="${row.boardId}" /></td>
+                            <td>${row.noticeYn === false ? num-- : '공지'}</td>
+                            <td class="tl"><a href="/board/view?boardId=${row.boardId}">${row.title}</a></td>
+                            <td>${row.writer}</td>
+                            <td>${dayjs(row.createdDate).format('YYYY-MM-DD HH:mm')}</td>
+                            <td>${row.viewCnt}</td>
+                        </tr>
+                    `;
+        })
+        document.getElementById('list').innerHTML = html;
+    }
+
+    // 페이지 HTML draw
+    function drawPage(pagination, params) {
+        if (!pagination || !params) {
+            document.querySelector('.paging').innerHTML = '';
+            throw new Error('Missing required parameters...');
+        }
+
+        let html = '';
+
+        if (pagination.existPrevPage) {
+            html += `
+                        <a href="javascript:void(0);" onclick="movePage(1)" class="page_bt first">첫 페이지</a>
+                        <a href="javascript:void(0);" onclick="movePage(${pagination.startPage - 1})" class="page_bt prev">이전 페이지</a>
+                    `;
+        }
+
+        html += '<p>';
+        for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+            html += (i !== params.page)
+                ? `<a href="javascript:void(0);" onclick="movePage(${i});">${i}</a>`
+                : `<span class="on">${i}</span>`
+        }
+        html += '</p>';
+
+        if (pagination.existNextPage) {
+            html += `
+                        <a href="javascript:void(0);" onclick="movePage(${pagination.endPage + 1});" class="page_bt next">다음 페이지</a>
+                        <a href="javascript:void(0);" onclick="movePage(${pagination.totalPageCount});" class="page_bt last">마지막 페이지</a>
+                    `;
+        }
+
+        document.querySelector('.paging').innerHTML = html;
+    }
+
+    // 페이지 이동
+    function movePage(page) {
+        const form = document.getElementById('searchForm');
+        const queryParams = {
+            page: (page) ? page : 1,
+            recordSize: 10,
+            pageSize: 10,
+            searchType: form.searchType.value,
+            keyword: form.keyword.value
+        }
+
+        location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
+    }
+
+    // 모든 체크박스 선택/해제
+    function selectAll(source) {
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+
+    // 선택된 항목 삭제
+    function deleteSelected() {
+        const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+        const ids = Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-board-id'));
+
+        if (ids.length === 0) {
+            alert('삭제할 항목을 선택하세요.');
+            return;
+        }
+
+        if (!confirm('선택된 항목을 삭제하시겠습니까?')) {
+            return;
+        }
+
+        ids.forEach(id => {
+            const formHtml = `
+                <form id="deleteForm${id}" action="/board/delete" method="post">
+                    <input type="hidden" name="boardId" value="${id}" />
+                </form>
+            `;
+            const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+            const form = doc.body.firstChild;
+            document.body.append(form);
+            document.getElementById(`deleteForm${id}`).submit();
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

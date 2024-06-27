@@ -41,6 +41,11 @@ CREATE TABLE IF NOT EXISTS `tbl_category`
     PRIMARY KEY (`category_code`)
 ) COMMENT = '상품 카테고리';
 
+ALTER TABLE tbl_category
+ADD CONSTRAINT fk_ref_category_code
+FOREIGN KEY (ref_category_code) REFERENCES tbl_category(category_code)
+ON DELETE CASCADE ON UPDATE CASCADE;
+
     # 데이터 유일성 보장(category_code)
     CREATE UNIQUE INDEX `tbl_category_PK` ON `tbl_category` (`category_code`);
 
