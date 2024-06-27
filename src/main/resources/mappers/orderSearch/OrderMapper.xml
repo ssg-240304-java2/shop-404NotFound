@@ -123,7 +123,7 @@
         JOIN
         tbl_user u ON o.user_no = u.user_no
         WHERE
-            u.is_deleted = 0 AND o.order_status = '처리완료'
+            u.is_deleted = 0
         GROUP BY
             u.user_no, u.user_id, u.user_name
         ORDER BY allOrderCount

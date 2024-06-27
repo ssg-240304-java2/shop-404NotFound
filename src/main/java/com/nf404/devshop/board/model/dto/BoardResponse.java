@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 public class BoardResponse {
 
     private Long boardId;                  // 게시글번호

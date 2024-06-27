@@ -9,10 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -47,19 +45,49 @@ public class BoardController {
 
     // 게시글 리스트 페이지
     @GetMapping("/board/list")
-    public String openBoardList(@ModelAttribute("params") SearchDTO params, Model model) {
-        PagingResponse<BoardResponse> response = boardService.findAllBoard(params);
-        model.addAttribute("response", response);
-        return "board/list";
+    public String openBoardList(Model model) {
+        List<BoardResponse> allBoard = boardService.findAllBoard();
+
+        model.addAttribute("boards", allBoard);
+        return "board/list copy";
     }
 
-    // 게시글 리스트 페이지 페이징 뺀부분
-    @GetMapping("/board/boardlist")
-    public String openBoardList(Model model) {
-        List<BoardResponse> boards = boardService.findAllBoards();
-        model.addAttribute("boards", boards);
-        return "board/boardlist";
+    /*
+    http://localhost:8080/board/detail/302
+     */
+    @GetMapping("/board/detail/{boardId}")
+    public String openBoardDetail(@PathVariable Integer boardId, Model model) {
+        BoardResponse board = boardService.findByBoardId(boardId);
+        String title = board.getTitle();
+        String content = board.getContent();
+
+        model.addAttribute("title", title);
+        model.addAttribute("content", content);
+
+        return "board/detail";
     }
+
+    @PostMapping("/board/list/delete")
+    public String delete(@RequestBody List<Integer> boardIds) {
+        System.out.println("boardIds = " + boardIds);
+        boardService.deleteByBoardIds(boardIds);
+
+        return "redirect:/board/list";
+    }
+
+//    public String openBoardList(@ModelAttribute("params") SearchDTO params, Model model) {
+//        PagingResponse<BoardResponse> response = boardService.findAllBoard(params);
+//        model.addAttribute("response", response);
+//        return "board/list";
+//    }
+
+    // 게시글 리스트 페이지 페이징 뺀부분
+//    @GetMapping("/board/boardlist")
+//    public String openBoardList(Model model) {
+//        List<BoardResponse> boards = boardService.findAllBoards();
+//        model.addAttribute("boards", boards);
+//        return "board/boardlist";
+//    }
 
     // 게시글 상세 페이지
     @GetMapping("/board/view")
