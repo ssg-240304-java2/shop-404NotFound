@@ -12,10 +12,12 @@ spring:
 
   # driver config
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://dokalab.asuscomm.com:50133/devshop
     username: devshop
     password: 1234
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://dokalab.asuscomm.com:50133/devshop
 
   # home.html의 css 경로 설정
   web:

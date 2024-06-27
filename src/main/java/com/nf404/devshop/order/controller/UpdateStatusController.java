@@ -29,8 +29,7 @@ public class UpdateStatusController {
         log.info("orderStatus >>>>>>>> {}", orderStatus);
 
         updateStatusService.updateOrderStatus(orderNo, orderStatus);
-
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>> 주문 상태 처리 완료");
+//        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>> 주문 상태 처리 완료");
         return "redirect:/order/orderlist";
     }
 }
