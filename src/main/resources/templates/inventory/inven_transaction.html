@@ -129,12 +129,15 @@
             <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
 
             <!-- Page Header -->
-            <div class="page-header">
-                <div class="container-fluid">
-                    <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">재고수량관리</h1>
-                    <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>
-                </div>
-            </div>
+    <div class="page-header">
+        <div class="container-fluid">
+            <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">개발자 용품 재고 변동 이력</h1>
+            <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">
+                개발자들이 필요로 하는 다양한 아이템들의 입고 및 출고 기록을 관리하고 추적합니다. 
+                이를 통해 인기 상품의 수요 패턴을 파악하고 재고를 효율적으로 관리할 수 있습니다.
+            </p>
+        </div>
+    </div>  
 
             <div class="container-fluid">
                 <!-- 알림 메시지 -->
@@ -153,7 +156,7 @@
 
                 <div class="card shadow mb-4 animate__animated animate__fadeIn animate__delay-1s">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">상품별 재고이력</h6>
                         <button class="btn btn-primary animate__animated animate__pulse animate__infinite" type="button" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" aria-controls="searchCollapse">
                             <i class="fas fa-search fa-sm"></i> 검색 필터
                         </button>
