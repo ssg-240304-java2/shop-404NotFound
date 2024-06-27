@@ -20,4 +20,6 @@ public interface ProductMapper {
     void updateProductInfo(ProductUpdateReqDto productUpdateReqDto);
 
     void updateProductStatusInfo(List<Integer> productCodeList);
+
+    int countProductsByCategoryCode(int categoryCode);
 }

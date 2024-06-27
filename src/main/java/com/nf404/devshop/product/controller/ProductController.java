@@ -37,13 +37,19 @@ public class ProductController {
         this.imageUtil = imageUtil;
     }
 
+    /***
+     * [select]
+     * - 필터링 조건을 받아 해당하는 상품의 리스트 반환
+     * @param productCriteria
+     * @param model
+     * @return
+     */
     @GetMapping("/product-list")
     public String searchProducts(@ModelAttribute ProductCriteria productCriteria, Model model) {
 
         List<ProductReadResDto> productList = productService.getProductInfo(productCriteria);
 
         for(ProductReadResDto productReadResDto : productList) {
-//            String finalFilename = filePath + productReadResDto.getImage().getUuidFilename();
             String finalFilename = imageUtil.convertFilenameToUrl(filePath, productReadResDto.getImage().getUuidFilename());
             productReadResDto.getImage().setUuidFilename(finalFilename);
         }
@@ -54,6 +60,11 @@ public class ProductController {
         return "/product/product-list";
     }
 
+    /***
+     * 상품 등록 페이지 이동
+     * @param model
+     * @return
+     */
     @GetMapping("/register")
     public String addProductPage(Model model) {
         List<CategoryDto> mainCategories = categoryService.getMainCategory();
@@ -61,6 +72,14 @@ public class ProductController {
         return "/product/register";
     };
 
+    /***
+     * [insert]
+     * - 입력한 정보로 상품 데이터 추가
+     * @param productCreateReqDto
+     * @param imageFile
+     * @param redirectAttributes
+     * @return
+     */
     @PostMapping("/register")
     public String addProduct(@ModelAttribute ProductCreateReqDto productCreateReqDto,
                              @RequestParam("imageFile") MultipartFile imageFile,
@@ -79,6 +98,12 @@ public class ProductController {
         return "redirect:/product/register";
     }
 
+    /***
+     * 상품 업데이트 페이지 이동
+     * @param productCode
+     * @param model
+     * @return
+     */
     @GetMapping("/update")
     public String updateProductPage(@RequestParam("productCode") Integer productCode, Model model) {
 
@@ -93,6 +118,15 @@ public class ProductController {
         return "/product/update";
     }
 
+    /***
+     * [update]
+     * - 선택한 상품의 데이터 업데이트
+     * @param productUpdateReqDto
+     * @param imageFile
+     * @param originalFileUrl
+     * @param redirectAttributes
+     * @return
+     */
     @PostMapping("/update")
     public String updateProductInfo(@ModelAttribute ProductUpdateReqDto productUpdateReqDto,
                                     @RequestParam("imageFile") MultipartFile imageFile,
@@ -122,7 +156,8 @@ public class ProductController {
     }
 
     /***
-     * delete
+     * [delete]
+     * - 선택된 모든 상품의 판매 상태 값 변경
      * @param productCodeList
      * @param redirectAttributes
      * @return

@@ -37,4 +37,22 @@
         where category_code = #{categoryCode}
     </update>
 
+    <delete id="deleteCategory">
+        delete from tbl_category
+        where category_code = #{categoryCode}
+    </delete>
+
+    <select id="countCategoriesByName" resultType="_int">
+        select count(*)
+        from tbl_category
+        where category_name = #{categoryName}
+    </select>
+
+    <select id="countCategoriesByNameAndCode" resultType="_int">
+        select count(*)
+        from tbl_category
+        where category_name = #{categoryName}
+          AND category_code != #{categoryCode}
+    </select>
+
 </mapper>

@@ -80,4 +80,8 @@ public class ProductService {
     public void updateProductStatusInfo(List<Integer> productCodeList) {
         productMapper.updateProductStatusInfo(productCodeList);
     }
+
+    public boolean isCategoryEmpty(int categoryCode) {
+        return productMapper.countProductsByCategoryCode(categoryCode) == 0;
+    }
 }
