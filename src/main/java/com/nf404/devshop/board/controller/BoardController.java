@@ -72,12 +72,12 @@ public class BoardController {
         return "board/view";
     }
 
-//    // 신규 게시글 생성
-//    @PostMapping("/board/save")
-//    public String saveBoard(BoardRequest params) {
-//        boardService.saveBoard(params);
-//        return "redirect:/board/list";
-//    }
+    // 신규 게시글 생성
+    @PostMapping("/board/save")
+    public String saveBoard(BoardRequest params) {
+        boardService.saveBoard(params);
+        return "redirect:/board/list";
+    }
 
 // 게시글 상세보기
 //    @GetMapping("/board/detail/{boardId}")

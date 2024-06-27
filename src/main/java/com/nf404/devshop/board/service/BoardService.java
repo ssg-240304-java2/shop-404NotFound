@@ -70,15 +70,15 @@ public class BoardService {
         return params.getBoardId();
     }
 
-    /**
-     * 게시글 삭제
-     * @param boardId - 게시글번호
-     * @return 게시글 id
-     */
-    public int deleteByBoardId(int boardId) {
-        boardMapper.deleteByBoardId(boardId);
-        return boardId;
-    }
+//    /**
+//     * 게시글 삭제
+//     * @param boardId - 게시글번호
+//     * @return 게시글 id
+//     */
+//    public int deleteByBoardId(int boardId) {
+//        boardMapper.deleteByBoardId(boardId);
+//        return boardId;
+//    }
 
 //    /**
 //     * 게시글 리스트 조회
