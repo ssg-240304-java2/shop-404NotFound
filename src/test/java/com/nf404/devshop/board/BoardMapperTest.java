@@ -22,6 +22,16 @@ public class BoardMapperTest {
     @Autowired
     private BoardService boardService;
 
+    @Test
+    @DisplayName("전체 게시글 리스트 조회 테스트")
+    void findAllBoard() {
+        List<BoardResponse> boards = boardMapper.findAllBoard();
+        System.out.println("전체 게시글 개수는 : " + boards.size() + "개 입니다.");
+        for (BoardResponse board : boards) {
+            System.out.println(">>>>>>>>>>>>>>>> " + board.toString());
+        }
+    }
+
 //    // 게시글 insert 테스트
 //    @Test
 //    @DisplayName("게시글 추가")

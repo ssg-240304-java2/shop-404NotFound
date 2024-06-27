@@ -73,29 +73,50 @@
 
 
     <!-- 게시글 삭제 -->
-    <delete id="deleteByBoardId" parameterType="_int">
+    <update id="deleteByBoardId">
         UPDATE tbl_board
         SET
             delete_yn = 1
         WHERE
             board_id = #{boardId}
-    </delete>
+    </update>
 
 
     <!-- 게시글 리스트 조회 -->
     <select id="findAllBoard" resultMap="boardResultMap">
+<!--        SELECT-->
+<!--            <include refid="boardColumns" />-->
+<!--        FROM-->
+<!--            tbl_board-->
+<!--        WHERE-->
+<!--            delete_yn = 0-->
+<!--        ORDER BY-->
+<!--            board_id DESC-->
+        <!-- 위 형태로 가져오되, notice_yn이 1인 것은 상단에 노출 -->
         SELECT
             <include refid="boardColumns" />
         FROM
             tbl_board
         WHERE
             delete_yn = 0
-            <include refid="search" />
         ORDER BY
-            board_id DESC
-        LIMIT
-            #{pagination.limitStart}, #{recordSize}
+            notice_yn DESC, board_id DESC
     </select>
+
+
+<!--    <select id="findAllBoard" resultMap="boardResultMap">-->
+<!--        SELECT-->
+<!--            <include refid="boardColumns" />-->
+<!--        FROM-->
+<!--            tbl_board-->
+<!--        WHERE-->
+<!--            delete_yn = 0-->
+<!--            <include refid="search" />-->
+<!--        ORDER BY-->
+<!--            board_id DESC-->
+<!--        LIMIT-->
+<!--            #{pagination.limitStart}, #{recordSize}-->
+<!--    </select>-->
 
     <select id="findAllBoards" resultMap="boardResultMap">
         SELECT
