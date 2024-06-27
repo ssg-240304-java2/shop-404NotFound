@@ -6,8 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nf404.devshop.board.model.dto.BoardRequest;
 import com.nf404.devshop.board.model.dto.BoardResponse;
 import com.nf404.devshop.board.service.BoardService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,6 +17,28 @@ public class BoardServiceTest {
 
     @Autowired
     BoardService boardService;
+
+    @Test
+    @DisplayName("선택된 게시글 삭제 테스트")
+    void deleteByBoardIds() {
+        // 기존 게시글 리스트 조회
+        List<BoardResponse> boards = boardService.findAllBoard();
+
+        List<Integer> boardIds = List.of(435, 434);
+        boardService.deleteByBoardIds(boardIds);
+
+        // 삭제 후 게시글 리스트 조회
+        List<BoardResponse> boardsAfterDelete = boardService.findAllBoard();
+
+        // assert를 이용한 테스트 코드 작성
+        boolean isDeleted = false;
+        for (BoardResponse boardResponse : boardsAfterDelete) {
+            // boardIds에 포함되어있는 게시글에 대해 deleteYn이 1인지 확인
+            if (boardIds.contains(boardResponse.getBoardId())) {
+                Assertions.assertEquals(1, boardResponse.getDeleteYn());
+            }
+        }
+    }
 
     @Test
     @DisplayName("게시글 생성 테스트")

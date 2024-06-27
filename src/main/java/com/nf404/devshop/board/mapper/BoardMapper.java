@@ -12,12 +12,14 @@ public interface BoardMapper {
 
     /**
      * 게시글 저장
+     *
      * @param params - 게시글 정보
      */
     void saveBoard(BoardRequest params);
 
     /**
      * 게시글 상세정보 조회
+     *
      * @param boardId - 게시글 번호
      * @return 게시글 상세정보
      */
@@ -25,24 +27,29 @@ public interface BoardMapper {
 
     /**
      * 게시글 수정
+     *
      * @param params - 게시글 정보
      */
     void updateBoard(BoardRequest params);
 
     /**
      * 게시글 삭제
+     *
      * @param boardId - 게시글 번호
      */
-    void deleteByBoardId(int boardId);
+    int deleteByBoardId(int boardId);
 
     /**
      * 게시글 리스트 조회
+     *
      * @return 게시글 리스트
      */
-    List<BoardResponse> findAllBoard(SearchDTO params);
+     List<BoardResponse> findAllBoard();
+//    List<BoardResponse> findAllBoard(SearchDTO params);
 
     /**
      * 게시글 수 카운팅
+     *
      * @return 게시글 수
      */
     int count(SearchDTO params);

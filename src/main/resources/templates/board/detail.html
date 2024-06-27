@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SB Admin 2 - Dashboard</title>
+    <link th:replace="elements/misc/deps :: html"/>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+            <div class="container-fluid">
+                <h1 class="h3 mb-4 text-gray-800" th:text="${title}">Page Name</h1>   <!-- 페이지 제목 -->
+                <p class="mb-4" th:text="${content}"></p>  <!-- 페이지 설명 -->
+                <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+
+                <!-- 행 항목으로 나누어서 채워넣으면 됩니다. -->
+
+                <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+            </div>
+        </div>
+        <footer th:replace="elements/footer :: footer"></footer>
+    </div>
+</div>
+</body>
+</html>
