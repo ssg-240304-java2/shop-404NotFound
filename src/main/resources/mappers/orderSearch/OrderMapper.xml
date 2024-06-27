@@ -29,6 +29,7 @@
         <result property="userPhone" column="USER_PHONE"/>
         <result property="userDate" column="USER_DATE"/>
         <result property="userRank" column="USER_RANK"/>
+        <result property="isDeleted" column="IS_DELETED"/>
     </resultMap>
 
     <select id="findAllOrder" resultMap="orderResultMap">
@@ -53,11 +54,12 @@
         tbl_orderitem oi ON o.order_no = oi.order_no
         LEFT JOIN
         tbl_product p ON oi.product_code = p.product_code
-        WHERE is_deleted = 0
+        WHERE u.is_deleted = 0
         ORDER BY
             o.order_no
     </select>
-    <!--<select id="searchOrders" resultMap="orderResultMap">
+
+    <select id="searchAndFilterOrders" parameterType="hashMap" resultMap="orderResultMap">
         SELECT
             o.order_no,
             o.user_no,
@@ -73,56 +75,33 @@
             p.price
         FROM tbl_order o
         JOIN tbl_user u ON o.user_no = u.user_no
-        LEFT JOIN tbl_orderitem oi ON o.order_no = oi.order_no
-        LEFT JOIN tbl_product p ON oi.product_code = p.product_code
+            LEFT JOIN tbl_orderitem oi ON o.order_no = oi.order_no
+            LEFT JOIN tbl_product p ON oi.product_code = p.product_code
         WHERE
-            o.order_no LIKE CONCAT('%', #{searchTerm}, '%') OR
-            o.user_no LIKE CONCAT('%', #{searchTerm}, '%') OR
-            u.user_id LIKE CONCAT('%', #{searchTerm}, '%') OR
-            u.user_name LIKE CONCAT('%', #{searchTerm}, '%') OR
-            u.user_addr LIKE CONCAT('%', #{searchTerm}, '%') OR
-            o.order_totalprice LIKE CONCAT('%', #{searchTerm}, '%') OR
-            o.created_at LIKE CONCAT('%', #{searchTerm}, '%') OR
-            o.order_status LIKE CONCAT('%', #{searchTerm}, '%') OR
-            p.product_name LIKE CONCAT('%', #{searchTerm}, '%') OR
-            oi.product_code LIKE CONCAT('%', #{searchTerm}, '%')
-        ORDER BY
-            o.order_no
-    </select>-->
-    <select id="searchAndFilterOrders" parameterType="hashMap">
-        SELECT
-        o.order_no,
-        o.user_no,
-        u.user_id,
-        u.user_name,
-        u.user_addr,
-        o.order_totalprice,
-        o.created_at,
-        o.order_status,
-        oi.product_code,
-        oi.order_item_quantity,
-        p.product_name,
-        p.price
-        FROM tbl_order o
-        JOIN tbl_user u ON o.user_no = u.user_no
-        LEFT JOIN tbl_orderitem oi ON o.order_no = oi.order_no
-        LEFT JOIN tbl_product p ON oi.product_code = p.product_code
-        WHERE
-        o.order_no LIKE CONCAT('%', #{searchTerm}, '%') OR
-        o.user_no LIKE CONCAT('%', #{searchTerm}, '%') OR
-        u.user_id LIKE CONCAT('%', #{searchTerm}, '%') OR
-        u.user_name LIKE CONCAT('%', #{searchTerm}, '%') OR
-        u.user_addr LIKE CONCAT('%', #{searchTerm}, '%') OR
-        o.order_totalprice LIKE CONCAT('%', #{searchTerm}, '%') OR
-        o.created_at LIKE CONCAT('%', #{searchTerm}, '%') OR
-        o.order_status LIKE CONCAT('%', #{searchTerm}, '%') OR
-        p.product_name LIKE CONCAT('%', #{searchTerm}, '%') OR
-        oi.product_code LIKE CONCAT('%', #{searchTerm}, '%')
-        OR
-        (o.created_at BETWEEN #{startDate} AND #{endDate})
-        ORDER BY
-        o.order_no
+            is_deleted = 0
+            <if test="search != null and !search.isEmpty()">
+                AND (
+                o.order_no LIKE CONCAT('%', #{search}, '%') OR
+                o.user_no LIKE CONCAT('%', #{search}, '%') OR
+                u.user_id LIKE CONCAT('%', #{search}, '%') OR
+                u.user_name LIKE CONCAT('%', #{search}, '%') OR
+                u.user_addr LIKE CONCAT('%', #{search}, '%') OR
+                o.order_totalprice LIKE CONCAT('%', #{search}, '%') OR
+                o.created_at LIKE CONCAT('%', #{search}, '%') OR
+                o.order_status LIKE CONCAT('%', #{search}, '%') OR
+                p.product_name LIKE CONCAT('%', #{search}, '%') OR
+                oi.product_code LIKE CONCAT('%', #{search}, '%')
+                )
+            </if>
+            <if test="startDate != null and !startDate.isEmpty()">
+                AND o.created_at &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and !endDate.isEmpty()">
+                AND o.created_at &lt;= #{endDate}
+            </if>
+        ORDER BY o.order_no
     </select>
+
     <select id="findOrderDetailByOrderNo" resultType="com.nf404.devshop.order.model.dto.OrderItemDTO">
         SELECT o.order_no,u.user_no, i.product_code, p.product_name, i.order_item_quantity, p.price
         FROM tbl_order o
@@ -132,4 +111,25 @@
         WHERE o.order_no = #{ orderNo }
     </select>
 
+    <select id="getOrderSummaryByUser" resultType="com.nf404.devshop.order.model.dto.OrderSummaryDTO">
+        SELECT
+            u.user_no,
+            u.user_id,
+            u.user_name,
+            COUNT(o.order_no) AS allOrderCount,
+            SUM(o.order_totalprice) AS allOrderPrice
+        FROM
+            tbl_order o
+        JOIN
+        tbl_user u ON o.user_no = u.user_no
+        WHERE
+            u.is_deleted = 0 AND o.order_status = '처리완료'
+        GROUP BY
+            u.user_no, u.user_id, u.user_name
+        ORDER BY allOrderCount
+    </select>
+    <select id="selectTotalCount" resultType="_int">
+        SELECT COUNT(*)
+        FROM tbl_order
+    </select>
 </mapper>

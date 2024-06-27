@@ -3,6 +3,7 @@ package com.nf404.devshop.order.model.service;
 import com.nf404.devshop.order.model.dao.OrderMapper;
 import com.nf404.devshop.order.model.dto.OrderDTO;
 import com.nf404.devshop.order.model.dto.OrderItemDTO;
+import com.nf404.devshop.order.model.dto.OrderSummaryDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +40,10 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.searchAndFilterOrders(map);
     }
 
-
-//    @Override
-//    public List<OrderDTO> searchOrders(String search) {
-//        return orderMapper.searchOrders(search);
-//    }
+    @Override
+    public List<OrderSummaryDTO> getOrderSummaryByUser() {
+        return orderMapper.getOrderSummaryByUser();
+    }
 
 
 }

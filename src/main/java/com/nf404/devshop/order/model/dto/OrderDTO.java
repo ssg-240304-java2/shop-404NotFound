@@ -18,4 +18,5 @@ public class OrderDTO {
     private String orderStatus;
     private UserDTO userInfo;
     private List<OrderItemDTO> orderItems;
+    private List<OrderSummaryDTO> orderSummary;
 }

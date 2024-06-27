@@ -88,9 +88,50 @@
                         </tr>
                         </tbody>
                     </table>
+                    <!--페이징 처리-->
+                    <!--<div class="pagingArea" align="center">
+                        &lt;!&ndash; 맨 앞으로 이동 버튼 &ndash;&gt;
+                        <button
+                                th:onclick="'location.href=\'/order/orderlist?currentPage='+ @{${selectCriteria.startPage}} + '\''"
+                                th:disabled="${selectCriteria.pageNo == 1}"
+                        >
+                            <<
+                        </button>
+                        &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;
+                        <button
+                                th:onclick="'location.href=\'/order/orderlist?currentPage='+ @{${selectCriteria.pageNo - 1}} + '\''"
+                                th:disabled="${selectCriteria.pageNo == 1}"
+                        >
+                            <
+                        </button>
+                        &lt;!&ndash; 숫자 버튼 &ndash;&gt;
+                        <th:block th:each="page : ${#numbers.sequence(selectCriteria.startPage, selectCriteria.endPage)}">
+                            <button
+                                    th:text="${ page }"
+                                    th:onclick="'location.href=\'/order/orderlist?currentPage='+ @{${page}} + '\''"
+                                    th:disabled="${ selectCriteria.pageNo eq page }">
+                            </button>
+                        </th:block>
+
+                        &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;
+                        <button
+                                th:onclick="'location.href=\'/order/orderlist?currentPage='+ @{${selectCriteria.pageNo + 1}} + '\''"
+                                th:disabled="${selectCriteria.pageNo == selectCriteria.maxPage}"
+                        >
+                            >
+                        </button>
+                        &lt;!&ndash; 마지막 페이지로 이동 버튼 &ndash;&gt;
+                        <button
+                                th:onclick="'location.href=\'/order/orderlist?currentPage='+ @{${selectCriteria.maxPage}} + '\''"
+                                th:disabled="${selectCriteria.pageNo == selectCriteria.maxPage}"
+                        >
+                            >>
+                        </button>
+                    </div>-->
                 </div>
 
             </div>
+
         </div>
         <footer class="sticky-footer bg-white">     <!-- footer -->
             <div class="container my-auto">
