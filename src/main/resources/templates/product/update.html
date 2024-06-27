@@ -5,6 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Developer Item Shop</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+        .form-group img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+        .form-group.radio-group {
+            display: flex;
+            align-items: center;
+        }
+        .form-group.radio-group label {
+            margin-right: 10px;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .form-row .form-group:last-child {
+            margin-right: 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #4e73df;
+        }
+        .btn-primary:hover {
+            background-color: #224abe;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #565e64;
+        }
+        .btn-action {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .btn-action:last-child {
+            margin-right: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,7 +101,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="mainCategoryCode">메인 카테고리</label>
-                <select id="mainCategoryCode" name="mainCategoryCode">
+                <select id="mainCategoryCode" name="mainCategoryCode" class="mainCategoryCode">
                     <option value="">Select Main Category</option>
                     <option th:each="mainCategory : ${mainCategories}"
                             th:value="${mainCategory.categoryCode}"
@@ -32,7 +110,7 @@
             </div>
             <div class="form-group">
                 <label for="subCategoryCode">서브 카테고리</label>
-                <select id="subCategoryCode" name="subCategoryCode" required>
+                <select id="subCategoryCode" name="subCategoryCode" class="subCategoryCode" required>
                 </select>
                 <br>
                 <span>기존 서브 카테고리: <span th:text="${productInfo.category.categoryName}"></span></span>
@@ -62,21 +140,43 @@
         <div class="form-group">
             <label for="originImage">기존 이미지</label>
             <img th:src="@{${productInfo.image.uuidFilename}}" id="originImage" alt="사진 없음">
-
         </div>
         <div>
-            <button type="submit">수정</button>
-            <button type="button" id="cancelOperation">취소</button>
+            <button type="submit" class="btn btn-primary btn-action">수정</button>
+            <button type="button" class="btn btn-secondary btn-action" id="cancelOperation">취소</button>
         </div>
     </form>
 </div>
+
 
 <script src="/js/product/showCategory.js"></script>
 
 <script>
     $(document).ready(function() {
+
+        $('#productInfoForm').on('submit', function(event) {
+            event.preventDefault(); // 기본 폼 제출 막기
+
+            var $form = $(this);
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: new FormData(this),
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // 성공적으로 수정되었음을 부모 창에 알림
+                    window.parent.postMessage('success', '*');
+                },
+                error: function() {
+                    // 오류 발생 시 부모 창에 알림
+                    window.parent.postMessage('error', '*');
+                }
+            });
+        });
+
         $('#cancelOperation').click(function() {
-            window.location.replace('/product/product-list');
+            window.parent.postMessage('cancel', '*');
         });
     });
 </script>

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#mainCategoryCode').change(function () {
+    $('.mainCategoryCode').change(function () {
         var parentId = $(this).val();
         if (parentId) {
             $.ajax({
@@ -7,7 +7,7 @@ $(document).ready(function() {
                 type: 'GET',
                 data: {parentId: parentId},
                 success: function (data) {
-                    var subCategorySelect = $('#subCategoryCode');
+                    var subCategorySelect = $('.subCategoryCode');
                     subCategorySelect.empty();
                     subCategorySelect.append('<option value="">Select Sub Category</option>');
                     $.each(data, function (index, subCategory) {

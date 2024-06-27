@@ -49,8 +49,6 @@ public class ProductController {
 
         List<ProductReadResDto> productList = productService.getProductInfo(productCriteria);
 
-        System.out.println("testtest");
-
         for(ProductReadResDto productReadResDto : productList) {
             String finalFilename = imageUtil.convertFilenameToUrl(filePath, productReadResDto.getImage().getUuidFilename());
             productReadResDto.getImage().setUuidFilename(finalFilename);
@@ -61,18 +59,6 @@ public class ProductController {
         model.addAttribute("mainCategories", mainCategories);
         return "product/product_list";
     }
-
-    /***
-     * 상품 등록 페이지 이동
-     * @param model
-     * @return
-     */
-    @GetMapping("/register")
-    public String addProductPage(Model model) {
-        List<CategoryDto> mainCategories = categoryService.getMainCategory();
-        model.addAttribute("mainCategories", mainCategories);
-        return "product/register";
-    };
 
     /***
      * [insert]
@@ -97,7 +83,7 @@ public class ProductController {
 
         productService.addProductInfo(productCreateReqDto, imageDto);
         redirectAttributes.addFlashAttribute("successMessage", "상품이 성공적으로 등록되었습니다!");
-        return "redirect:/product/register";
+        return "redirect:/product/product-list";
     }
 
     /***
@@ -119,6 +105,7 @@ public class ProductController {
         model.addAttribute("mainCategories", mainCategories);
         return "product/update";
     }
+
 
     /***
      * [update]

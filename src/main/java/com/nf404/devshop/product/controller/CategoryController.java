@@ -77,8 +77,14 @@ public class CategoryController {
     @ResponseBody
     public String deleteCategory(@RequestParam("categoryCode") int categoryCode) {
 
-        if(!productService.isCategoryEmpty(categoryCode))
-            throw new IllegalArgumentException("해당 카테고리의 상품이 존재하여 삭제할 수 없습니다!");
+        if(categoryService.getCategoryByCode(categoryCode).getRefCategoryCode() == null) {
+            if(categoryService.isMainCategoryInUse(categoryCode)) {
+                throw new IllegalArgumentException("해당 카테고리의 서브 카테고리가 존재하여 삭제할 수 없습니다!");
+            }
+        } else {
+            if(!productService.isCategoryEmpty(categoryCode))
+                throw new IllegalArgumentException("해당 카테고리의 상품이 존재하여 삭제할 수 없습니다!");
+        }
 
         categoryService.deleteCategory(categoryCode);
         return "카테고리 삭제 완료!";
