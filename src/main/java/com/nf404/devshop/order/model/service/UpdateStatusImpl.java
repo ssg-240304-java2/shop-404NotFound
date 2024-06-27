@@ -35,7 +35,6 @@ public class UpdateStatusImpl implements UpdateStatusService {
         map.put("orderNo", orderNo);
         map.put("orderStatus", orderStatus);
         updateStatusMapper.updateOrderStatus(map);
-
         if ("처리완료".equals(orderStatus)) {
             List<OrderItemDTO> orderItems = orderMapper.findOrderDetailByOrderNo(orderNo);
             for (OrderItemDTO orderItem : orderItems) {

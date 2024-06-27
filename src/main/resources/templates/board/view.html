@@ -7,7 +7,35 @@
         <title>SB Admin 2 - Dashboard</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <link th:replace="elements/misc/deps :: html"/>
+        <style>
+            .d-flex.flex-row {
+                display: flex;
+                gap: 10px; /* 버튼과 링크 사이의 간격 */
+                margin-right: 20px; /* 상단 여백 */
+                justify-content: flex-end; /* 오른쪽 끝으로 정렬 */
+            }
+            .page-header {
+                background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+                color: white;
+                padding: 30px 0;
+                margin-bottom: 30px;
+                position: relative;
+                overflow: hidden;
+            }
+            .page-header::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+                animation: backgroundMove 20s linear infinite;
+            }
+        </style>
     </head>
     <body id="page-top">
         <div id="wrapper">
@@ -15,13 +43,12 @@
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
                     <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
-                    <div class="container-fluid">
-                        <h1 class="h3 mb-4 text-gray-800">게시글 관리</h1>   <!-- 페이지 제목 -->
-                        <p class="mb-4">
-                            게시글을 상세보기 페이지입니다.<br>
-                            게시글 상세조회, 수정, 삭제가 가능합니다.
-
-                        </p>  <!-- 페이지 설명 -->
+                        <div class="page-header">
+                            <div class="container-fluid">
+                                <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">게시글 상세보기</h1>
+                                <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">게시글을 상세보기 페이지입니다.<br>게시글 상세조회, 수정, 삭제가 가능합니다.</p>
+                            </div>
+                        </div>
                         <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
                         <section>
                             <div class="card-body">
@@ -96,8 +123,9 @@
 
             // 게시글 수정 페이지로 이동
             function goWritePage() {
-                location.href = '/board/write' + location.search;
-            }
+                const boardId = [[ ${board.boardId} ]];
+                location.href = `/board/write?boardId=${boardId}`;
+                }
 
             // 게시글 리스트 페이지로 이동
             function goListPage() {

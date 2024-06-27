@@ -30,6 +30,25 @@ public class BoardService {
         return params.getBoardId();
     }
 
+    /**
+     * 게시글 리스트 조회
+     * @return list
+     */
+    public List<BoardResponse> findAllBoard() {
+        return boardMapper.findAllBoard();
+    }
+
+
+    /**
+     * 게시글 선택 삭제
+     * @param boardIds
+     */
+    @Transactional
+    public void deleteByBoardIds(List<Integer> boardIds) {
+        for (Integer boardId : boardIds) {
+            boardMapper.deleteByBoardId(boardId);
+        }
+    }
 
     /**
      * 특정 게시글 상세정보 조회
@@ -51,21 +70,21 @@ public class BoardService {
         return params.getBoardId();
     }
 
-    /**
-     * 게시글 삭제
-     * @param boardId - 게시글번호
-     * @return 게시글 id
-     */
-    public int deleteByBoardId(int boardId) {
-        boardMapper.deleteByBoardId(boardId);
-        return boardId;
-    }
+//    /**
+//     * 게시글 삭제
+//     * @param boardId - 게시글번호
+//     * @return 게시글 id
+//     */
+//    public int deleteByBoardId(int boardId) {
+//        boardMapper.deleteByBoardId(boardId);
+//        return boardId;
+//    }
 
-    /**
-     * 게시글 리스트 조회
-     * @Param params - search conditions
-     * @return list & pagination information
-     */
+//    /**
+//     * 게시글 리스트 조회
+//     * @Param params - search conditions
+//     * @return list & pagination information
+//     */
 //    public PagingResponse<BoardResponse> findAllBoard(SearchDTO params) {
 //        // 조건에 해당하는 데이터가 없는 경우, 응답 데이터에 비어있는 리스트와 null을 담아 반환
 //        int count = boardMapper.count(params);
@@ -82,23 +101,5 @@ public class BoardService {
 //        return new PagingResponse<>(list, pagination);
 //    }
 
-    /**
-     * 게시글 리스트 조회
-     * @return list
-     */
-    public List<BoardResponse> findAllBoard() {
-        return boardMapper.findAllBoard();
-    }
 
-
-    public List<BoardResponse> findAllBoards() {
-        return boardMapper.findAllBoards();
-    }
-
-    @Transactional
-    public void deleteByBoardIds(List<Integer> boardIds) {
-        for (Integer boardId : boardIds) {
-            boardMapper.deleteByBoardId(boardId);
-        }
-    }
 }
