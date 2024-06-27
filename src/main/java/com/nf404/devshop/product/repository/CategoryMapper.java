@@ -24,4 +24,8 @@ public interface CategoryMapper {
     void deleteCategory(int categoryCode);
 
     int countCategoriesByNameAndCode(@Param("categoryName") String categoryName, @Param("categoryCode") int categoryCode);
+
+    CategoryDto selectCategoryByCode(int categoryCode);
+
+    int countSubCategoriesByCode(int categoryCode);
 }

@@ -34,6 +34,15 @@ public class CategoryService {
     }
 
     /***
+     * 카테고리 정보 반환 서비스 메소드
+     * @param categoryCode
+     * @return
+     */
+    public CategoryDto getCategoryByCode(int categoryCode) {
+        return categoryMapper.selectCategoryByCode(categoryCode);
+    }
+
+    /***
      * 전체 카테고리 반환 서비스 메소드
      * @return
      */
@@ -61,16 +70,27 @@ public class CategoryService {
         categoryMapper.updateCategory(categoryDto);
     }
 
+    /***
+     * 카테고리 삭제 메소드
+     * @param categoryCode
+     */
     @Transactional
     public void deleteCategory(int categoryCode) {
         categoryMapper.deleteCategory(categoryCode);
     }
 
+
+
     public boolean isCategoryNameDuplicated(String categoryName) {
         return categoryMapper.countCategoriesByName(categoryName) > 0;
     }
 
+
     public boolean isCategoryNameDuplicated(String categoryName, int categoryCode) {
         return categoryMapper.countCategoriesByNameAndCode(categoryName, categoryCode) > 0;
+    }
+
+    public boolean isMainCategoryInUse(int categoryCode) {
+        return categoryMapper.countSubCategoriesByCode(categoryCode) != 0;
     }
 }

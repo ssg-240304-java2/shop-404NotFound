@@ -269,8 +269,14 @@
                         $('#modalForm').submit(function(event) {
                             event.preventDefault();
                             var action = $('#modalForm').attr('data-action');
+                            var type = $('#refCategoryCode').is(':visible') ? 'sub' : 'main';
                             var formData = $(this).serialize();
                             var url = '/category/' + action;
+
+                            if (type === 'sub' && $('#refCategoryCode').val() === '') {
+                                alert('서브 카테고리를 추가할 때는 상위 카테고리를 선택해야 합니다!');
+                                return;
+                            }
 
                             $.ajax({
                                 type: 'post',
@@ -293,6 +299,7 @@
                         function openModal(action, type, categoryCode, categoryName, refCategoryCode) {
                             $('#myModal').show();
                             $('#modalForm').attr('data-action', action); // 액션 구별을 위한 속성 설정
+                            $('#modalForm').attr('data-type', type);  // 변경된 부분: type을 설정
                             if (action === 'edit') {
                                 $('#modalTitle').text('카테고리 수정');
                                 $('#categoryCode').val(categoryCode);
