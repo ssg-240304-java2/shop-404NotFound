@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>전체 상품관리 - DevShop</title>
+    <title>Developer Item Shop</title>
 
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -277,6 +277,8 @@
 
 <script src="/js/product/showCategory.js"></script>
 
+<!---------------------------------------------------- SCRIPT -------------------------------------------------------->
+
 <script>
     $(document).ready(function() {
         // 데이터 테이블 초기화
@@ -354,7 +356,7 @@
         // 신상품 추가 버튼 클릭 이벤트
         $('#addNewProductButton').click(function(event) {
             event.preventDefault();
-            $('#editProductIframe').attr('src', '/product/register');
+            $('#editProductIframe').attr('src', 'register');
             $('#editProductModal').modal('show');
         });
 
@@ -362,9 +364,10 @@
         $('.edit-product').click(function(event) {
             event.preventDefault();
             var productCode = $(this).data('product-code');
-            $('#editProductIframe').attr('src', '/product/update?productCode=' + productCode);
+            $('#editProductIframe').attr('src', 'update?productCode=' + productCode);
             $('#editProductModal').modal('show');
         });
+
 
         // 성공 및 오류 메시지 표시
         var successMessage = `[[${successMessage}]]`;

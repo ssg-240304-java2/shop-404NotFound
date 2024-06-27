@@ -49,8 +49,6 @@ public class ProductController {
 
         List<ProductReadResDto> productList = productService.getProductInfo(productCriteria);
 
-        System.out.println("testtest");
-
         for(ProductReadResDto productReadResDto : productList) {
             String finalFilename = imageUtil.convertFilenameToUrl(filePath, productReadResDto.getImage().getUuidFilename());
             productReadResDto.getImage().setUuidFilename(finalFilename);
@@ -119,6 +117,7 @@ public class ProductController {
         model.addAttribute("mainCategories", mainCategories);
         return "product/update";
     }
+
 
     /***
      * [update]
