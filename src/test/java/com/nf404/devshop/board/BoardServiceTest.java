@@ -71,11 +71,11 @@ public class BoardServiceTest {
     @DisplayName("게시판 리스트 조회 테스트")
     void saveByForeach() {
 
-        for (int i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= 50; i++) {
             BoardRequest params = new BoardRequest();
-            params.setTitle(i + "번 게시글 제목");
-            params.setContent(i + "번 게시글 내용");
-            params.setWriter("테스터" + i);
+            params.setTitle("주문번호" + i + "번 고객 문의");
+            params.setContent("주문번호" + i + "번 고객 문의내용");
+            params.setWriter("고객" + i);
             params.setNoticeYn(false);
             boardService.saveBoard(params);
         }
@@ -128,11 +128,11 @@ public class BoardServiceTest {
     @Test
     @DisplayName("테스트 데이터 삽입")
     void saveByBoardForeach() {
-        for (int i = 1; i <= 200; i++) {
+        for (int i = 1; i <= 50; i++) {
             BoardRequest params = new BoardRequest();
-            params.setTitle(i + "번 게시글 제목");
-            params.setContent(i + "번 게시글 내용");
-            params.setWriter("테스터" + i);
+            params.setTitle("주문번호 " + i + "번 고객 문의");
+            params.setContent("주문번호 " + i + "번 고객 문의내용");
+            params.setWriter("고객" + i);
             params.setNoticeYn(false);
             boardService.saveBoard(params);
         }
