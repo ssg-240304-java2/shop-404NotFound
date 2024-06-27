@@ -1,78 +1,97 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
-    <th:block layout:fragment="title">
-        <title>상세 페이지</title>
-    </th:block>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>SB Admin 2 - Dashboard</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link th:replace="elements/misc/deps :: html"/>
+    </head>
+    <body id="page-top">
+        <div id="wrapper">
+            <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+                    <div class="container-fluid">
+                        <h1 class="h3 mb-4 text-gray-800">게시글 관리</h1>   <!-- 페이지 제목 -->
+                        <p class="mb-4">
+                            게시글을 상세보기 페이지입니다.<br>
+                            게시글 상세조회, 수정, 삭제가 가능합니다.
 
-    <th:block layout:fragment="content">
-        <div class="page_tits">
-            <h3>게시판 관리</h3>
-            <p class="path"><strong>현재 위치 :</strong> <span>게시판 관리</span> <span>게시판 리스트</span> <span>상세정보</span></p>
+                        </p>  <!-- 페이지 설명 -->
+                        <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+                        <section>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+                                                <colgroup>
+                                            <col style="width:10%;" /><col style="width:23%;" /><col style="width:10%;" /><col style="width:23%;" />
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row">글 유형</th>
+                                            <td th:text="${board.noticeYn == false ? '일반' : '공지'}"></td>
+
+                                            <th scope="row">등록일</th>
+                                            <td th:text="${#temporals.format( board.createdDate, 'yyyy-MM-dd HH:mm' )}"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row">제목</th>
+                                            <td>[[ ${board.title} ]]</td>
+
+                                            <th scope="row">조회</th>
+                                            <td colspan="3">[[ ${board.viewCnt} ]]</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">이름</th>
+                                            <td colspan="3">[[ ${board.writer} ]]</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">내용</th>
+                                            <td colspan="3">[[ ${board.content} ]]</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="d-flex flex-row" >
+                                        <button type="button" onclick="goWritePage();" class="btn btn-primary btn-sm">수정</button>
+                                        <button type="button" onclick="deleteBoard();" class="btn btn-danger btn-sm">삭제</button>
+                                        <button type="button" onclick="goListPage();" class="btn btn-secondary btn-sm">뒤로</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+                    </div>
+                </div>
+                <footer th:replace="elements/footer :: footer"></footer>
+            </div>
         </div>
-
-        <div class="content">
-            <section>
-                <table class="tb tb_row">
-                    <colgroup>
-                        <col style="width:10%;" /><col style="width:23%;" /><col style="width:10%;" /><col style="width:23%;" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th scope="row">글 유형</th>
-                        <td th:text="${board.noticeYn == false ? '일반' : '공지'}"></td>
-
-                        <th scope="row">등록일</th>
-                        <td th:text="${#temporals.format( board.createdDate, 'yyyy-MM-dd HH:mm' )}"></td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row">제목</th>
-                        <td>[[ ${board.title} ]]</td>
-
-                        <th scope="row">조회</th>
-                        <td colspan="3">[[ ${board.viewCnt} ]]</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">이름</th>
-                        <td colspan="3">[[ ${board.writer} ]]</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">내용</th>
-                        <td colspan="3">[[ ${board.content} ]]</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p class="btn_set">
-                    <button type="button" onclick="goWritePage();" class="btns btn_bdr4 btn_mid">수정</button>
-                    <button type="button" onclick="deleteBoard();" class="btns btn_bdr1 btn_mid">삭제</button>
-                    <button type="button" onclick="goListPage();" class="btns btn_bdr3 btn_mid">뒤로</button>
-                </p>
-            </section>
-        </div> <!--/* .content */-->
-    </th:block>
-
-    <th:block layout:fragment="script">
         <script th:inline="javascript">
             /*<![CDATA[*/
-                // 게시글 삭제
-                function deleteBoard() {
-                    const id = [[ ${board.boardId} ]]
+            // 게시글 삭제
+            function deleteBoard() {
+                const id = [[ ${board.boardId} ]]
 
-                    if ( !confirm('게시글을 삭제할까요?')) {
-                        return false;
-                    }
+                if ( !confirm('게시글을 삭제할까요?')) {
+                    return false;
+                }
 
-                    const formHtml = `
+                const formHtml = `
                         <form id="deleteForm" action="/board/delete" method="post">
                             <input type="hidden" id="boardId" name="boardId" value="${id}" />
                         </form>
                     `;
 
-                    const doc = new DOMParser().parseFromString(formHtml, 'text/html');
-                    const form = doc.body.firstChild;
-                    document.body.append(form);
-                    document.getElementById('deleteForm').submit();
-                }
+                const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+                const form = doc.body.firstChild;
+                document.body.append(form);
+                document.getElementById('deleteForm').submit();
+            }
             /*]]>*/
 
             // 게시글 수정 페이지로 이동
@@ -87,5 +106,5 @@
                 location.href = '/board/list' + '?' + queryString.toString();
             }
         </script>
-    </th:block>
+    </body>
 </html>
