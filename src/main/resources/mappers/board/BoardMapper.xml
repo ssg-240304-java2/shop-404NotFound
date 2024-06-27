@@ -97,6 +97,17 @@
             #{pagination.limitStart}, #{recordSize}
     </select>
 
+    <select id="findAllBoards" resultMap="boardResultMap">
+        SELECT
+            <include refid="boardColumns" />
+        FROM
+            tbl_board
+        WHERE
+            delete_yn = 0
+        ORDER BY
+            notice_yn DESC, board_id DESC
+    </select>
+
     <!-- 게시글 수 카운팅 -->
     <select id="count" parameterType="com.nf404.devshop.board.model.dto.SearchDTO" resultType="_int">
         SELECT

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -50,6 +51,14 @@ public class BoardController {
         PagingResponse<BoardResponse> response = boardService.findAllBoard(params);
         model.addAttribute("response", response);
         return "board/list";
+    }
+
+    // 게시글 리스트 페이지 페이징 뺀부분
+    @GetMapping("/board/boardlist")
+    public String openBoardList(Model model) {
+        List<BoardResponse> boards = boardService.findAllBoards();
+        model.addAttribute("boards", boards);
+        return "board/boardlist";
     }
 
     // 게시글 상세 페이지

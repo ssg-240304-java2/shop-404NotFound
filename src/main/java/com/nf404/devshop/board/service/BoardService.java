@@ -85,4 +85,7 @@ public class BoardService {
     }
 
 
+    public List<BoardResponse> findAllBoards() {
+        return boardMapper.findAllBoards();
+    }
 }

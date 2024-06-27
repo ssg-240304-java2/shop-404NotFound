@@ -47,4 +47,6 @@ public interface BoardMapper {
      */
     int count(SearchDTO params);
 
+    //
+    List<BoardResponse> findAllBoards();
 }
