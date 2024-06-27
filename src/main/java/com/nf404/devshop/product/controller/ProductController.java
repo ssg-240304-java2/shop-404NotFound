@@ -49,6 +49,8 @@ public class ProductController {
 
         List<ProductReadResDto> productList = productService.getProductInfo(productCriteria);
 
+        System.out.println("testtest");
+
         for(ProductReadResDto productReadResDto : productList) {
             String finalFilename = imageUtil.convertFilenameToUrl(filePath, productReadResDto.getImage().getUuidFilename());
             productReadResDto.getImage().setUuidFilename(finalFilename);
@@ -57,7 +59,7 @@ public class ProductController {
         model.addAttribute("productList", productList);
         List<CategoryDto> mainCategories = categoryService.getMainCategory();
         model.addAttribute("mainCategories", mainCategories);
-        return "/product/product-list";
+        return "product/product_list";
     }
 
     /***
@@ -69,7 +71,7 @@ public class ProductController {
     public String addProductPage(Model model) {
         List<CategoryDto> mainCategories = categoryService.getMainCategory();
         model.addAttribute("mainCategories", mainCategories);
-        return "/product/register";
+        return "product/register";
     };
 
     /***
@@ -115,7 +117,7 @@ public class ProductController {
 
         List<CategoryDto> mainCategories = categoryService.getMainCategory();
         model.addAttribute("mainCategories", mainCategories);
-        return "/product/update";
+        return "product/update";
     }
 
     /***
