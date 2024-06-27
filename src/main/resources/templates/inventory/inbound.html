@@ -83,6 +83,7 @@
 
     <title>재고관리 - 재고수량관리</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link th:replace="elements/misc/deps :: html"/>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -144,9 +145,14 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .stock-zero {
-            color: red;
-            font-weight: bold;
+        .stock-very-low {
+        background-color: #FFCCCB;
+        }
+        .stock-low {
+            background-color: #FFE5B4;
+        }
+        .stock-icon {
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -167,31 +173,30 @@
             </div>
 
             <div class="container-fluid">
-                <!-- 상품정보 및 재고수량 테이블 -->
                 <div class="card shadow mb-4 animate__animated animate__fadeIn animate__delay-1s">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered animate__animated animate__fadeIn animate__delay-2s" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
-                                <tr>
-                                    <th>상품코드</th>
-                                    <th>상품명</th>
-                                    <th>재고수량</th>
-                                    <th>부가작업</th>
-                                </tr>
+                                    <tr>
+                                        <th>상품코드</th>
+                                        <th>상품명</th>
+                                        <th>재고수량</th>
+                                        <th>부가작업</th>
+                                    </tr>
                                 </thead>
-                                <tbody th:each="item : ${itemList}">
-                                <tr th:classappend="${item.stockQuantity < 100} ? ' stock-zero' : ''">
-                                    <td th:text="${item.productCode}"></td>
-                                    <td th:text="${item.product.productName}"></td>
-                                    <td th:text="${item.stockQuantity}"></td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm edit-item btn-action" th:data-productcode="${item.productCode}">재고수량 입고</button>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr th:each="item : ${itemList}">
+                                        <td th:text="${item.productCode}"></td>
+                                        <td th:text="${item.product.productName}"></td>
+                                        <td th:text="${item.stockQuantity}"></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm edit-item btn-action" th:data-productcode="${item.productCode}">재고수량 입고</button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -250,32 +255,43 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     $(document).ready(function() {
+        // 기존 DataTable이 있다면 제거
         if ($.fn.DataTable.isDataTable('#dataTable')) {
             $('#dataTable').DataTable().destroy();
         }
-        // DataTable 초기화
-        var table = $('#dataTable').DataTable();
-
-        // 재고수량이 0인 행에 stock-zero 클래스 적용
-        $('#dataTable tbody tr').each(function() {
-            var stockQuantity = parseInt($(this).find('td:eq(2)').text());
-            if (stockQuantity === 0) {
-                $(this).addClass('stock-zero');
+        
+        // 테이블 초기화
+        $('#dataTable').DataTable({
+        "columnDefs": [
+            {
+                "targets": 2,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                    var stock = parseInt(cellData);
+                    var $td = $(td);
+                    if (stock <= 50) {
+                        $td.addClass('stock-very-low');
+                        $td.html('<i class="fas fa-exclamation-triangle stock-icon" title="매우 낮은 재고"></i>' + cellData);
+                    } else if (stock <= 100) {
+                        $td.addClass('stock-low');
+                        $td.html('<i class="fas fa-exclamation stock-icon" title="낮은 재고"></i>' + cellData);
+                    }
+                    $td.attr('title', '현재 재고: ' + stock);
+                }
             }
-        });
-
+        ]
+    });
+    // 툴팁 초기화 (Bootstrap 툴팁 사용)
+        $('[title]').tooltip();
         // 수정 버튼 클릭 이벤트 (이벤트 위임 사용)
         $('#dataTable').on('click', '.edit-item', function() {
             var productCode = $(this).data('productcode');
-
             $('#editProductCode').val(productCode);
             $('#editStockQuantity').val(0);  // 기본값 0으로 설정
-
             $('#editItemModal').modal('show').addClass('animate__animated animate__fadeInUp');
         });
     });
     /*]]>*/
-</script>
+    </script>    
 </body>
 </html>
 
