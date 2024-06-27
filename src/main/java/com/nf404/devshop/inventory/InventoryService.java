@@ -95,4 +95,12 @@ public class InventoryService {
     public void insertNewStockTuple(int productCode) {
         stockMapper.insertNewStockTuple(productCode);
     }
+
+    /**
+     * 모든 재고수량과 상품정보를 포괄한 데이터를 조회한다.
+     * @return List<StockAndProduct> 재고수량과 상품정보를 포함한 리스트
+     */
+    public List<StockAndProduct> getAllStocksInfoWithProductInfo() {
+        return stockMapper.getAllStocksInfoWithProductInfo();
+    }
 }

@@ -1,6 +1,6 @@
 package com.nf404.devshop.inventory;
 
-import com.nf404.devshop.inventory.stock.Stock;
+import com.nf404.devshop.inventory.stock.*;
 import com.nf404.devshop.inventory.transactions.Transactions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +78,8 @@ class InventoryServiceTest {
     @Test
     @DisplayName("1개 상품 재고 출고")
     void updateStockOutbound() {
-        int productCode = 1;
-        int quantity = 200;
+        int productCode = 22;
+        int quantity = 220;
 
         inventoryService.updateStockOutbound(productCode, quantity);
 
@@ -106,5 +106,14 @@ class InventoryServiceTest {
         System.out.println(stock);
 
         Assertions.assertNotNull(stock);
+    }
+
+    @Test
+    @DisplayName("상품정보를 포함한 모든 재고량 조회 테스트")
+    void getAllStocksWithProductInfo() {
+        List<StockAndProduct> stocks = inventoryService.getAllStocksInfoWithProductInfo();
+        for (var stock : stocks) {
+            System.out.println(stock);
+        }
     }
 }

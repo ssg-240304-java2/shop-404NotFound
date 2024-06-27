@@ -32,17 +32,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> getAllUsers() {
         List<UserDTO> users = userMapper.getAllUsers();
-        log.info("Retrieved users: {}", users);
+        log.info("Retrieved non-deleted users: {}", users);
         if (users == null || users.isEmpty()) {
-            log.warn("No users found or users list is null");
+            log.warn("No non-deleted users found or users list is null");
         } else {
-            log.info("Number of users retrieved: {}", users.size());
-            for (UserDTO user : users) {
-                log.info("User: {}", user);
-            }
+            log.info("Number of non-deleted users retrieved: {}", users.size());
         }
-        return userMapper.getAllUsers();
+        return users;
     }
+
 
 
     @Override
@@ -69,9 +67,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO user) {
-        // 비즈니스 로직 추가 예정.
-        // 예: 변경된 필드만 업데이트하는 로직 등
-        userMapper.updateUser(user);
+        UserDTO existingUser = userMapper.getUserById(user.getUserId());
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+    
+        // 비밀번호가 변경되었는지 확인
+        if (user.getUserPw() != null && !user.getUserPw().isEmpty()) {
+            // 여기에 비밀번호 암호화 로직을 추가할 수 있습니다.
+            // 예: user.setUserPw(passwordEncoder.encode(user.getUserPw()));
+        } else {
+            // 비밀번호가 변경되지 않았다면, 기존 비밀번호를 유지
+            user.setUserPw(existingUser.getUserPw());
+        }
+    
+        // 나머지 필드 업데이트
+        existingUser.setUserName(user.getUserName());
+        existingUser.setUserAddr(user.getUserAddr());
+        existingUser.setUserPhone(user.getUserPhone());
+        existingUser.setUserRank(user.getUserRank());
+    
+        userMapper.updateUser(existingUser);
+        log.info("User updated: userId={}, newRank={}", existingUser.getUserId(), existingUser.getUserRank());
     }
 
 //    @Override

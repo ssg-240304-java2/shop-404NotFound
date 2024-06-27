@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 사용자 관리를 위한 컨트롤러 클래스.
@@ -29,11 +30,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // 템플릿 메인 페이지
-    @GetMapping("/userhome")
-    public String userHome() {
-        return "user/userhome";
-    }
+    // 이하 템플릿에 적용될 객체들
 
     @GetMapping("/list")
     public String listUsers(
@@ -43,45 +40,70 @@ public class UserController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             Model model) {
-        log.info("Search parameters - userId: {}, userName: {}, userRank: {}, startDate: {}, endDate: {}",
-                userId, userName, userRank, startDate, endDate);
 
-        List<UserDTO> users;
-        try {
-            if (userId != null || userName != null || userRank != null || startDate != null || endDate != null) {
-                // 검색 조건이 있는 경우
-                users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
-            } else {
-                // 검색 조건이 없는 경우 (기존 로직)
-                users = userService.getAllUsers();
-            }
-
-            if (users == null) {
-                users = new ArrayList<>(); // null 대신 빈 리스트 사용
-            }
-            log.info("Retrieved users count: {}", users.size());
-        } catch (Exception e) {
-            log.error("Error fetching users: ", e);
-            users = new ArrayList<>();
-            model.addAttribute("errorMessage", "사용자 정보를 가져오는 중 오류가 발생했습니다.");
-        }
-
-        log.info("Users list size: {}", users.size());
+        List<UserDTO> users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
+        users = users.stream().filter(user -> !user.isDeleted()).collect(Collectors.toList());
         model.addAttribute("users", users);
-        return "user/list";
+        return "user/user_list";
     }
+
+
+
+//      이전 기능
+//    @GetMapping("/list")
+//    public String listUsers(
+//            @RequestParam(required = false) String userId,
+//            @RequestParam(required = false) String userName,
+//            @RequestParam(required = false) Integer userRank,
+//            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+//            Model model) {
+//        log.info("Search parameters - userId: {}, userName: {}, userRank: {}, startDate: {}, endDate: {}",
+//                userId, userName, userRank, startDate, endDate);
+//
+//        List<UserDTO> users;
+//        try {
+//            if (userId != null || userName != null || userRank != null || startDate != null || endDate != null) {
+//                // 검색 조건이 있는 경우
+//                users = userService.getFilteredUsers(userId, userName, userRank, startDate, endDate);
+//            } else {
+//                // 검색 조건이 없는 경우 (기존 로직)
+//                users = userService.getAllUsers();
+//            }
+//
+//            if (users == null) {
+//                users = new ArrayList<>(); // null 대신 빈 리스트 사용
+//            }
+//            log.info("Retrieved users count: {}", users.size());
+//        } catch (Exception e) {
+//            log.error("Error fetching users: ", e);
+//            users = new ArrayList<>();
+//            model.addAttribute("errorMessage", "사용자 정보를 가져오는 중 오류가 발생했습니다.");
+//        }
+//
+//        log.info("Users list size: {}", users.size());
+//        model.addAttribute("users", users);
+//        return "user/user_list";
+//    }
+
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new UserDTO());
-        return "user/register";
+        return "user/user_register";
     }
-
+    
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute UserDTO user) {
-        userService.registerUser(user);
+    public String registerUser(@ModelAttribute UserDTO user, RedirectAttributes redirectAttributes) {
+        try {
+            userService.registerUser(user);
+            redirectAttributes.addFlashAttribute("successMessage", "회원이 성공적으로 등록되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "회원 등록 중 오류가 발생했습니다: " + e.getMessage());
+        }
         return "redirect:/users/list";
     }
+    
 
     @GetMapping("/edit/{userId}")
     public String showEditForm(@PathVariable String userId, Model model) {
@@ -99,25 +121,21 @@ public class UserController {
 
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute UserDTO updatedUser, RedirectAttributes redirectAttributes) {
-        log.info("Updating user: {}", updatedUser);
         try {
-            // 기존 사용자 정보를 가져옵니다.
             UserDTO existingUser = userService.getUserById(updatedUser.getUserId());
             if (existingUser == null) {
                 throw new IllegalArgumentException("User not found");
             }
 
-            // 랭크를 제외한 다른 필드들만 업데이트합니다.
             existingUser.setUserName(updatedUser.getUserName());
             existingUser.setUserPw(updatedUser.getUserPw());
             existingUser.setUserAddr(updatedUser.getUserAddr());
             existingUser.setUserPhone(updatedUser.getUserPhone());
-            // userRank는 업데이트하지 않습니다.
+            existingUser.setUserRank(updatedUser.getUserRank());
 
             userService.updateUser(existingUser);
             redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
-            log.error("Error updating user: ", e);
             redirectAttributes.addFlashAttribute("errorMessage", "사용자 정보 업데이트 중 오류가 발생했습니다: " + e.getMessage());
         }
         return "redirect:/users/list";
@@ -141,6 +159,7 @@ public class UserController {
         }
         return "redirect:/users/list";
     }
+
 
     @GetMapping("/login")
     public String showLoginForm() {

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+<head>
+    <meta charset="UTF-8">
+    <title>리스트 페이지</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="page_tits">
+        <h3>게시판 관리</h3>
+        <p class="path"><strong>현재 위치 :</strong> <span>게시판 관리</span> <span>리스트</span> <span>게시판 리스트</span></p>
+    </div>
+
+    <div class="content">
+        <section>
+            <!--/* 검색 */-->
+            <div class="search_box">
+                <form id="searchForm" onsubmit="return false;" autocomplete="off">
+                    <div class="sch_group fl">
+                        <select id="searchType" name="searchType" title="검색 유형 선택">
+                            <option value="">전체 검색</option>
+                            <option value="title">제목</option>
+                            <option value="content">내용</option>
+                            <option value="writer">작성자</option>
+                        </select>
+                        <input type="text" id="keyword" name="keyword" placeholder="키워드를 입력해 주세요." title="키워드 입력" />
+                        <button type="button" class="bt_search" onclick="movePage(1);"><i class="fas fa-search"></i><span class="skip_info">검색</span></button>
+                    </div>
+                </form>
+            </div>
+
+            <!--/* 리스트 */-->
+            <table class="tb tb_col">
+                <colgroup>
+                    <col style="width:50px;"/><col style="width:7.5%;"/><col style="width:auto;"/><col style="width:10%;"/><col style="width:15%;"/><col style="width:7.5%;"/>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="checkAll" onchange="selectAll(this)"/></th>
+                    <th scope="col">번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">등록일</th>
+                    <th scope="col">조회</th>
+                </tr>
+                </thead>
+
+                <!--/* 리스트 데이터 렌더링 영역 */-->
+                <tbody id="list">
+
+                </tbody>
+            </table>
+
+            <!--/* 페이지네이션 렌더링 영역 */-->
+            <div class="paging">
+
+            </div>
+
+            <!--/* 버튼 */-->
+            <p class="btn_set tr">
+                <button type="button" class="btns btn_st3 btn_mid" onclick="deleteSelected()">선택 삭제</button>
+                <a th:href="@{/board/write}" class="btns btn_st3 btn_mid">글쓰기</a>
+            </p>
+        </section>
+    </div> <!--/* .content */-->
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            window.onload = () => {
+                // 페이지가 로드되었을 때, 딱 한 번만 함수를 실행
+                findAllBoard();
+            }
+
+            // 게시글 리스트 조회
+            function findAllBoard() {
+                const list = [[ ${response.list} ]];
+                const pagination = [[ ${response.pagination} ]];
+                const params = [[ ${params} ]];
+                let num = pagination.totalRecordCount - ((params.page - 1) * params.recordSize);
+
+                drawList(list, num);
+                drawPage(pagination, params);
+            }
+
+            // 리스트 HTML draw
+            function drawList(list, num) {
+                let html = '';
+                list.forEach(row => {
+                    html += `
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox" data-board-id="${row.boardId}" /></td>
+                            <td>${row.noticeYn === false ? num-- : '공지'}</td>
+                            <td class="tl"><a href="/board/view?boardId=${row.boardId}">${row.title}</a></td>
+                            <td>${row.writer}</td>
+                            <td>${dayjs(row.createdDate).format('YYYY-MM-DD HH:mm')}</td>
+                            <td>${row.viewCnt}</td>
+                        </tr>
+                    `;
+                })
+                document.getElementById('list').innerHTML = html;
+            }
+
+            // 페이지 HTML draw
+            function drawPage(pagination, params) {
+                if (!pagination || !params) {
+                    document.querySelector('.paging').innerHTML = '';
+                    throw new Error('Missing required parameters...');
+                }
+
+                let html = '';
+
+                if (pagination.existPrevPage) {
+                    html += `
+                        <a href="javascript:void(0);" onclick="movePage(1)" class="page_bt first">첫 페이지</a>
+                        <a href="javascript:void(0);" onclick="movePage(${pagination.startPage - 1})" class="page_bt prev">이전 페이지</a>
+                    `;
+                }
+
+                html += '<p>';
+                for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+                    html += (i !== params.page)
+                        ? `<a href="javascript:void(0);" onclick="movePage(${i});">${i}</a>`
+                        : `<span class="on">${i}</span>`
+                }
+                html += '</p>';
+
+                if (pagination.existNextPage) {
+                    html += `
+                        <a href="javascript:void(0);" onclick="movePage(${pagination.endPage + 1});" class="page_bt next">다음 페이지</a>
+                        <a href="javascript:void(0);" onclick="movePage(${pagination.totalPageCount});" class="page_bt last">마지막 페이지</a>
+                    `;
+                }
+
+                document.querySelector('.paging').innerHTML = html;
+            }
+
+            // 페이지 이동
+            function movePage(page) {
+                const form = document.getElementById('searchForm');
+                const queryParams = {
+                    page: (page) ? page : 1,
+                    recordSize: 10,
+                    pageSize: 10,
+                    searchType: form.searchType.value,
+                    keyword: form.keyword.value
+                }
+
+                location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
+            }
+
+            // 모든 체크박스 선택/해제
+            function selectAll(source) {
+                const checkboxes = document.querySelectorAll('.row-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = source.checked;
+                });
+            }
+
+            // 선택된 항목 삭제
+            function deleteSelected() {
+                const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+                const ids = Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-board-id'));
+
+                if (ids.length === 0) {
+                    alert('삭제할 항목을 선택하세요.');
+                    return;
+                }
+
+                if (!confirm('선택된 항목을 삭제하시겠습니까?')) {
+                    return;
+                }
+
+                ids.forEach(id => {
+                    // 여기서 삭제 요청을 서버로 보내는 로직을 추가하면 됩니다.
+                    // 예를 들어, AJAX 요청을 사용해서 삭제 API를 호출하거나, 폼을 생성하여 POST 요청을 보내는 방식 등을 사용할 수 있습니다.
+                    console.log(`삭제 요청 - boardId: ${id}`);
+                    // 여기서 삭제 로직을 추가하세요.
+                    // 예시로 console에 로그를 찍는 것만 하였습니다.
+                });
+            }
+        </script>
+    </th:block>
+</th:block>
+</body>
+</html>

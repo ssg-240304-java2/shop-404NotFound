@@ -36,4 +36,52 @@
         select *
         from tbl_inventory_stock
     </select>
+
+    <resultMap id="productAndProductResultMap" type="com.nf404.devshop.inventory.stock.StockAndProduct">
+        <id property="productCode" column="product_code" />
+        <result property="stockQuantity" column="stock_quantity" />
+
+        <association property="product" javaType="com.nf404.devshop.product.model.dto.res.ProductReadResDto">
+            <id property="productCode" column="product_code"/>
+            <result property="productName" column="product_name" />
+        </association>
+    </resultMap>
+
+<!--    @NoArgsConstructor-->
+<!--    @AllArgsConstructor-->
+<!--    @Getter-->
+<!--    @Setter-->
+<!--    @ToString-->
+<!--    public class StockAndProduct {-->
+<!--    private int productCode;-->
+<!--    private int stockQuantity;-->
+
+<!--    // 상품코드, 상품명, 재고수량-->
+<!--    private ProductReadResDto product;-->
+<!--    }-->
+
+<!--    @NoArgsConstructor-->
+<!--    @AllArgsConstructor-->
+<!--    @Getter-->
+<!--    @Setter-->
+<!--    @ToString-->
+<!--    public class ProductReadResDto {-->
+
+<!--    private int productCode;-->
+<!--    private String productName;-->
+<!--    private int price;-->
+<!--    private String isDisplayed;-->
+<!--    private String productDesc;-->
+<!--    private LocalDate registrationDate;-->
+
+<!--    private Category category;-->
+<!--    private Image image;-->
+<!--    }-->
+    <select id="getAllStocksInfoWithProductInfo" resultMap="productAndProductResultMap">
+        select s.product_code, s.stock_quantity, p.product_name
+        from tbl_inventory_stock s
+        join tbl_product p
+        on s.product_code = p.product_code
+    </select>
+
 </mapper>
