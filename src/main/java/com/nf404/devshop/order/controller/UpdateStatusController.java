@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @Slf4j
@@ -24,12 +25,13 @@ public class UpdateStatusController {
      * @param orderStatus
      */
     @PostMapping("/updatestatus")
-    public String updateOrderStatus(@RequestParam(required = false) int orderNo, @RequestParam(required = false) String orderStatus) {
+    public String updateOrderStatus(@RequestParam(required = false) int orderNo, @RequestParam(required = false) String orderStatus, RedirectAttributes redirectAttributes) {
         log.info("orderNo >>>>>>>>>>>>> {}", orderNo);
         log.info("orderStatus >>>>>>>> {}", orderStatus);
 
         updateStatusService.updateOrderStatus(orderNo, orderStatus);
 //        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>> 주문 상태 처리 완료");
+        redirectAttributes.addFlashAttribute("updateSuccess", true);
         return "redirect:/order/orderlist";
     }
 }

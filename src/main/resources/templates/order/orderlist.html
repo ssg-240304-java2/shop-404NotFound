@@ -95,7 +95,7 @@
                                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${order.orderStatus}"></button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <form th:action="@{/order/updatestatus}" method="post">
+                                            <form th:action="@{/order/updatestatus}" method="post" onsubmit="return confirmUpdate();">
                                                 <input type="hidden" name="orderNo" th:value="${order.orderNo}"/>
                                                 <input type="hidden" name="orderStatus" value="처리완료"/>
                                                 <button class="dropdown-item" type="submit" th:disabled="${order.orderStatus == '처리완료'}">처리 완료</button>
@@ -131,6 +131,10 @@
                 <script src="/js/demo/datatables-demo.js"></script>
 
                 <script th:inline="javascript">
+                    function confirmUpdate() {
+                        alert('처리 완료하였습니다.');
+                        return true;  // Continue with form submission
+                    }
                     /*<![CDATA[*/
                     $(document).ready(function() {
                         // Check if DataTable is not already initialized

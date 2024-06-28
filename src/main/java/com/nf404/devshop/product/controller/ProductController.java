@@ -61,18 +61,6 @@ public class ProductController {
     }
 
     /***
-     * 상품 등록 페이지 이동
-     * @param model
-     * @return
-     */
-    @GetMapping("/register")
-    public String addProductPage(Model model) {
-        List<CategoryDto> mainCategories = categoryService.getMainCategory();
-        model.addAttribute("mainCategories", mainCategories);
-        return "product/register";
-    };
-
-    /***
      * [insert]
      * - 입력한 정보로 상품 데이터 추가
      * @param productCreateReqDto
@@ -95,7 +83,7 @@ public class ProductController {
 
         productService.addProductInfo(productCreateReqDto, imageDto);
         redirectAttributes.addFlashAttribute("successMessage", "상품이 성공적으로 등록되었습니다!");
-        return "redirect:/product/register";
+        return "redirect:/product/product-list";
     }
 
     /***

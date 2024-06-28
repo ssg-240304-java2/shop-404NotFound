@@ -55,4 +55,15 @@
           AND category_code != #{categoryCode}
     </select>
 
+    <select id="selectCategoryByCode" resultMap="categoryResultMap">
+        select * from tbl_category
+        where category_code = #{categoryCode}
+    </select>
+
+    <select id="countSubCategoriesByCode" resultType="_int">
+        select count(*)
+        from tbl_category
+        where ref_category_code = #{categoryCode}
+    </select>
+
 </mapper>
