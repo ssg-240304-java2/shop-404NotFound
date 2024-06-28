@@ -100,11 +100,11 @@ public class BoardController {
 //        return "board/boardlist";
 //    }
 
-//    // 게시글 삭제
-//    @PostMapping("/board/delete")
-//    public String deleteBoard(@RequestParam Integer boardId, SearchDTO queryParams, Model model) {
-//        boardService.deleteByBoardId(boardId);
-//        return "redirect:/board/list";
-//    }
+    // 게시글 삭제
+    @PostMapping("/board/delete")
+    public String deleteBoard(@RequestParam Integer boardId, SearchDTO queryParams, Model model) {
+        boardService.deleteByBoardId(boardId);
+        return "redirect:/board/list";
+    }
 
 }
