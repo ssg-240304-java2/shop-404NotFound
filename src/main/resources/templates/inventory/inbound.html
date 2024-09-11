@@ -1,0 +1,499 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--    <head>-->
+<!--        <meta charset="UTF-8" />-->
+<!--        <meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+<!--        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />-->
+
+<!--        <title>재고관리 - 재고수량관리</title>-->
+
+<!--        <link th:replace="elements/misc/deps :: html"/>-->
+
+<!--    </head>-->
+<!--    <body id="page-top">-->
+<!--        <div id="wrapper">-->
+<!--            <nav th:replace="elements/nav :: body"></nav> &lt;!&ndash; left sidebar &ndash;&gt;-->
+
+<!--            <div id="content-wrapper" class="d-flex flex-column">-->
+<!--                <div id="content">-->
+<!--                    <nav th:replace="elements/topbar :: body"></nav> &lt;!&ndash; top navbar &ndash;&gt;-->
+<!--                    <div class="container-fluid">-->
+<!--                        <h1 class="h3 mb-4 text-gray-800">재고수량관리</h1>   &lt;!&ndash; 페이지 제목 &ndash;&gt;-->
+<!--                        <p class="mb-4">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>  &lt;!&ndash; 페이지 설명 &ndash;&gt;-->
+<!--                        &lt;!&ndash; 이곳에 내용을 채워넣으면 됩니다. start &ndash;&gt;-->
+
+<!--                        &lt;!&ndash; todo. 상품정보 및 재고수량 테이블 &ndash;&gt;-->
+<!--                        <div class="card shadow mb-4">-->
+<!--                            <div class="card-header py-3">-->
+<!--                                <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>-->
+<!--                            </div>-->
+<!--                            <div class="card-body">-->
+<!--                                <div class="table-responsive">-->
+<!--                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">-->
+<!--                                        <thead>-->
+<!--                                                <tr>-->
+<!--                                                    <th>상품코드</th>-->
+<!--                                                    <th>상품명</th>-->
+<!--                                                    <th>재고수량</th>-->
+<!--                                                    <th>부가작업</th>-->
+<!--                                                </tr>-->
+<!--                                            </thead>-->
+<!--                                            <tbody th:each="item : ${itemList}">-->
+<!--                                                <tr>-->
+<!--                                                    <td th:text="${item.productCode}"></td>-->
+<!--                                                    <td th:text="${item.product.productName}"></td>-->
+<!--                                                    <td th:text="${item.stockQuantity}"></td>-->
+<!--                                                    <td>-->
+<!--                                                        <a th:href="@{/admin/stock/list/{productCode}(productCode=${item.productCode})}" class="btn btn-primary btn-icon-split">-->
+<!--                                                            <span class="icon text-white-50">-->
+<!--                                                                <i class="fas fa-flag"></i>-->
+<!--                                                            </span>-->
+<!--                                                            <span class="text">재고수량 입고</span>-->
+<!--                                                        </a>-->
+<!--                                                    </td>-->
+<!--                                                </tr>-->
+<!--                                        </tbody>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+
+
+<!--                        &lt;!&ndash; 이곳에 내용을 채워넣으면 됩니다. end &ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <footer th:replace="elements/footer :: footer"></footer>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </body>-->
+<!--</html>-->
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>재고관리 - 재고수량관리</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link th:replace="elements/misc/deps :: html"/>
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+            animation: backgroundMove 20s linear infinite;
+        }
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50%, 50%); }
+        }
+        .rank-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .rank-badge:hover {
+            transform: scale(1.1);
+        }
+        .rank-bronze {
+            background-color: #CD7F32;
+            color: white;
+        }
+        .rank-silver {
+            background-color: #C0C0C0;
+            color: black;
+        }
+        .rank-gold {
+            background-color: #FFD700;
+            color: black;
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-action {
+            transition: all 0.3s ease;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .stock-very-low {
+        background-color: #FFCCCB;
+        }
+        .stock-low {
+            background-color: #FFE5B4;
+        }
+        .stock-icon {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+
+            <!-- Page Header -->
+    <div class="page-header">
+        <div class="container-fluid">
+            <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">실시간 재고 현황 대시보드</h1>
+            <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">
+                효율적인 재고 관리로 비즈니스 최적화를 실현하세요. 상품별 실시간 재고 현황을 한눈에 확인하고, 
+                신속한 입고 처리로 재고 부족 문제를 예방할 수 있습니다.
+            </p>
+        </div>
+    </div>
+
+            <div class="container-fluid">
+                <div class="card shadow mb-4 animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>상품코드</th>
+                                        <th>상품명</th>
+                                        <th>재고수량</th>
+                                        <th>부가작업</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${itemList}">
+                                        <td th:text="${item.productCode}"></td>
+                                        <td th:text="${item.product.productName}"></td>
+                                        <td th:text="${item.stockQuantity}"></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm edit-item btn-action" th:data-productcode="${item.productCode}">재고수량 입고</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="elements/footer :: footer"></footer>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editItemModalLabel">재고수량 입고</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editItemForm" th:action="@{/admin/stock/update}" method="post">
+                    <input type="hidden" id="editProductCode" name="productCode">
+                    <div class="form-group">
+                        <label for="editStockQuantity">추가할 재고수량</label>
+                        <input type="number" class="form-control" id="editStockQuantity" name="stockQuantity" value="0" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/demo/datatables-demo.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        // 기존 DataTable이 있다면 제거
+        if ($.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable().destroy();
+        }
+        
+        // 테이블 초기화
+        $('#dataTable').DataTable({
+        "columnDefs": [
+            {
+                "targets": 2,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                    var stock = parseInt(cellData);
+                    var $td = $(td);
+                    if (stock <= 50) {
+                        $td.addClass('stock-very-low');
+                        $td.html('<i class="fas fa-exclamation-triangle stock-icon" title="매우 낮은 재고"></i>' + cellData);
+                    } else if (stock <= 100) {
+                        $td.addClass('stock-low');
+                        $td.html('<i class="fas fa-exclamation stock-icon" title="낮은 재고"></i>' + cellData);
+                    }
+                    $td.attr('title', '현재 재고: ' + stock);
+                }
+            }
+        ]
+    });
+    // 툴팁 초기화 (Bootstrap 툴팁 사용)
+        $('[title]').tooltip();
+        // 수정 버튼 클릭 이벤트 (이벤트 위임 사용)
+        $('#dataTable').on('click', '.edit-item', function() {
+            var productCode = $(this).data('productcode');
+            $('#editProductCode').val(productCode);
+            $('#editStockQuantity').val(0);  // 기본값 0으로 설정
+            $('#editItemModal').modal('show').addClass('animate__animated animate__fadeInUp');
+        });
+    });
+    /*]]>*/
+    </script>    
+</body>
+</html>
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />-->
+
+<!--    <title>재고관리 - 재고수량관리</title>-->
+
+<!--    <link th:replace="elements/misc/deps :: html"/>-->
+<!--    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>-->
+
+<!--    <style>-->
+<!--        .page-header {-->
+<!--            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);-->
+<!--            color: white;-->
+<!--            padding: 30px 0;-->
+<!--            margin-bottom: 30px;-->
+<!--            position: relative;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+<!--        .page-header::after {-->
+<!--            content: '';-->
+<!--            position: absolute;-->
+<!--            top: -50%;-->
+<!--            left: -50%;-->
+<!--            width: 200%;-->
+<!--            height: 200%;-->
+<!--            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);-->
+<!--            animation: backgroundMove 20s linear infinite;-->
+<!--        }-->
+<!--        @keyframes backgroundMove {-->
+<!--            0% { transform: translate(0, 0); }-->
+<!--            100% { transform: translate(50%, 50%); }-->
+<!--        }-->
+<!--        .rank-badge {-->
+<!--            padding: 5px 10px;-->
+<!--            border-radius: 15px;-->
+<!--            font-weight: bold;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .rank-badge:hover {-->
+<!--            transform: scale(1.1);-->
+<!--        }-->
+<!--        .rank-bronze {-->
+<!--            background-color: #CD7F32;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .rank-silver {-->
+<!--            background-color: #C0C0C0;-->
+<!--            color: black;-->
+<!--        }-->
+<!--        .rank-gold {-->
+<!--            background-color: #FFD700;-->
+<!--            color: black;-->
+<!--        }-->
+<!--        .card {-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .card:hover {-->
+<!--            transform: translateY(-5px);-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.1);-->
+<!--        }-->
+<!--        .btn-action {-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .btn-action:hover {-->
+<!--            transform: translateY(-2px);-->
+<!--            box-shadow: 0 2px 5px rgba(0,0,0,0.2);-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body id="page-top">-->
+<!--<div id="wrapper">-->
+<!--    <nav th:replace="elements/nav :: body"></nav> &lt;!&ndash; left sidebar &ndash;&gt;-->
+
+<!--    <div id="content-wrapper" class="d-flex flex-column">-->
+<!--        <div id="content">-->
+<!--            <nav th:replace="elements/topbar :: body"></nav> &lt;!&ndash; top navbar &ndash;&gt;-->
+
+<!--            &lt;!&ndash; Page Header &ndash;&gt;-->
+<!--            <div class="page-header">-->
+<!--                <div class="container-fluid">-->
+<!--                    <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">재고수량관리</h1>-->
+<!--                    <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">각 상품별 재고수량 확인 및 입고처리를 위한 서비스입니다.</p>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="container-fluid">-->
+<!--                &lt;!&ndash; 상품정보 및 재고수량 테이블 &ndash;&gt;-->
+<!--                <div class="card shadow mb-4 animate__animated animate__fadeIn animate__delay-1s">-->
+<!--                    <div class="card-header py-3">-->
+<!--                        <h6 class="m-0 font-weight-bold text-primary">상품별 재고수량</h6>-->
+<!--                    </div>-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="table-responsive">-->
+<!--                            <table class="table table-bordered animate__animated animate__fadeIn animate__delay-2s" id="dataTable" width="100%" cellspacing="0">-->
+<!--                                <thead>-->
+<!--                                <tr>-->
+<!--                                    <th>상품코드</th>-->
+<!--                                    <th>상품명</th>-->
+<!--                                    <th>재고수량</th>-->
+<!--                                    <th>부가작업</th>-->
+<!--                                </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody th:each="item : ${itemList}">-->
+<!--                                <tr>-->
+<!--                                    <td th:text="${item.productCode}"></td>-->
+<!--                                    <td th:text="${item.product.productName}"></td>-->
+<!--                                    <td th:text="${item.stockQuantity}"></td>-->
+<!--                                    <td>-->
+<!--                                        <button class="btn btn-primary btn-sm edit-item btn-action" th:data-productcode="${item.productCode}">재고수량 입고</button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <footer th:replace="elements/footer :: footer"></footer>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; 수정 모달 &ndash;&gt;-->
+<!--<div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="editItemModalLabel">재고수량 입고</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form id="editItemForm" th:action="@{/admin/stock/update}" method="post">-->
+<!--                    <input type="hidden" id="editProductCode" name="productCode">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="editStockQuantity">추가할 재고수량</label>-->
+<!--                        <input type="number" class="form-control" id="editStockQuantity" name="stockQuantity" value="0" required>-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>-->
+<!--                        <button type="submit" class="btn btn-primary">저장</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap core JavaScript&ndash;&gt;-->
+<!--<script src="/vendor/jquery/jquery.min.js"></script>-->
+<!--<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+
+<!--&lt;!&ndash; Core plugin JavaScript&ndash;&gt;-->
+<!--<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>-->
+
+<!--&lt;!&ndash; Custom scripts for all pages&ndash;&gt;-->
+<!--<script src="/js/sb-admin-2.min.js"></script>-->
+
+<!--&lt;!&ndash; Page level plugins &ndash;&gt;-->
+<!--<script src="/vendor/datatables/jquery.dataTables.min.js"></script>-->
+<!--<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>-->
+
+<!--&lt;!&ndash; Page level custom scripts &ndash;&gt;-->
+<!--<script src="/js/demo/datatables-demo.js"></script>-->
+
+<!--<script th:inline="javascript">-->
+<!--    /*<![CDATA[*/-->
+<!--    $(document).ready(function() {-->
+<!--        if ($.fn.DataTable.isDataTable('#dataTable')) {-->
+<!--            $('#dataTable').DataTable().destroy();-->
+<!--        }-->
+<!--        // DataTable 초기화-->
+<!--        var table = $('#dataTable').DataTable();-->
+
+<!--        // 수정 버튼 클릭 이벤트 (이벤트 위임 사용)-->
+<!--        $('#dataTable').on('click', '.edit-item', function() {-->
+<!--            var productCode = $(this).data('productcode');-->
+
+<!--            $('#editProductCode').val(productCode);-->
+<!--            $('#editStockQuantity').val(0);  // 기본값 0으로 설정-->
+
+<!--            $('#editItemModal').modal('show').addClass('animate__animated animate__fadeInUp');-->
+<!--        });-->
+<!--    });-->
+<!--    /*]]>*/-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->

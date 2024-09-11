@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <title>SB Admin 2 - Dashboard</title>
+        <link th:replace="elements/misc/deps :: html" />
+        <style>
+            .page-header {
+                background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+                color: white;
+                padding: 30px 0;
+                margin-bottom: 30px;
+                position: relative;
+                overflow: hidden;
+            }
+            .page-header::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+                animation: backgroundMove 20s linear infinite;
+            }
+        </style>
+    </head>
+    <body id="page-top">
+        <div id="wrapper">
+            <nav th:replace="elements/nav :: body"></nav>
+            <!-- left sidebar -->
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <nav th:replace="elements/topbar :: body"></nav>
+                    <!-- top navbar -->
+                    <!-- 페이지 제목 -->
+                        <div class="page-header">
+                            <div class="container-fluid">
+                                <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">공지사항</h1>
+                                <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">공지사항 페이지입니다.<br/></p>
+                            </div>
+                        </div>
+
+                        <!-- 페이지 설명 -->
+                        <!-- 이곳에 내용을 채워넣으면 됩니다. start -->
+                        <!-- 버튼 추가! -->
+
+                        <!-- DataTales Example -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">공지사항</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" id="boardAllSelector" /></th>
+                                                <th>번호</th>
+                                                <th>제목</th>
+                                                <th>작성자</th>
+                                                <th>등록일</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="item : ${boards}">
+                                                <td>
+                                                    <!-- <input type="checkbox"/> -->
+                                                    <input type="checkbox" class="boardSelection" />
+                                                </td>
+                                                <td th:text="${item.noticeYn == false ? item.boardId : '공지'}"></td>
+                                                <td>
+	                                                <!-- th:text="${item.title}" -->
+	                                                <a th:href="@{'/board/view/' + ${item.boardId}}" th:text="${item.title}"></a>
+                                                </td>
+                                                <td th:text="${item.writer}"></td>
+                                                <td th:text="${item.createdDate}"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+	                    <!-- <button id="deleteAllSelection">선택 삭제</button> -->
+
+                        <a id="deleteAllSelection" class="btn btn-danger btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span class="text">선택항목 삭제</span>
+                        </a>
+                        <!-- 이곳에 내용을 채워넣으면 됩니다. end -->
+                    </div>
+                </div>
+                <footer th:replace="elements/footer :: footer"></footer>
+            </div>
+        </div>
+
+        <script>
+            // boardAllSelector 클릭 시 모든 boardSelection 체크박스 체크/해제
+            $("#boardAllSelector").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".boardSelection").prop("checked", true);
+                } else {
+                    $(".boardSelection").prop("checked", false);
+                }
+            });
+
+            // 각각의 boardSelection 클릭 시 alert로 현재까지 활성화된 boardSelection의 boardId 출력
+            $(".boardSelection").click(function () {
+                printAllSelections();
+            });
+
+            function getAllSelections() {
+                var boardIds = [];
+                $(".boardSelection").each(function () {
+                    if ($(this).is(":checked")) {
+                        boardIds.push($(this).parent().next().text());
+                    }
+                });
+
+                return boardIds;
+            }
+
+            $("#deleteAllSelection").click(function () {
+                requestDeleteItems();
+            });
+
+            // boardIds를 Springcontroller의 PostMapper로 전달
+            // /delete로 post 요청을 보내면 boardIds를 전달 - not async(not use ajax)
+            function requestDeleteItems() {
+                var boardIds = getAllSelections();
+
+                alert(boardIds);
+                $.ajax({
+                    url: "/board/list/delete",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(boardIds),
+                    success: function () {
+                        alert("삭제되었습니다.");
+                        // redirect to /
+                        location.href = "/board/list";
+                    },
+                    error: function () {
+                        alert("삭제에 실패했습니다.");
+                    },
+                });
+            }
+        </script>
+    </body>
+</html>

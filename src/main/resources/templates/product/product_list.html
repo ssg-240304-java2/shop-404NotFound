@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Developer Item Shop</title>
+
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link th:replace="elements/misc/deps :: html"/>
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+            animation: backgroundMove 20s linear infinite;
+        }
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50%, 50%); }
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-action {
+            transition: all 0.3s ease;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .content-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* 윗부분 맞추기 위해 추가 */
+        }
+        .filter-section {
+            width: 20%;
+            margin-right: 2%;
+        }
+        .results-section {
+            width: 78%;
+        }
+        .scrollable-table {
+            height: 800px; /* 높이 2배로 증가 */
+            overflow-y: scroll;
+        }
+        .button-group {
+            display: flex;
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            margin-bottom: 10px;
+        }
+        .button-group .btn + .btn {
+            margin-left: 10px; /* 버튼 간격 조정 */
+        }
+        .modal-dialog-custom {
+            max-width: 40%; /* 너비를 40%로 설정 */
+            height: 80vh; /* 높이를 80vh로 설정 */
+        }
+        .modal-dialog-custom .modal-content {
+            height: 70%; /* modal-content의 높이를 70%로 설정 */
+        }
+        .modal-dialog-custom iframe {
+            height: 100%; /* iframe의 높이를 100%로 설정 */
+        }
+        .modal-dialog-custom2 {
+            max-width: 60%;
+            height: 70vh;
+        }
+        .modal-dialog-custom2 .modal-content {
+            height: 100%;
+        }
+        .modal-dialog-custom2 .modal-body {
+            overflow-y: auto;
+        }
+        .modal-dialog-custom2 .form-container {
+            padding: 20px;
+        }
+        .modal-dialog-custom2 .form-group {
+            margin-bottom: 20px;
+        }
+        .modal-dialog-custom2 .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .modal-dialog-custom2 .form-group input,
+        .modal-dialog-custom2 .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .modal-dialog-custom2 .form-group input[type="file"] {
+            padding: 5px;
+        }
+        .modal-dialog-custom2 .form-group.radio-group {
+            display: flex;
+            align-items: center;
+        }
+        .modal-dialog-custom2 .form-group.radio-group label {
+            margin-right: 10px;
+        }
+        .modal-dialog-custom2 .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .modal-dialog-custom2 .form-row .form-group {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .modal-dialog-custom2 .form-row .form-group:last-child {
+            margin-right: 0;
+        }
+        .modal-dialog-custom2 .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+        }
+        .modal-dialog-custom2 .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-dialog-custom2 .btn-primary {
+            background-color: #4e73df;
+        }
+        .modal-dialog-custom2 .btn-primary:hover {
+            background-color: #224abe;
+        }
+        .modal-dialog-custom2 .btn-secondary {
+            background-color: #6c757d;
+        }
+        .modal-dialog-custom2 .btn-secondary:hover {
+            background-color: #565e64;
+        }
+    </style>
+
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <nav th:replace="elements/nav :: body"></nav> <!-- left sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="elements/topbar :: body"></nav> <!-- top navbar -->
+            <div class="page-header">
+                <div class="container-fluid">
+                    <h1 class="h3 mb-0 text-white animate__animated animate__fadeInDown">전체 상품관리</h1>
+                    <p class="mt-2 animate__animated animate__fadeInUp animate__delay-1s">상품의 조회, 수정, 판매상태 변경을 처리할 수 있는 페이지 입니다.</p>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <!-- 알림 메시지 -->
+                <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeIn" role="alert" id="successAlert" style="display:none;">
+                    <strong>성공!</strong> <span id="successMessage"></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeIn" role="alert" id="errorAlert" style="display:none;">
+                    <strong>오류!</strong> <span id="errorMessage"></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="content-wrapper">
+                    <div class="filter-section card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">검색 필터</h6>
+                        </div>
+                        <div class="card-body">
+                            <form action="/product/product-list" method="GET" id="productSearchForm">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="productName" name="productName" placeholder="상품 이름" th:value="${param.productName}">
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control mainCategoryCode" id="mainCategoryCode" name="mainCategoryCode">
+                                        <option value="">메인 카테고리</option>
+                                        <option th:each="mainCategory : ${mainCategories}"
+                                                th:value="${mainCategory.categoryCode}"
+                                                th:text="${mainCategory.categoryName}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control subCategoryCode" id="subCategoryCode"  name="subCategoryCode">
+                                        <option value="">서브 카테고리</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="minPrice" name="minPrice" placeholder="최소 가격" min="0" th:value="${param.minPrice}">
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="maxPrice" name="maxPrice" placeholder="최대 가격" min="0" th:value="${param.maxPrice}">
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="isDisplayed" id="isDisplayedY" value="Y" checked>
+                                        <label class="form-check-label" for="isDisplayedY">판매중</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="isDisplayed" id="isDisplayedN" value="N">
+                                        <label class="form-check-label" for="isDisplayedN">판매중단</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="startDate" name="startDate" th:value="${param.startDate}" placeholder="생성일자 이후">
+                                </div>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="endDate" name="endDate" th:value="${param.endDate}" placeholder="생성일자 이전">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-block">검색</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <div class="button-group">
+                            <button class="btn btn-info" id="selectAllCheckboxButton">전체 선택</button>
+                            <button class="btn btn-danger" id="changeDisplayStatusButton">선택항목 판매상태 변경</button>
+                            <button class="btn btn-success" id="addNewProductButton">신상품 추가</button>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">상품 목록</h6>
+                            </div>
+                            <div class="card-body scrollable-table">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>선택</th>
+                                            <th>상품 코드</th>
+                                            <th>이미지</th>
+                                            <th>상품 이름</th>
+                                            <th>가격</th>
+                                            <th>카테고리</th>
+                                            <th>판매 여부</th>
+                                            <th>상품 설명</th>
+                                            <th>등록 일자</th>
+                                            <th>작업</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="product : ${productList}">
+                                            <td>
+                                                <input type="checkbox" name="selectedProduct[]" th:value="${product.productCode}"/>
+                                            </td>
+                                            <td th:text="${product.productCode}"></td>
+                                            <td><img th:src="@{${product.image.uuidFilename}}" alt="상품 이미지 준비중 입니다." width="100px" height="100px"></td>
+                                            <td th:text="${product.productName}"></td>
+                                            <td th:text="${product.price}"></td>
+                                            <td th:text="${product.category.categoryName}"></td>
+                                            <td th:text="${product.isDisplayed}"></td>
+                                            <td th:text="${product.productDesc}"></td>
+                                            <td th:text="${product.registrationDate}"></td>
+                                            <td>
+                                                <a href="#" class="btn btn-primary btn-sm edit-product btn-action" th:data-product-code="${product.productCode}">수정</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2020</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-custom" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">상품 정보 수정</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="editProductIframe" src="" frameborder="0" style="width:100%; height:400px;"></iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 등록 모달 -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-custom2" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">상품 정보 등록</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-container">
+                    <form action="/product/register" method="post" id="productInfoForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="productName">상품 이름</label>
+                            <input type="text" id="addProductName" name="productName" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="mainCategoryCode">메인 카테고리</label>
+                                <select id="addMainCategoryCode" name="mainCategoryCode" class="mainCategoryCode">
+                                    <option value="">Select Main Category</option>
+                                    <option th:each="mainCategory : ${mainCategories}"
+                                            th:value="${mainCategory.categoryCode}"
+                                            th:text="${mainCategory.categoryName}"></option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="subCategoryCode">서브 카테고리</label>
+                                <select id="addCategoryCode" class="subCategoryCode" name="subCategoryCode" required>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addPrice">상품 가격</label>
+                            <input type="number" id="addPrice" name="price" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addProductDesc">상품 설명</label>
+                            <input type="text" id="addProductDesc" name="productDesc">
+                        </div>
+
+                        <div class="form-group radio-group">
+                            <label>판매 여부</label>
+                            <label><input type="radio" name="isDisplayed" id="addIsDisplayedY" value="Y" checked>판매중</label>
+                            <label><input type="radio" name="isDisplayed" id="addIsDisplayedN" value="N">판매중단</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addImageFile">이미지</label>
+                            <input type="file" id="addImageFile" name="imageFile">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                            <button type="submit" class="btn btn-primary" id="addProductChanges">등록</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/demo/datatables-demo.js"></script>
+
+<script src="/js/product/showCategory.js"></script>
+
+<!---------------------------------------------------- SCRIPT -------------------------------------------------------->
+
+<script>
+    $(document).ready(function() {
+        // 데이터 테이블 초기화
+        if ($.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable().destroy();
+        }
+        var table = $('#dataTable').DataTable({
+            paging: false
+        });
+
+        // 검색 폼 검증
+        $('#productSearchForm').submit(function(event) {
+            var minPrice = $('#minPrice').val();
+            var maxPrice = $('#maxPrice').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+
+            if (minPrice && maxPrice && parseInt(minPrice) > parseInt(maxPrice)) {
+                alert('최대 가격은 최소 가격보다 커야 합니다.');
+                event.preventDefault();
+            }
+
+            if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+                alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+                event.preventDefault();
+            }
+        });
+
+        $('#changeDisplayStatusButton').click(function(event) {
+            event.preventDefault();
+
+            var selectedProducts = [];
+            $("input[name='selectedProduct[]']:checked").each(function() {
+                selectedProducts.push($(this).val());
+            });
+
+            if (selectedProducts.length === 0) {
+                alert("최소 한 개의 상품을 선택해야 합니다.");
+                return;
+            }
+
+            var confirmResult = confirm("판매 상태를 변경 하시겠습니까?");
+            if (!confirmResult) {
+                $("input[name='selectedProduct[]']:checked").prop('checked', false);
+                return;
+            }
+
+            $.ajax({
+                url: '/product/disable-product',
+                type: 'POST',
+                data: { selectedProduct: selectedProducts },
+                success: function(response) {
+                    alert('판매 상태가 성공적으로 변경되었습니다.');
+                    // 변경된 내용을 반영하기 위해 테이블 갱신
+                    $('#productSearchForm').submit();
+                },
+                error: function(xhr, status, error) {
+                    alert('판매 상태 변경 중 오류가 발생했습니다.');
+                }
+            });
+        });
+
+        if (!$('input[name="isDisplayed"]:checked').length) {
+            $('#isDisplayedY').prop('checked', true);
+        }
+
+        // 전체 선택 버튼 클릭 이벤트
+        let allChecked = false;
+        $('#selectAllCheckboxButton').click(function(event) {
+            event.preventDefault();
+            allChecked = !allChecked;
+            $('input[name="selectedProduct[]"]').prop('checked', allChecked);
+        });
+
+        // 신상품 추가 버튼 클릭 이벤트
+        $('#addNewProductButton').click(function(event) {
+            event.preventDefault();
+            $('#addProductModal').modal('show');
+        });
+
+        // 수정 버튼 클릭 이벤트
+        $('.edit-product').click(function(event) {
+            event.preventDefault();
+
+            // 상품 코드 가져오기
+            var productCode = $(this).data('product-code');
+
+            // iframe의 src 설정
+            var iframeSrc = '/product/update?productCode=' + productCode;
+            $('#editProductIframe').attr('src', iframeSrc);
+
+            // 모달 표시
+            $('#editProductModal').modal('show');
+        });
+
+
+
+        window.addEventListener('message', function(event) {
+            if (event.data === 'success') {
+                // 성공 메시지 표시
+                $('#successAlert').show().text('상품이 성공적으로 수정되었습니다.');
+
+                // 모달 닫기
+                $('#editProductModal').modal('hide');
+
+                // 테이블 갱신 또는 페이지 리로드
+                location.reload();
+            } else if (event.data === 'error') {
+                // 오류 메시지 표시
+                $('#errorAlert').show().text('상품 수정 중 오류가 발생했습니다.');
+            } else if (event.data === 'cancel') {
+                // 모달 닫기
+                $('#editProductModal').modal('hide');
+            }
+        });
+
+        // 성공 및 오류 메시지 표시
+        var successMessage = `[[${successMessage}]]`;
+        var errorMessage = `[[${errorMessage}]]`;
+
+        if (successMessage) {
+            showAlert(successMessage, true);
+        }
+        if (errorMessage) {
+            showAlert(errorMessage, false);
+        }
+    });
+
+    function showAlert(message, isSuccess) {
+        var alertElement = isSuccess ? $('#successAlert') : $('#errorAlert');
+        var messageElement = isSuccess ? $('#successMessage') : $('#errorMessage');
+
+        messageElement.text(message);
+        alertElement.show().addClass('animate__animated animate__fadeIn');
+
+        setTimeout(function() {
+            alertElement.removeClass('animate__fadeIn').addClass('animate__fadeOut');
+            setTimeout(function() {
+                alertElement.hide().removeClass('animate__fadeOut');
+            }, 500);
+        }, 3000);
+    }
+</script>
+</body>
+</html>
